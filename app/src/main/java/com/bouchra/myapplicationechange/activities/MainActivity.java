@@ -1,18 +1,7 @@
 package com.bouchra.myapplicationechange.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
-
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.SpannableString;
-
-import android.text.Spanned;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,25 +9,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bouchra.myapplicationechange.ProfileActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.Sinscrire;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.facebook.share.ShareApi;
-import com.facebook.share.Sharer;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -54,9 +34,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import org.json.JSONObject;
-
-import java.sql.Array;
 import java.util.Arrays;
 
 

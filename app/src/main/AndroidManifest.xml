@@ -11,17 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".profilUser"></activity>
+        <activity android:name=".activities.profilUser"></activity>
         <activity
-            android:name=".Acceuil"
+            android:name=".activities.Acceuil"
             android:theme="@style/AppTheme.FullScreen" />
         <activity
-            android:name=".Connect"
+            android:name=".activities.Connect"
             android:theme="@style/AppTheme.FullScreen" />
         <activity
-            android:name=".Sinscrire"
+            android:name=".activities.Sinscrire"
             android:theme="@style/AppTheme.FullScreen" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".activities.ProfileActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:theme="@style/AppTheme.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

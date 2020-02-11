@@ -6,7 +6,7 @@
     android:id="@+id/jkg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Acceuil">
+    tools:context=".activities.Acceuil">
     <LinearLayout
         android:id="@+id/layoutt14"
         android:layout_width="match_parent"
