@@ -7,7 +7,7 @@ public class Commentaire {
     private Date dateCommentaire;
     private String contenuCommentaire;
     private float repos;// nbr *
-    public int Calcul_Score(){
+    public int Calcul_Score(){// score des commentaie
         float score=0;
       return (int) score;
     }
