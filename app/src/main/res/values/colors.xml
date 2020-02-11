@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="black">#FF130F10</color>
+    <color name="bleu">#082B91</color>
+    <color name="bleuk">#021163</color>
+    <color name="purple">#AC1DC4</color>
+    <color name="Login_form_details">#ccffffff</color>
+    <color name="Login_form_details_medium">#66ffffff</color>
+    <color name="Login_form">#871B9B</color>
+    <color name="Login_form_details_ligh">#4B045C</color>
+    <color name="purpletrasp">#D56AE7</color>
+    <color name="bleutransp">#537BEE</color>
+</resources>

@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">Echange d articles</string>
+    <string name="facebook_app_id">557802801649601</string>
+    <string name="fb_login_protocol_scheme">fb557802801649601</string>
+    <string name="idnt">S identifier</string>
+<!--hado ta3 facebook-->>
+    <string name="cancelled">Cancelled</string>
+    <string name="ok">OK</string>
+    <string name="FBexception">FacebookAuthorizationException.</string>
+    <string-array name="choice_item">
+        <item> Distance la plus proche</item>
+        <item>Timing</item>
+    </string-array>
+
+<!--    <string-array name="choice_ville">
+        <item> 1-Adrar</item>
+        <item> 2-Chlef</item>
+        <item>3-Laghouat </item>
+        <item> 4-Oum Bouaghi</item>
+        <item>5-Batna </item>
+        <item>6- B </item>//////
+        <item>7-Biskra </item>
+        <item> 8- Béchar</item>
+        <item>9-Blida </item>
+        <item>10-Bouira </item>
+        <item>11-Tamanrasset </item>
+        <item>12-Tébassa </item>
+        <item>13-Tlemcen </item>
+        <item> 14-Tiaret</item>
+        <item>15-Tizi Ouzou </item>
+        <item>16-Alger </item>
+        <item>17-Djelfa </item>
+        <item>18-Jijel </item>
+        <item> 19-Sétif</item>
+        <item>20-Saida </item>///////////
+        <item> 21-Skikda</item>
+        <item>22-Sidi Bel Abbès </item>
+        <item>23-Annaba </item>
+        <item> 24-Guelma</item>
+        <item>25-Constantine </item>
+        <item> 26-Médéa</item>
+        <item>27-Mostaganem </item>
+        <item>28-M'Sila </item>
+        <item>29- Mascara</item>
+        <item>30-Ouargla </item>
+        <item>31-Oran </item>
+        <item>32-Bayadh </item>
+        <item> 33-</item>/*//////////////////
+        <item> 34-Bordj Bou Arreridj</item>
+        <item> 35-Boumerdès</item>
+        <item> 36-Tarf</item>
+        <item> 37-Tindouf</item>
+        <item>38-Tissemsilt </item>
+        <item> 39-</item>////////////////////
+        <item>40-Khenchela </item>
+        <item> 41-Souk Ahras</item>
+        <item>42-Tipaza </item>
+        <item>43-Mila </item>
+        <item> 44-Ain Defla</item>////
+        <item>45-Naâma </item>iiiiiiiiiiiiiiimaim
+        <item> 46-Témouchent</item>
+        <item> 47-Ghardaia</item>//////////////
+        <item>48-Relizane </item>
+
+
+    </string-array>-->
+
+</resources>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "23641542062",
+    "firebase_url": "https://echange-darticle.firebaseio.com",
+    "project_id": "echange-darticle",
+    "storage_bucket": "echange-darticle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23641542062:android:e0a1d166735200fec70c3f",
+        "android_client_info": {
+          "package_name": "com.bouchra.myapplicationechange"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "23641542062-p75134abvv4rog46aohqes6e8mtrcdf7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bouchra.myapplicationechange",
+            "certificate_hash": "ebdf8aa7593b3c9295b5eb283c519dd385b43f5d"
+          }
+        },
+        {
+          "client_id": "23641542062-9p5572g1m5eb1dhdd56gspgn8tqqfiq1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDR_pKOfY6Ie9nU5UPG4bAXuy52IQ1oM7E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23641542062-9p5572g1m5eb1dhdd56gspgn8tqqfiq1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

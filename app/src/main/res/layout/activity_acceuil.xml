@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/jkg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Acceuil">
+    <LinearLayout
+        android:id="@+id/layoutt14"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/bleu"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/ic_menu"     />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:layout_marginLeft="50dp"
+            android:layout_gravity="center"
+            android:textColor="@color/Login_form_details"
+            android:textSize="25dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_search"     />
+
+
+
+    </LinearLayout>
+    <ScrollView
+        android:layout_below="@+id/layoutt14"
+        android:id="@+id/layoot5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        >
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tout"
+                android:textSize="15sp"
+                android:textAllCaps="false"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vèhicules"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tèlèphones"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Automobiles"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textAllCaps="false"
+                android:text="Pièces dètachèes"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textAllCaps="false"
+                android:text="Immobilier"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textAllCaps="false"
+                android:text="Vetements"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:text="Livres"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Eletronique  et electromènager"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Accessoires de mode"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cosmetiques et  Beautè"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:textSize="15sp"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:text="Maison et fournitures"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loisirs et Dèvertissements"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                android:text="Matiriaux et  Equipements"/>
+        </LinearLayout>
+        </HorizontalScrollView>
+
+    </ScrollView>
+    <View
+        android:id="@+id/viw1"
+        android:layout_marginTop="10dp"
+        android:layout_below=  "@+id/layoot5"
+        android:layout_width="fill_parent"
+        android:layout_height="2px"
+        android:background="@color/black"/>
+    <LinearLayout
+            android:layout_below="@+id/viw1"
+
+            android:layout_width="match_parent"
+            android:id="@+id/bhh"
+            android:layout_height="85dp"
+
+            android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/layout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textSize="20dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_location"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt11"
+                    android:text="Choisissiez la ville"
+                    android:textSize="17dp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout2"
+                android:layout_marginLeft="70dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+
+                    android:textSize="20dp"
+                    android:background="@drawable/ic_shuffle"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+               <TextView
+                   android:id="@+id/txt22"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                   android:textSize="15sp"
+                   android:paddingLeft="10dp"
+                   android:layout_marginTop="10dp"
+                    android:text="Choisissiez  le classement des articles "
+                    android:textColor="@color/black"/>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    <View
+            android:id="@+id/viw2"
+        android:layout_below="@+id/bhh"
+        android:layout_width="fill_parent"
+        android:layout_height="2px"
+        android:background="@color/black"/>
+
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="147dp"
+        android:text="Profil" />
+
+
+</RelativeLayout>
