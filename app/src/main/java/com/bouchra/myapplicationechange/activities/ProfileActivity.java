@@ -1,4 +1,4 @@
-package com.bouchra.myapplicationechange;
+package com.bouchra.myapplicationechange.activities;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bouchra.myapplicationechange.Acceuil;
+import com.bouchra.myapplicationechange.Membre;
+import com.bouchra.myapplicationechange.R;
 import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,20 +66,18 @@ public class ProfileActivity extends AppCompatActivity {
         Picasso.get().load(photoUrl).into(profile_img);
         //hdo ta3 ysjl f firebase
         Membre model = new Membre();
-        model.setId_Membre(pId);
-        model.setNom_Membre(user.getDisplayName());
-        model.setImg_Membre(photoUrl);
+        model.setIdMembre(pId);
+        model.setNomMembre(user.getDisplayName());
+        //***************************************************************************
+        //model.setImgMembre(photoUrl);
         myRef.setValue(model);
         //htalhna bch ykml ta3 li ywsl ll firebase
 
 
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseAuth.signOut();
-                UpdateUI();
+        logOut.setOnClickListener(v -> {
+            firebaseAuth.signOut();
+            updateUI();
 
-            }
         });
         //hna bansayi ndir ta3 dialog
 
@@ -91,7 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser == null) {
-            UpdateUI();
+            updateUI();
         }
        /* else {
             startActivity(new Intent(ProfileActivity.this,Acceuil.class));
@@ -102,13 +103,13 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-    private void UpdateUI() {
+    private void updateUI() {
         startActivity(new Intent(ProfileActivity.this, MainActivity.class));
         finish();
     }
 
 
-    public void gotoacc(View view) {
+    public void goToAcc(View view) {
         Intent intt = new Intent(ProfileActivity.this, Acceuil.class);
         startActivity(intt);
     }

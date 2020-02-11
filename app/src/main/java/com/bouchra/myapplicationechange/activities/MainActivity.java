@@ -1,4 +1,4 @@
-package com.bouchra.myapplicationechange;
+package com.bouchra.myapplicationechange.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +20,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bouchra.myapplicationechange.ProfileActivity;
+import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.Sinscrire;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookAuthorizationException;
@@ -62,74 +65,69 @@ public class MainActivity extends AppCompatActivity {
     private CallbackManager mCallbackManager;
 
     private FirebaseAuth mAuth;
+    private TextView connect;
     private final String TAG = "MainActivity";
+    private static final int RC_SIGN_IN = 100;
+    GoogleSignInClient  mGoogleSignInClient;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+// ta3 ggole
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient= GoogleSignIn.getClient(this,gso);
         // Initialize Firebase Auth
 
 
         mAuth = FirebaseAuth.getInstance();
         mCallbackManager = CallbackManager.Factory.create();
         Button loginButtonFB = findViewById(R.id.loginfb); // ta3 afcebook
+        Button loginButtonGoogle = findViewById(R.id.logingoogle);// ta3 google
 
+        connect = findViewById(R.id.connecte);
+
+        connect.setOnClickListener(v -> {
+            Intent gotoo = new Intent(MainActivity.this, Connect.class);
+            startActivity(gotoo);
+        });
 
 // hdi tni dkhla f ta3 facebook
-        loginButtonFB.setOnClickListener(new OnClickListener() {
+        loginButtonFB.setOnClickListener(view -> {
+            LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("email", "public_profile"));
+            LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    Log.d(TAG, "facebook:en cas de succès:" + loginResult);
+                    handleFacebookAccessToken(loginResult.getAccessToken());
+                }
+
+                @Override
+                public void onCancel() {
+                    Log.d(TAG, "facebook:annuler");
+                }
+
+                @Override
+                public void onError(FacebookException error) {
+                    Log.d(TAG, "facebook:en cas d' erreur", error);
+                }
+            });
+        });
+// hadi ta3 gooooogle
+        loginButtonGoogle.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View view) {
-                LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("email", "public_profile"));
-                LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        Log.d(TAG, "facebook:en cas de succès:" + loginResult);
-                        handleFacebookAccessToken(loginResult.getAccessToken());
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        Log.d(TAG, "facebook:annuler");
-                    }
-
-                    @Override
-                    public void onError(FacebookException error) {
-                        Log.d(TAG, "facebook:en cas d' erreur", error);
-                    }
-                });
+            public void onClick(View v) {
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, RC_SIGN_IN);
             }
         });
 
-
     }
-
-
-
-
-
-
-
-
-
-
-      /*  TextView textView=(TextView)findViewById(R.id.conect) ;
-        TextView textView1=(TextView)findViewById(R.id.inscr);
-        String text= "Se connecter";
-        String text1= " cree un compte";
-        SpannableString ss=new SpannableString(text);
-        SpannableString aa=new SpannableString(text1);
-        UnderlineSpan underlineSpan=new UnderlineSpan();
-          ss.setSpan(underlineSpan,0,4,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        aa.setSpan(underlineSpan,5,2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);*/
-
-    //******hadi taa google
-
-
-    //hadiiiiiiiiiiiii tabla3 taa oncrete fonctiuon nichan }
 
 
     // *********************************************************** hado ta3  connection avec facebook mna hta l tli funcyion ta3 update
@@ -139,6 +137,19 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        // hadi taaaaaaaaaaaaaa3 goooooooogle
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+
+                Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
 
 
     }
@@ -188,10 +199,36 @@ public class MainActivity extends AppCompatActivity {
         Intent go = new Intent(MainActivity.this, Sinscrire.class);
         startActivity(go);
     }
+/////// hadi ta3 gooooogle
 
-    public void connecte(View view) {
-        Intent gotoo = new Intent(MainActivity.this, connect.class);
-        startActivity(gotoo);
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+
+                            FirebaseUser user = mAuth.getCurrentUser();
+                           // updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+
+                            Toast.makeText(MainActivity.this, "Login Failed....", Toast.LENGTH_SHORT).show();
+                           // updateUI(null);
+                        }
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //grt and show error mesage
+                Toast.makeText(MainActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-
 }

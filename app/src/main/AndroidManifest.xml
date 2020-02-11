@@ -16,7 +16,7 @@
             android:name=".Acceuil"
             android:theme="@style/AppTheme.FullScreen" />
         <activity
-            android:name=".connect"
+            android:name=".Connect"
             android:theme="@style/AppTheme.FullScreen" />
         <activity
             android:name=".Sinscrire"

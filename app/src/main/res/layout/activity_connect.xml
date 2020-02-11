@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".connect">
+    tools:context=".Connect">
 <!--com.google.android.material.textfield.TextInputLayout-->
     <LinearLayout
         android:id="@+id/l1l"
@@ -94,13 +94,13 @@
             android:id="@+id/cv"
             android:layout_width="500dp"
             android:layout_height="230dp"
-            android:layout_margin="20dp"
+            android:layout_margin="16dp"
             app:cardCornerRadius="10dp"
             app:cardElevation="2dp"  >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
+                android:layout_marginHorizontal="16dp"
                 android:orientation="vertical">
 
 
@@ -177,7 +177,7 @@
             android:id="@+id/btnplac"
             android:layout_width="50dp"
             android:layout_height="50dp"
-           android:src="@drawable/ic_add_foreground"
+            android:src="@drawable/ic_add_foreground"
             android:background="@drawable/btn_login"
             android:onClick="gotoo_insc"
             />

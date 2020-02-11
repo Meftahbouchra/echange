@@ -1,4 +1,4 @@
-package com.bouchra.myapplicationechange;
+package com.bouchra.myapplicationechange.models;
 
 import java.util.Date;
 
@@ -6,16 +6,16 @@ public class Membre {
     private String idMembre;
     private String nomMembre;
     private int numTel;
-    private char email;
+    private String email;
     private String adresseMembre;
-    private char motDePasse;
+    private String motDePasse;
 
     public Membre() {
     }
 
     private Date dateInscription;
 
-    public Membre(String idMembre, String nomMembre, int numTel, char email, String adresseMembre, char motDePasse, Date dateInscription, String lienCompteFb, String lienCompteGoogle) {
+    public Membre(String idMembre, String nomMembre, int numTel, String email, String adresseMembre, String motDePasse, Date dateInscription, String lienCompteFb, String lienCompteGoogle) {
         this.idMembre = idMembre;
         this.nomMembre = nomMembre;
         this.numTel = numTel;
@@ -51,11 +51,11 @@ public class Membre {
         this.numTel = numTel;
     }
 
-    public char getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(char email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -67,11 +67,11 @@ public class Membre {
         this.adresseMembre = adresseMembre;
     }
 
-    public char getMotDePasse() {
+    public String getMotDePasse() {
         return motDePasse;
     }
 
-    public void setMotDePasse(char motDePasse) {
+    public void setMotDePasse(String motDePasse) {
         this.motDePasse = motDePasse;
     }
 

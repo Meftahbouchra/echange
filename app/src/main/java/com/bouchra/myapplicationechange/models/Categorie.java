@@ -1,4 +1,4 @@
-package com.bouchra.myapplicationechange;
+package com.bouchra.myapplicationechange.models;
 
 public enum Categorie {
     VEHICULES(1, "Vèhicules"),

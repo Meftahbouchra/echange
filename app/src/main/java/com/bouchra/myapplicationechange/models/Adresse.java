@@ -1,4 +1,4 @@
-package com.bouchra.myapplicationechange;
+package com.bouchra.myapplicationechange.models;
 
 public class Adresse {
     private String idAdresse;

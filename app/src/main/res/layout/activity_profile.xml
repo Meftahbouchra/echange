@@ -48,6 +48,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="148dp"
         android:text="continuer"
-        android:onClick="gotoacc"/>
+        android:onClick="goToAcc"/>
 
 </RelativeLayout>

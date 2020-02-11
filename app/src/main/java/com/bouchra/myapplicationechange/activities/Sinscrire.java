@@ -1,4 +1,4 @@
-package com.bouchra.myapplicationechange;
+package com.bouchra.myapplicationechange.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bouchra.myapplicationechange.Acceuil;
+import com.bouchra.myapplicationechange.Membre;
+import com.bouchra.myapplicationechange.R;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -95,10 +98,10 @@ public class Sinscrire extends AppCompatActivity {
                             ID = firebaseAuth.getCurrentUser().getUid();
                             databaseReference = FirebaseDatabase.getInstance().getReference("Membre").child(ID);
                             Membre usr = new Membre();
-                            usr.setEmail_Memebre(email);
-                            usr.setNom_Membre(name);
-                            usr.setMot_de_passe__Membre(password);
-                            usr.setId_Membre(ID);
+                            usr.setEmail(email);
+                            usr.setNomMembre(name);
+                            usr.setMotDePasse(password);
+                            usr.setIdMembre(ID);
                             databaseReference.setValue(usr).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task2) {
