@@ -1,69 +1,105 @@
 package com.bouchra.myapplicationechange;
 
+import java.util.Date;
+
 public class Membre {
-    private String id_Membre, nom_Membre, img_Membre,tel_Mrmbre,email_Memebre,adresse_Membre, mot_de_passe__Membre,date_inscrip_Membre;
+    private String idMembre;
+    private String nomMembre;
+    private int numTel;
+    private char email;
+    private String adresseMembre;
+    private char motDePasse;
 
-    public String getImg_Membre() {
-        return img_Membre;
+    public Membre() {
     }
 
-    public void setImg_Membre(String img_Membre) {
-        this.img_Membre = img_Membre;
+    private Date dateInscription;
+
+    public Membre(String idMembre, String nomMembre, int numTel, char email, String adresseMembre, char motDePasse, Date dateInscription, String lienCompteFb, String lienCompteGoogle) {
+        this.idMembre = idMembre;
+        this.nomMembre = nomMembre;
+        this.numTel = numTel;
+        this.email = email;
+        this.adresseMembre = adresseMembre;
+        this.motDePasse = motDePasse;
+        this.dateInscription = dateInscription;
+        this.lienCompteFb = lienCompteFb;
+        this.lienCompteGoogle = lienCompteGoogle;
     }
 
-    public String getId_Membre() {
-        return id_Membre;
+    public String getIdMembre() {
+        return idMembre;
     }
 
-    public void setId_Membre(String id_Membre) {
-        this.id_Membre = id_Membre;
+    public void setIdMembre(String idMembre) {
+        this.idMembre = idMembre;
     }
 
-    public String getNom_Membre() {
-        return nom_Membre;
+    public String getNomMembre() {
+        return nomMembre;
     }
 
-    public void setNom_Membre(String nom_Membre) {
-        this.nom_Membre = nom_Membre;
+    public void setNomMembre(String nomMembre) {
+        this.nomMembre = nomMembre;
     }
 
-    public String getTel_Mrmbre() {
-        return tel_Mrmbre;
+    public int getNumTel() {
+        return numTel;
     }
 
-    public void setTel_Mrmbre(String tel_Mrmbre) {
-        this.tel_Mrmbre = tel_Mrmbre;
+    public void setNumTel(int numTel) {
+        this.numTel = numTel;
     }
 
-    public String getEmail_Memebre() {
-        return email_Memebre;
+    public char getEmail() {
+        return email;
     }
 
-    public void setEmail_Memebre(String email_Memebre) {
-        this.email_Memebre = email_Memebre;
+    public void setEmail(char email) {
+        this.email = email;
     }
 
-    public String getAdresse_Membre() {
-        return adresse_Membre;
+    public String getAdresseMembre() {
+        return adresseMembre;
     }
 
-    public void setAdresse_Membre(String adresse_Membre) {
-        this.adresse_Membre = adresse_Membre;
+    public void setAdresseMembre(String adresseMembre) {
+        this.adresseMembre = adresseMembre;
     }
 
-    public String getMot_de_passe__Membre() {
-        return mot_de_passe__Membre;
+    public char getMotDePasse() {
+        return motDePasse;
     }
 
-    public void setMot_de_passe__Membre(String mot_de_passe__Membre) {
-        this.mot_de_passe__Membre = mot_de_passe__Membre;
+    public void setMotDePasse(char motDePasse) {
+        this.motDePasse = motDePasse;
     }
 
-    public String getDate_inscrip_Membre() {
-        return date_inscrip_Membre;
+    public Date getDateInscription() {
+        return dateInscription;
     }
 
-    public void setDate_inscrip_Membre(String date_inscrip_Membre) {
-        this.date_inscrip_Membre = date_inscrip_Membre;
+    public void setDateInscription(Date dateInscription) {
+        this.dateInscription = dateInscription;
     }
+
+    public String getLienCompteFb() {
+        return lienCompteFb;
+    }
+
+    public void setLienCompteFb(String lienCompteFb) {
+        this.lienCompteFb = lienCompteFb;
+    }
+
+    public String getLienCompteGoogle() {
+        return lienCompteGoogle;
+    }
+
+    public void setLienCompteGoogle(String lienCompteGoogle) {
+        this.lienCompteGoogle = lienCompteGoogle;
+    }
+
+    private String lienCompteFb;
+    private String lienCompteGoogle;
+
 }

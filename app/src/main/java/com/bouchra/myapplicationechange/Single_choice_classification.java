@@ -11,9 +11,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class Single_choice_classification extends DialogFragment {
-    int position=0; // default selected posotion
-    public interface  SingleChoiceListener{
-        void onPositiveButtononCliked(String[] list , int  position);
+    int position = 0; // default selected posotion
+
+    public interface SingleChoiceListener {
+        void onPositiveButtononCliked(String[] list, int position);
+
         void onNegativeButtononCliked();
     }
 
@@ -24,9 +26,9 @@ public class Single_choice_classification extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            mListener= (SingleChoiceListener) context;
-        }catch (Exception e){
-            throw  new ClassCastException(getActivity().toString()+"SingleChoiceListener must implemented");
+            mListener = (SingleChoiceListener) context;
+        } catch (Exception e) {
+            throw new ClassCastException(getActivity().toString() + "SingleChoiceListener must implemented");
         }
 
     }
@@ -34,20 +36,20 @@ public class Single_choice_classification extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder= new AlertDialog.Builder(getActivity());
-        String[] list= getActivity().getResources().getStringArray(R.array.choice_item);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        String[] list = getActivity().getResources().getStringArray(R.array.choice_item);
         builder.setTitle("select your choice")
                 .setSingleChoiceItems(list, position, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        position=which;
+                        position = which;
 
                     }
                 })
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.onPositiveButtononCliked(list,position);
+                        mListener.onPositiveButtononCliked(list, position);
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {

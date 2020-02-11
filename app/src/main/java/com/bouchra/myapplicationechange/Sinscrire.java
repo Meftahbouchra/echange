@@ -36,10 +36,10 @@ public class Sinscrire extends AppCompatActivity {
     private String name = "";
     private String email = "";
     private String password = "";
-    private String ID ;
+    private String ID;
     // declare a instanbce
     private DatabaseReference databaseReference;
-     private FirebaseAuth firebaseAuth;
+    private FirebaseAuth firebaseAuth;
 
 
     @Override
@@ -57,21 +57,25 @@ public class Sinscrire extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
 
+        btn_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //input email,pswrd , name
+                name = txt_username.getText().toString();
+                email = txt_email.getText().toString();
+                password = txt_password.getText().toString();
+                //validate
+                if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
+                    if (password.length() >= 6) {
+                        registerUser();
+                    } else {
+                        Toast.makeText(Sinscrire.this, "Le mot de passe doit comporter au mois 6 caractéres ", Toast.LENGTH_LONG).show();
+                    }
 
-     btn_register.setOnClickListener(new View.OnClickListener() {
-     @Override
-     public void onClick(View v) {
-      //input email,pswrd , name
-     name = txt_username.getText().toString();
-     email = txt_email.getText().toString();
-     password = txt_password.getText().toString();
-     //validate
-    if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
-          if (password.length() >= 6) {    registerUser();    }
-          else { Toast.makeText(Sinscrire.this, "Le mot de passe doit comporter au mois 6 caractéres ", Toast.LENGTH_LONG).show(); }
 
-
-    } else { Toast.makeText(Sinscrire.this, "Vous devez remplir les champs", Toast.LENGTH_LONG).show();}
+                } else {
+                    Toast.makeText(Sinscrire.this, "Vous devez remplir les champs", Toast.LENGTH_LONG).show();
+                }
 
 
             }
@@ -80,37 +84,35 @@ public class Sinscrire extends AppCompatActivity {
 
     private void registerUser() {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
-        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-           @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                 if(task.isSuccessful()) {
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
 
 
-                     //hdo ta3 ysjl f firebase
+                            //hdo ta3 ysjl f firebase
 
-                     ID = firebaseAuth.getCurrentUser().getUid();
-                     databaseReference= FirebaseDatabase.getInstance().getReference("Membre").child(ID);
-                     Membre usr = new Membre();
-                     usr.setEmail_Memebre(email);
-                     usr.setNom_Membre(name);
-                     usr.setMot_de_passe__Membre(password);
-                     usr.setId_Membre(ID);
-                     databaseReference.setValue(usr).addOnCompleteListener(new OnCompleteListener<Void>() {
-                         @Override
-                         public void onComplete(@NonNull Task<Void> task2) {
-                             if(task2.isSuccessful()) {
-                                 startActivity(new Intent(Sinscrire.this, Acceuil.class));
-                                 finish();}
-
-                             else {
-                                 Toast.makeText(Sinscrire.this, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();}
-                         }
-                     });
-
-
+                            ID = firebaseAuth.getCurrentUser().getUid();
+                            databaseReference = FirebaseDatabase.getInstance().getReference("Membre").child(ID);
+                            Membre usr = new Membre();
+                            usr.setEmail_Memebre(email);
+                            usr.setNom_Membre(name);
+                            usr.setMot_de_passe__Membre(password);
+                            usr.setId_Membre(ID);
+                            databaseReference.setValue(usr).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task2) {
+                                    if (task2.isSuccessful()) {
+                                        startActivity(new Intent(Sinscrire.this, Acceuil.class));
+                                        finish();
+                                    } else {
+                                        Toast.makeText(Sinscrire.this, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
 
 
-                     // hna sayina darna kimla ta3 facebook bach yjo f fire base fi rahba khrabna mlfog
+                            // hna sayina darna kimla ta3 facebook bach yjo f fire base fi rahba khrabna mlfog
                          /*  Membre usr = new Membre();
                             usr.setEmail_Memebre(email);
                             usr.setNom_Membre(name);
@@ -130,8 +132,9 @@ public class Sinscrire extends AppCompatActivity {
                                 }
                             });*/
 
+                        } else {
+                            Toast.makeText(Sinscrire.this, "Cet utilisateur ne peut pas etre enregistrè", Toast.LENGTH_LONG).show();
                         }
-                 else{ Toast.makeText(Sinscrire.this, "Cet utilisateur ne peut pas etre enregistrè", Toast.LENGTH_LONG).show();}
 
                     }
 

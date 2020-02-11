@@ -24,36 +24,34 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private TextView name;
-  private   CircleImageView profile_img;
-  private   Button logOut;
-  private   String pId;
-   private DatabaseReference myRef;
-  private   String facebookUserTd=" ";
+    private CircleImageView profile_img;
+    private Button logOut;
+    private String pId;
+    private DatabaseReference myRef;
+    private String facebookUserTd = " ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        profile_img=findViewById(R.id.profilimG);
-        name=findViewById(R.id.name);
-        logOut=findViewById(R.id.logout);
+        profile_img = findViewById(R.id.profilimG);
+        name = findViewById(R.id.name);
+        logOut = findViewById(R.id.logout);
 
 
-
-
-        firebaseAuth =FirebaseAuth.getInstance();
-        FirebaseUser user =firebaseAuth.getCurrentUser();
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
         //hdo ta3 ysjl f firebase
-        pId =firebaseAuth.getUid();
+        pId = firebaseAuth.getUid();
         //hdo ta3 ysjl f firebase
-        myRef= FirebaseDatabase.getInstance().getReference("Membre").child(pId);
+        myRef = FirebaseDatabase.getInstance().getReference("Membre").child(pId);
         name.setText(user.getDisplayName());
 
 
-        for(UserInfo profile : user.getProviderData()){
+        for (UserInfo profile : user.getProviderData()) {
 
-            if(FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())){
-                facebookUserTd =profile.getUid();
+            if (FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())) {
+                facebookUserTd = profile.getUid();
 
 
             }
@@ -61,10 +59,10 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
 
-        String photoUrl ="https://graph.facebook.com/"+facebookUserTd +"/picture?height=500";
+        String photoUrl = "https://graph.facebook.com/" + facebookUserTd + "/picture?height=500";
         Picasso.get().load(photoUrl).into(profile_img);
         //hdo ta3 ysjl f firebase
-        Membre model =new Membre();
+        Membre model = new Membre();
         model.setId_Membre(pId);
         model.setNom_Membre(user.getDisplayName());
         model.setImg_Membre(photoUrl);
@@ -72,8 +70,8 @@ public class ProfileActivity extends AppCompatActivity {
         //htalhna bch ykml ta3 li ywsl ll firebase
 
 
-       logOut.setOnClickListener(new View.OnClickListener() {
-          @Override
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 firebaseAuth.signOut();
                 UpdateUI();
@@ -83,10 +81,7 @@ public class ProfileActivity extends AppCompatActivity {
         //hna bansayi ndir ta3 dialog
 
 
-
-
     }
-
 
 
     @Override
@@ -95,7 +90,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
 
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser == null){
+        if (currentUser == null) {
             UpdateUI();
         }
        /* else {
@@ -106,14 +101,15 @@ public class ProfileActivity extends AppCompatActivity {
 */
 
     }
+
     private void UpdateUI() {
-        startActivity(new Intent(ProfileActivity.this,MainActivity.class));
+        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
         finish();
     }
 
 
     public void gotoacc(View view) {
-        Intent intt= new Intent(ProfileActivity.this,Acceuil.class);
+        Intent intt = new Intent(ProfileActivity.this, Acceuil.class);
         startActivity(intt);
     }
 }

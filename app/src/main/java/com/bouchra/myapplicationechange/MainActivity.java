@@ -57,17 +57,15 @@ import java.sql.Array;
 import java.util.Arrays;
 
 
-
 public class MainActivity extends AppCompatActivity {
 
     private CallbackManager mCallbackManager;
 
-    private FirebaseAuth mAuth ;
-private  final String TAG="MainActivity";
+    private FirebaseAuth mAuth;
+    private final String TAG = "MainActivity";
 
 
-
- @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -76,20 +74,16 @@ private  final String TAG="MainActivity";
         // Initialize Firebase Auth
 
 
-       mAuth = FirebaseAuth.getInstance();
-       mCallbackManager = CallbackManager.Factory.create();
+        mAuth = FirebaseAuth.getInstance();
+        mCallbackManager = CallbackManager.Factory.create();
         Button loginButtonFB = findViewById(R.id.loginfb); // ta3 afcebook
 
 
-
-
-
-
 // hdi tni dkhla f ta3 facebook
-     loginButtonFB.setOnClickListener(new OnClickListener() {
+        loginButtonFB.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                LoginManager.getInstance().logInWithReadPermissions(MainActivity.this,Arrays.asList("email", "public_profile"));
+                LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("email", "public_profile"));
                 LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
@@ -106,7 +100,8 @@ private  final String TAG="MainActivity";
                     public void onError(FacebookException error) {
                         Log.d(TAG, "facebook:en cas d' erreur", error);
                     }
-                }); }
+                });
+            }
         });
 
 
@@ -131,30 +126,31 @@ private  final String TAG="MainActivity";
           ss.setSpan(underlineSpan,0,4,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         aa.setSpan(underlineSpan,5,2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
-        //******hadi taa google
+    //******hadi taa google
 
 
-   //hadiiiiiiiiiiiii tabla3 taa oncrete fonctiuon nichan }
+    //hadiiiiiiiiiiiii tabla3 taa oncrete fonctiuon nichan }
 
 
-   // *********************************************************** hado ta3  connection avec facebook mna hta l tli funcyion ta3 update
+    // *********************************************************** hado ta3  connection avec facebook mna hta l tli funcyion ta3 update
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // Pass the activity result back to the Facebook SDK
-       mCallbackManager.onActivityResult(requestCode, resultCode, data);
-
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
 
 
     }
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            updateUI(); }
+        if (currentUser != null) {
+            updateUI();
+        }
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
@@ -180,25 +176,22 @@ private  final String TAG="MainActivity";
                     }
                 });
     }
-// hadi tadi l la page zawja li t3rad fiha les D
+
+    // hadi tadi l la page zawja li t3rad fiha les D
     private void updateUI() {
         startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         finish();
     }
 
 
-
-
-
-
-    public void inscrire (View view){
-            Intent go = new Intent(MainActivity.this, Sinscrire.class);
-            startActivity(go);
-        }
-
-        public void connecte (View view){
-            Intent gotoo = new Intent(MainActivity.this, connect.class);
-            startActivity(gotoo);
-        }
-
+    public void inscrire(View view) {
+        Intent go = new Intent(MainActivity.this, Sinscrire.class);
+        startActivity(go);
     }
+
+    public void connecte(View view) {
+        Intent gotoo = new Intent(MainActivity.this, connect.class);
+        startActivity(gotoo);
+    }
+
+}
