@@ -18,20 +18,20 @@ public enum Categorie {
     private int point;
     private String nomCategorie;
 
-    public void setpoint(int point) {
+    public void setPoint(int point) {
         this.point = point;
     }
 
-    public int getpoint() {
+    public int getPoint() {
         return point;
     }
 
 
-    public void setnomCategorie(String nomCategorie) {
+    public void setNomCategorie(String nomCategorie) {
         this.nomCategorie = nomCategorie;
     }
 
-    public String getnomCategorie() {
+    public String getNomCategorie() {
         return nomCategorie;
     }
 
