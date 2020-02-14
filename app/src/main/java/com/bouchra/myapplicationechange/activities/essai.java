@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.adapters.CarouselViewAdapter;
 import com.bouchra.myapplicationechange.adapters.RecycleViewAdapter;
 import com.bouchra.myapplicationechange.fragments.PosteModelAnnonce;
 
@@ -17,7 +16,6 @@ public class essai extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecycleViewAdapter postAdapter;
-    private CarouselViewAdapter imageAdapter;
     private ArrayList<PosteModelAnnonce> posts;
 
 
@@ -29,18 +27,16 @@ public class essai extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclev);
         posts = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            posts.add(new PosteModelAnnonce("title" + i, "descriuption" + i, " " + imageAdapter));
+            posts.add(new PosteModelAnnonce("title" + i, "descriuption" + i, " " ));
         }
         // ta3rif l adapter , yadi l contyext = essai activity w l aarykyst li khasa bl post
         postAdapter = new RecycleViewAdapter(this, posts);
-        imageAdapter = new CarouselViewAdapter(this, posts);
+
         // tahdid lyout
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         //rabt recyclerView m3a l adapter
 
         recyclerView.setAdapter(postAdapter);
-
-
 
     }
 }

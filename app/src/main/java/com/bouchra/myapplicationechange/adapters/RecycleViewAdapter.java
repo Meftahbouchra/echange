@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.fragments.PosteModelAnnonce;
+import com.squareup.picasso.Picasso;
+import com.synnapps.carouselview.CarouselView;
 
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView title , desc;
+        CarouselView carouselView;
 
 
 
@@ -35,7 +38,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
            title = itemView.findViewById(R.id.nom_annonce);
             desc = itemView.findViewById(R.id.desc_annonce);
-            //carouselView = itemView.findViewById(R.id.image_annonce);
+            carouselView = itemView.findViewById(R.id.image_annonce);
         }
     }
 
@@ -62,11 +65,13 @@ private  Context context;
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // had l holder rah fih  image nomAnnoce w kolch li f  ViewHolder=holder
         PosteModelAnnonce p=posts.get(position); // tjibah f had l pisition
-holder.title.setText(p.getTitle());
-holder.desc.setText(p.getDesciption());
-
-
-
+        holder.title.setText(p.getTitle());
+        holder.desc.setText(p.getDesciption());
+        String [] mImages = new String[]{
+                "https://cdn.futura-sciences.com/buildsv6/images/mediumoriginal/6/5/2/652a7adb1b_98148_01-intro-773.jpg"
+        };
+        holder.carouselView.setPageCount(mImages.length);
+        holder.carouselView.setImageListener((pos, imageView) -> Picasso.get().load(mImages[pos]).placeholder(R.color.black).into(imageView));
     }
 
     @Override

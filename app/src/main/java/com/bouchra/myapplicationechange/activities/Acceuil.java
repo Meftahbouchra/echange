@@ -2,7 +2,6 @@ package com.bouchra.myapplicationechange.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,19 +36,13 @@ private  Button esy , google;
         textView2=findViewById(R.id.txt22);
         esy = findViewById(R.id.button4);
         google=findViewById(R.id.button5);
-        google.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent googlemap = new Intent(Acceuil.this, GoogleMaps.class);
-                startActivity(googlemap);
-            }
+        google.setOnClickListener(v -> {
+            Intent googlemap = new Intent(Acceuil.this, GoogleMaps.class);
+            startActivity(googlemap);
         });
-        esy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent ProfilUs = new Intent(Acceuil.this, essai.class);
-                startActivity(ProfilUs);
-            }
+        esy.setOnClickListener(v -> {
+            Intent ProfilUs = new Intent(Acceuil.this, essai.class);
+            startActivity(ProfilUs);
         });
 
 
@@ -57,21 +50,15 @@ private  Button esy , google;
         firebaseAuth=FirebaseAuth.getInstance();
         button_Profil= findViewById(R.id.button3);
         // hadi nrmlm tkon f navigation ya3ni l menu
-        button_Profil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent ProfilUs = new Intent(Acceuil.this, profilUser.class);
-                startActivity(ProfilUs);
-            }
+        button_Profil.setOnClickListener(v -> {
+            Intent ProfilUs = new Intent(Acceuil.this, profilUser.class);
+            startActivity(ProfilUs);
         });
-        linearLayout2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        linearLayout2.setOnClickListener(v -> {
 
-                DialogFragment singleChoiceDialog = new Single_choice_classification();
-                singleChoiceDialog.setCancelable(false);
-                singleChoiceDialog.show(getSupportFragmentManager(),"Single Choice Dialog");
-            }
+            DialogFragment singleChoiceDialog = new Single_choice_classification();
+            singleChoiceDialog.setCancelable(false);
+            singleChoiceDialog.show(getSupportFragmentManager(),"Single Choice Dialog");
         });
     }
     private  void checkUserStatus(){
