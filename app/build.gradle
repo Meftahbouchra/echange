@@ -39,15 +39,25 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.firebase:firebase-database:19.2.1'
-    implementation 'de.hdodenhof:circleimageview:3.0.0'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
-    implementation 'com.github.bumptech.glide:glide:4.10.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-
+    //recyclerview
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     //hadi support
-   implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    //circle imageview
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //Carousel
+    implementation 'com.synnapps:carouselview:0.1.5'
+    // GoogleMaps
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
 
 }

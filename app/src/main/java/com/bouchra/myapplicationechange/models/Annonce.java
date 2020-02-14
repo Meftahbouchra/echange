@@ -5,6 +5,10 @@ import java.util.Date;
 public class Annonce {
     private String idAnnonce;
     private String  titreAnnonce;
+    private String  descriptionAnnonce;
+    private String  articleEnRetour;
+    private Date dateAnnonce;
+    private String  statu;
 
     public Annonce() {
     }
@@ -18,8 +22,7 @@ public class Annonce {
         this.statu = statu;
     }
 
-    private String  descriptionAnnonce;
-    private String  articleEnRetour;
+
 
     public String getIdAnnonce() {
         return idAnnonce;
@@ -69,6 +72,5 @@ public class Annonce {
         this.statu = statu;
     }
 
-    private Date dateAnnonce;
-    private String  statu;
+
 }

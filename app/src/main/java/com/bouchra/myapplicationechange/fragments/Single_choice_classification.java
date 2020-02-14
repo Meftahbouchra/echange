@@ -3,7 +3,6 @@ package com.bouchra.myapplicationechange.fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -30,7 +29,8 @@ public class Single_choice_classification extends DialogFragment {
         try {
             mListener = (SingleChoiceListener) context;
         } catch (Exception e) {
-            throw new ClassCastException(getActivity().toString() + "SingleChoiceListener must implemented");
+            throw new ClassCastException(getActivity().toString() + "\n" +
+                    "SingleChoiceListener doit être implémenté");
         }
 
     }
@@ -40,10 +40,10 @@ public class Single_choice_classification extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String[] list = getActivity().getResources().getStringArray(R.array.choice_item);
-        builder.setTitle("select your choice")
+        builder.setTitle("Le classement est par :")
                 .setSingleChoiceItems(list, position, (dialog, which) -> position = which)
-                .setPositiveButton("ok", (dialog, which) -> mListener.onPositiveButtononCliked(list, position))
-                .setNegativeButton("cancel", (dialog, which) -> mListener.onNegativeButtononCliked());
+                .setPositiveButton("Ok", (dialog, which) -> mListener.onPositiveButtononCliked(list, position))
+                .setNegativeButton("Annuler", (dialog, which) -> mListener.onNegativeButtononCliked());
         return builder.create();
     }
 }

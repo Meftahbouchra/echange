@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.fragments.Connect;
+import com.bouchra.myapplicationechange.fragments.Sinscrire;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -25,7 +27,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView connect;
     private final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 100;
-    GoogleSignInClient  mGoogleSignInClient;
+    GoogleSignInClient mGoogleSignInClient;
 
 
     @Override
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-        mGoogleSignInClient= GoogleSignIn.getClient(this,gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         // Initialize Firebase Auth
 
 
@@ -70,8 +71,7 @@ public class MainActivity extends AppCompatActivity {
         connect = findViewById(R.id.connecte);
 
         connect.setOnClickListener(v -> {
-            Intent gotoo = new Intent(MainActivity.this, Connect.class);
-            startActivity(gotoo);
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment,new Connect(),"connect").commit();
         });
 
 // hdi tni dkhla f ta3 facebook
@@ -173,8 +173,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void inscrire(View view) {
-        Intent go = new Intent(MainActivity.this, Sinscrire.class);
-        startActivity(go);
+        // hada ta3 mn acti  nhal fragm
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment,new Sinscrire(),"inscrire").commit();
     }
 /////// hadi ta3 gooooogle
 
@@ -183,29 +183,36 @@ public class MainActivity extends AppCompatActivity {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's informatio
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        Toast.makeText(MainActivity.this, "" + user.getEmail(), Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this, Acceuil.class));
+                        finish();
+                        // updateUI(user);
+                    } else {
+                        // If sign in fails, display a message to the user.
 
-                            FirebaseUser user = mAuth.getCurrentUser();
-                           // updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-
-                            Toast.makeText(MainActivity.this, "Login Failed....", Toast.LENGTH_SHORT).show();
-                           // updateUI(null);
-                        }
-
-
+                        Toast.makeText(MainActivity.this, "Login Failed....", Toast.LENGTH_SHORT).show();
+                        // updateUI(null);
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                //grt and show error mesage
-                Toast.makeText(MainActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+
+
+                }).addOnFailureListener(e -> {
+                    //grt and show error mesage
+                    Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    @Override
+    // tgla3 l frag ila kyn ila mknch tkhroj ga3  mn had l act
+    public void onBackPressed() {
+        if (getSupportFragmentManager().findFragmentByTag("connect") != null){
+            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("connect")).commit();
+        } else if (getSupportFragmentManager().findFragmentByTag("inscrire") != null){
+            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("inscrire")).commit();
+        } else { super.onBackPressed();
+        }
     }
 }

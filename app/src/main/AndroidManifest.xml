@@ -3,6 +3,8 @@
     package="com.bouchra.myapplicationechange">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -11,15 +13,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.profilUser"></activity>
+        <activity android:name=".activities.GoogleMaps" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_Key" />
+
+        <activity android:name=".activities.essai" />
+        <activity android:name=".activities.profilUser" />
         <activity
             android:name=".activities.Acceuil"
             android:theme="@style/AppTheme.FullScreen" />
         <activity
-            android:name=".activities.Connect"
+            android:name=".fragments.Connect"
             android:theme="@style/AppTheme.FullScreen" />
         <activity
-            android:name=".activities.Sinscrire"
+            android:name=".fragments.Sinscrire"
             android:theme="@style/AppTheme.FullScreen" />
         <activity android:name=".activities.ProfileActivity" />
 

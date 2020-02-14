@@ -3,7 +3,7 @@
     <string name="facebook_app_id">557802801649601</string>
     <string name="fb_login_protocol_scheme">fb557802801649601</string>
     <string name="idnt">S identifier</string>
-<!--hado ta3 facebook-->>
+    <!--hado ta3 facebook-->>
     <string name="cancelled">Cancelled</string>
     <string name="ok">OK</string>
     <string name="FBexception">FacebookAuthorizationException.</string>
@@ -12,7 +12,10 @@
         <item>Timing</item>
     </string-array>
 
-<!--    <string-array name="choice_ville">
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--    <string-array name="choice_ville">
         <item> 1-Adrar</item>
         <item> 2-Chlef</item>
         <item>3-Laghouat </item>

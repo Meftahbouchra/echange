@@ -1,8 +1,5 @@
 package com.bouchra.myapplicationechange.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +7,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.fragments.Single_choice_classification;
@@ -21,7 +21,7 @@ public class Acceuil extends AppCompatActivity implements Single_choice_classifi
   private Button button_Profil;
  private LinearLayout  linearLayout1,linearLayout2;
 private  TextView textView1,textView2;
-
+private  Button esy , google;
 
 
 
@@ -35,6 +35,22 @@ private  TextView textView1,textView2;
         linearLayout2=findViewById(R.id.layout2);
         textView1=findViewById(R.id.txt11);
         textView2=findViewById(R.id.txt22);
+        esy = findViewById(R.id.button4);
+        google=findViewById(R.id.button5);
+        google.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent googlemap = new Intent(Acceuil.this, GoogleMaps.class);
+                startActivity(googlemap);
+            }
+        });
+        esy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ProfilUs = new Intent(Acceuil.this, essai.class);
+                startActivity(ProfilUs);
+            }
+        });
 
 
         // init

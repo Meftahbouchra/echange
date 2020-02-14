@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.Connect">
+    android:background="@android:color/white"
+    tools:context=".fragments.Connect">
 <!--com.google.android.material.textfield.TextInputLayout-->
     <LinearLayout
         android:id="@+id/l1l"
@@ -201,7 +202,7 @@
             android:layout_marginLeft="134dp"
             android:textSize="17sp"
             android:layout_marginTop="25dp"
-            android:onClick="go_to_inscri"/>
+           />
 
 
     </RelativeLayout>
