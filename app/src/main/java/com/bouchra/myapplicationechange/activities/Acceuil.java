@@ -2,6 +2,7 @@ package com.bouchra.myapplicationechange.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,7 +21,7 @@ public class Acceuil extends AppCompatActivity implements Single_choice_classifi
   private Button button_Profil;
  private LinearLayout  linearLayout1,linearLayout2;
 private  TextView textView1,textView2;
-private  Button esy , google;
+private  Button esy , google, loadImage;
 
 
 
@@ -36,9 +37,17 @@ private  Button esy , google;
         textView2=findViewById(R.id.txt22);
         esy = findViewById(R.id.button4);
         google=findViewById(R.id.button5);
+        loadImage=findViewById(R.id.button6);
+        loadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent loaddimage = new Intent(Acceuil.this, ImagesStorage.class);
+                startActivity(loaddimage);finish();
+            }
+        });
         google.setOnClickListener(v -> {
             Intent googlemap = new Intent(Acceuil.this, GoogleMaps.class);
-            startActivity(googlemap);
+            startActivity(googlemap); finish();
         });
         esy.setOnClickListener(v -> {
             Intent ProfilUs = new Intent(Acceuil.this, essai.class);

@@ -253,4 +253,14 @@
         android:layout_marginBottom="298dp"
         android:text="Maps" />
 
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="280dp"
+        android:layout_marginEnd="102dp"
+        android:text="loadImages" />
+
 </RelativeLayout>

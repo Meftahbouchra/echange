@@ -12,8 +12,24 @@
         <item>Timing</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="choix_categorie">
+        <item>Vèhicules </item>
+        <item> Tèlèphones</item>
+        <item>Automobiles </item>
+        <item>Pièces dètachèes </item>
+        <item> Immobilier</item>
+        <item>Vetements </item>
+        <item>Livres </item>
+        <item>Eletronique et electromènager </item>
+        <item> Accessoires de mode</item>
+        <item> Cosmetiques et Beautè</item>
+        <item> Maison et fournitures</item>
+        <item> Loisirs et Dèvertissements</item>
+        <item> Matiriaux et Equipements</item>
+
+    </string-array>
 
     <!--    <string-array name="choice_ville">
         <item> 1-Adrar</item>

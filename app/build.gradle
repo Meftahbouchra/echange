@@ -11,6 +11,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -58,6 +59,9 @@ dependencies {
     implementation 'com.synnapps:carouselview:0.1.5'
     // GoogleMaps
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.firebase:firebase-storage:19.1.1'
+// erreur
+    implementation 'com.android.support:multidex:1.0.3'
 
 
 }
