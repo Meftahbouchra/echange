@@ -7,13 +7,7 @@
     tools:context=".activities.ImagesStorage">
 
 
-    <Button
-        android:id="@+id/button_choose_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:text="Camera" />
+
 
     <TextView
         android:id="@+id/txtv"
@@ -88,7 +82,7 @@ android:layout_marginTop="20dp"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="16dp"
-        app:srcCompat="@drawable/ic_shopping"
+
          />
     <!--app:srcCompat="@drawable/ic_shopping-->
 
@@ -121,6 +115,8 @@ android:layout_marginTop="20dp"
         android:layout_marginStart="143dp"
         android:layout_marginBottom="79dp"
         android:text="bottom sheet" />
+
+
 
 
 </RelativeLayout>

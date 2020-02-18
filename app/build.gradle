@@ -64,7 +64,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:19.1.1'
 // erreur Multidex
     implementation 'androidx.multidex:multidex:2.0.1'
-
+    //dexter
+    implementation 'com.karumi:dexter:5.0.0'
 
 
 }
