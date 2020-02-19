@@ -40,7 +40,7 @@ import java.util.List;
 public class ImagesStorage extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Button up;
- StorageReference mStorageRef;
+    StorageReference mStorageRef;
 
     private static final String IMAGE_DIRECTORY = "/Echange d article";
     private int GALLERY = 1, CAMERA = 2;
@@ -64,15 +64,15 @@ public class ImagesStorage extends AppCompatActivity implements AdapterView.OnIt
         imageview = findViewById(R.id.image_view);
         // bottom shet
         Button buttonOpenBottomSheet = findViewById(R.id.button_sheet);
-        buttonOpenBottomSheet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
-                bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");
-            }
+        buttonOpenBottomSheet.setOnClickListener(v -> {
+            BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
+            bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");
         });
-
-
+// btn ajouter des article en retour
+        up.setOnClickListener(v -> {
+            Intent ajou = new Intent(ImagesStorage.this, Article_en_retour.class);
+            startActivity(ajou);
+        });
 
     }
 
@@ -185,8 +185,6 @@ public class ImagesStorage extends AppCompatActivity implements AdapterView.OnIt
                     public void onPermissionRationaleShouldBeShown(List<com.karumi.dexter.listener.PermissionRequest> permissions, PermissionToken token) {
 
                     }
-
-
 
 
                 }).

@@ -10,8 +10,7 @@ public class Annonce {
     private Date dateAnnonce;
     private String  statu;
 
-    public Annonce() {
-    }
+
 
     public Annonce(String idAnnonce, String titreAnnonce, String descriptionAnnonce, String articleEnRetour, Date dateAnnonce, String statu) {
         this.idAnnonce = idAnnonce;

@@ -26,7 +26,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     //view holder class
     // hadi li dakhal hadi mla claas  hiya li masoola 3la les compos ta3 laliste
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView title , desc;
         CarouselView carouselView;
@@ -73,7 +73,7 @@ private  Context context;
         holder.carouselView.setPageCount(mImages.length);
         holder.carouselView.setImageListener((pos, imageView) -> Picasso.get().load(mImages[pos]).placeholder(R.color.black).into(imageView));
     }
-
+//la taille de notre liste
     @Override
     public int getItemCount() {
         return posts.size();

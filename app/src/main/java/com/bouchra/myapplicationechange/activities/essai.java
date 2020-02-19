@@ -19,6 +19,7 @@ public class essai extends AppCompatActivity {
     private ArrayList<PosteModelAnnonce> posts;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

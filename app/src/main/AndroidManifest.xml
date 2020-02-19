@@ -5,14 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-
-
-
-
-    <uses-permission android:name="android.permission.CAMERA"></uses-permission>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="androidx.multidex.MultiDexApplication"
@@ -22,9 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.ImagesStorage"
-            >
-            <!-- nkado ndro kima hadik taa activit lwla-->
+        <activity android:name=".activities.Article_en_retour"></activity>
+        <activity android:name=".activities.ImagesStorage">
+
+            <!-- nkado ndro kima hadik taa activit lwla -->
         </activity>
         <activity android:name=".activities.GoogleMaps" />
 
@@ -76,20 +72,13 @@
         </activity>
 
         <provider
-
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.bouchra.myapplicationechange.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true"
-
-
-            >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/fille_paths">
-
-            </meta-data>
-
+                android:resource="@xml/fille_paths"></meta-data>
         </provider>
     </application>
 
