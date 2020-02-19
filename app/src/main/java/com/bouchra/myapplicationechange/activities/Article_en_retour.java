@@ -32,23 +32,30 @@ public class Article_en_retour extends AppCompatActivity {
         recyclerView = findViewById(R.id.rec_retour);
 
         ArrayList<String> posts = new ArrayList<>();
+        //isEmpty ewt vide    isEmpty()
 
         textView.setOnClickListener(v -> {
             String x = editText.getText().toString();
-            if (posts.size() < 10) {
-                posts.add(x);
-                editText.setText("");
-                postAdapter = new RecycleViewArticleRetour(this, posts);
-                recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                recyclerView.setAdapter(postAdapter);
+            if( !x.isEmpty()){
+                if (posts.size() < 10) {
+                    posts.add(x);
+                    editText.setText("");
+                    postAdapter = new RecycleViewArticleRetour(this, posts);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                    recyclerView.setAdapter(postAdapter);
 
-            } else {
-                editText.setEnabled(false);
-                editText.setText("");
-                Toast.makeText(this, "Dèsolè, il n'ya pas pour ajouter plus d'article", Toast.LENGTH_SHORT).show();
+                } else {
+                    editText.setEnabled(false);
+                    editText.setText("");
+                    Toast.makeText(this, "Dèsolè, il n'ya pas pour ajouter plus d'article", Toast.LENGTH_SHORT).show();
 
 
-            }// vous avez atteint la limite des postes possible
+                }// vous avez atteint la limite des postes possible
+
+
+            }else{
+                Toast.makeText(this, "remplir le champs", Toast.LENGTH_SHORT).show();
+            }
 
         });
 

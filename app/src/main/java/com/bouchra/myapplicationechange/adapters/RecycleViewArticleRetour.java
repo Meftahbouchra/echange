@@ -27,17 +27,17 @@ public class RecycleViewArticleRetour extends RecyclerView.Adapter<RecycleViewAr
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            article=itemView.findViewById(R.id.text_retour) ;
-            remove=itemView.findViewById(R.id.btun_remove);
+            article = itemView.findViewById(R.id.text_retour);
+            remove = itemView.findViewById(R.id.btun_remove);
         }
     }
 
-    private  Context context;
-    private ArrayList<String> list ;
+    private Context context;
+    private ArrayList<String> list;
 
     public RecycleViewArticleRetour(Context c, ArrayList<String> articleRetour) {
-        this.context=c;
-        list=articleRetour;
+        this.context = c;
+        list = articleRetour;
     }
 
     @NonNull
@@ -53,7 +53,13 @@ public class RecycleViewArticleRetour extends RecyclerView.Adapter<RecycleViewAr
     public void onBindViewHolder(@NonNull ViewHolder h, int position) {
 
         h.article.setText(list.get(position));
-        h.remove.setText(list.get(position));
+        // h.remove.setText(list.get(position));
+        h.remove.setText("-");
+        h.remove.setOnClickListener(v -> {
+
+            list.remove(position);
+            this.notifyDataSetChanged();
+        });
 
     }
 
