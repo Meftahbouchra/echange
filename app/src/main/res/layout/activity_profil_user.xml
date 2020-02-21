@@ -1,195 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.profilUser">
-
-    <LinearLayout
-        android:id="@+id/pr"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/ic_arrow_back_"
-            ></TextView>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@+id/pr"
-        android:id="@+id/profili"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-     android:layout_marginTop="50dp"
-        android:orientation="horizontal">
-
-        <de.hdodenhof.circleimageview.CircleImageView
- android:id="@+id/imgn"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:layout_marginStart="150dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-
-            android:layout_marginBottom="20dp"
-            app:civ_border_width="2dp" />
-    </LinearLayout>
-
-
-    <TableLayout
-        android:id="@+id/njb"
-        android:layout_below="@id/profili"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="30dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-        <TableRow   android:background="@drawable/bordr_table" >
-
-            <TextView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:gravity="center"
-
-                android:background="@drawable/ic_person"
-                android:textSize="20sp"></TextView>
-            <TextView
-                android:id="@+id/n1"
-                android:layout_width="270dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:background="@drawable/bordr_table"
-                android:textSize="20sp"></TextView>
-
-        </TableRow>
-
-        <TableRow
-            android:background="@drawable/bordr_table">
-
-            <TextView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:gravity="center"
-                android:background="@drawable/ic_local_phone"
-                android:textSize="20sp"></TextView>
-            <TextView
-                android:id="@+id/n2"
-                android:layout_width="250dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:background="@drawable/bordr_table"
-
-                android:textSize="20sp"></TextView>
-
-
-
-        </TableRow>
-        <TableRow
-            android:background="@drawable/bordr_table">
-
-            <TextView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:gravity="center"
-                android:background="@drawable/ic_location"
-                android:textSize="20sp"></TextView>
-
-            <TextView
-                android:id="@+id/n3"
-                android:layout_width="250dp"
-                android:layout_height="73dp"
-                android:background="@drawable/bordr_table"
-                android:gravity="center"
-
-                android:textSize="20sp"></TextView>
-
-        </TableRow>
-        <TableRow
-            android:background="@drawable/bordr_table">
-
-            <TextView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:gravity="center"
-                android:background="@drawable/ic_email"
-                android:textSize="20sp"></TextView>
-            <TextView
-                android:layout_width="250dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:id="@+id/n4"
-                android:background="@drawable/bordr_table"
-
-                android:textSize="20sp"></TextView>
-
-        </TableRow>
-
-
-
-    </TableLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/njb"
         android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/njb"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="50dp"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-          android:layout_gravity="center"
-android:textColor="@color/black"
-            android:text="Le nombre d' annonces :"
-            android:textSize="20sp"></TextView>
-        <TextView
-            android:id="@+id/nbr1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:layout_marginLeft="10dp"
-            android:text="0"
-            android:textSize="20sp"></TextView>
-        </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="405dp">
+            <LinearLayout
+                android:background="@drawable/choix"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:orientation="vertical">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_marginTop="45dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/user"/>
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Meftah Bouchra"
+                    android:textColor="#fff"
+                    android:textStyle="bold"
+                    android:textSize="21sp"/>
+            </LinearLayout>
+            <androidx.cardview.widget.CardView
+                android:layout_width="400dp"
+                android:layout_height="120dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="275dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+                    <LinearLayout
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_weight="1.5"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Avis moyen"
+                            android:textSize="20sp"
+                            />
+                        <LinearLayout
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
 
+
+                            <TextView
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="125"
+                                android:textStyle="bold"
+                                android:textSize="20sp"
+
+                                android:textColor="@color/black"/>
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_star_black_24dp"
+                                android:tint="@color/gold"
+
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_weight="1.5"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Commentaire"
+                            android:textSize="20sp"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10dp"
+                            android:text="360"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="360dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_gravity="center"
-            android:textColor="@color/black"
+            android:layout_marginTop="45dp">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:paddingLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_email"/>
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="Wiliam@gmail.com"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:paddingLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_local_phone"/>
+                <TextView
+                    android:textStyle="bold"
 
-            android:text="Le nombre d 'offres :"
-            android:textSize="20sp"></TextView>
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="+213"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:paddingLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_location"/>
+                <TextView
+                    android:textStyle="bold"
+
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="Add to group"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/grey"/>
         <TextView
-            android:id="@+id/nbr2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:layout_marginLeft="10dp"
-            android:text="0"
-            android:textSize="20sp"></TextView>
-    </LinearLayout>
+            android:text="Les commentaire"
+            android:gravity="center"
+            android:textColor="@color/black"/>
+        <ImageView
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/grey"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:nestedScrollingEnabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recyle_commentaire">
+        </androidx.recyclerview.widget.RecyclerView>
+
+
 
     </LinearLayout>
-
-
-
-
-
-</RelativeLayout>
+</androidx.core.widget.NestedScrollView>
 

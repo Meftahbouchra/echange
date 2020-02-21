@@ -53,11 +53,13 @@ public class RecycleViewArticleRetour extends RecyclerView.Adapter<RecycleViewAr
     public void onBindViewHolder(@NonNull ViewHolder h, int position) {
 
         h.article.setText(list.get(position));
-        // h.remove.setText(list.get(position));
+
         h.remove.setText("-");
         h.remove.setOnClickListener(v -> {
 
             list.remove(position);
+            // adapter hna khas ndirolah refresh
+            // ins pour refresh vta3 view
             this.notifyDataSetChanged();
         });
 

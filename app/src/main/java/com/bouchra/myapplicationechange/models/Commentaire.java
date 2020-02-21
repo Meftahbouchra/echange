@@ -6,15 +6,27 @@ public class Commentaire {
     private String idCommentaire;
     private Date dateCommentaire;
     private String contenuCommentaire;
+    private String nameUser;
     private float repos;// nbr *
+
+    public String getNameUser() {
+        return nameUser;
+    }
+
+    public void setNameUser(String nameUser) {
+        this.nameUser = nameUser;
+    }
+
+
 
     public Commentaire() {
     }
 
-    public Commentaire(String idCommentaire, Date dateCommentaire, String contenuCommentaire, float repos) {
+    public Commentaire(String idCommentaire, Date dateCommentaire, String contenuCommentaire, String nameUser, float repos) {
         this.idCommentaire = idCommentaire;
         this.dateCommentaire = dateCommentaire;
         this.contenuCommentaire = contenuCommentaire;
+        this.nameUser = nameUser;
         this.repos = repos;
     }
 

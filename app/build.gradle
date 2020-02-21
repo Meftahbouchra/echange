@@ -66,6 +66,8 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     //dexter
     implementation 'com.karumi:dexter:5.0.0'
+    // cardview
+    implementation 'androidx.cardview:cardview:1.0.0'
 
 
 }
