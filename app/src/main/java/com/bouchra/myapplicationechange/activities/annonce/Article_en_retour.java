@@ -1,4 +1,4 @@
-package com.bouchra.myapplicationechange.activities;
+package com.bouchra.myapplicationechange.activities.annonce;
 
 import android.os.Bundle;
 import android.widget.EditText;
@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.RecycleViewArticleRetour;
+import com.bouchra.myapplicationechange.models.Annonce;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -21,6 +24,7 @@ public class Article_en_retour extends AppCompatActivity {
 
     private EditText editText;
     private TextView textView;
+    private Annonce annonce;
 
 
     @Override
@@ -30,7 +34,7 @@ public class Article_en_retour extends AppCompatActivity {
         editText = findViewById(R.id.edittxt_article);
         textView = findViewById(R.id.ajout_article);
         recyclerView = findViewById(R.id.rec_retour);
-
+        annonce = (Annonce) getIntent().getSerializableExtra("annonce");
         ArrayList<String> posts = new ArrayList<>();
         //isEmpty ewt vide    isEmpty()
 
@@ -56,6 +60,20 @@ public class Article_en_retour extends AppCompatActivity {
             }else{
                 Toast.makeText(this, "remplir le champs", Toast.LENGTH_SHORT).show();
             }
+
+        });
+
+
+        findViewById(R.id.ok).setOnClickListener(v -> {
+            annonce.getArticleEnRetour().addAll(posts);
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Annonce");
+            databaseReference.setValue(annonce).addOnCompleteListener(task2 -> {
+                if (task2.isSuccessful()) {
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
+                }
+            });
 
         });
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Echange d articles</string>
+    <string name="app_name">EchangeArticles</string>
     <string name="facebook_app_id">557802801649601</string>
     <string name="fb_login_protocol_scheme">fb557802801649601</string>
     <string name="idnt">S identifier</string>

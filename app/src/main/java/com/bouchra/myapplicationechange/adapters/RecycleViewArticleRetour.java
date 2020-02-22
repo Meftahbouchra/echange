@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.activities.Article_en_retour;
+import com.bouchra.myapplicationechange.activities.annonce.Article_en_retour;
 
 import java.util.ArrayList;
 

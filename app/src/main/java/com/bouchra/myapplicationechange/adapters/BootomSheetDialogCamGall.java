@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.activities.ImagesStorage;
+import com.bouchra.myapplicationechange.activities.annonce.ImagesStorage;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {

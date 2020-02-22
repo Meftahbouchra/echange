@@ -1,27 +1,48 @@
 package com.bouchra.myapplicationechange.models;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class Annonce {
+public class Annonce implements Serializable {// bch nkdo nrsloha ù blasa lblsa whdkhra
     private String idAnnonce;
     private String  titreAnnonce;
     private String  descriptionAnnonce;
-    private String  articleEnRetour;
+    private ArrayList<String> articleEnRetour = new ArrayList<>();
     private Date dateAnnonce;
     private String  statu;
+    private String  userId;
+    private ArrayList<String> images = new ArrayList<>();
 
+    public Annonce() {
+    }
 
-
-    public Annonce(String idAnnonce, String titreAnnonce, String descriptionAnnonce, String articleEnRetour, Date dateAnnonce, String statu) {
+    public Annonce(String idAnnonce, String titreAnnonce, String descriptionAnnonce, ArrayList<String> articleEnRetour, Date dateAnnonce, String statu, String userId, ArrayList<String> images) {
         this.idAnnonce = idAnnonce;
         this.titreAnnonce = titreAnnonce;
         this.descriptionAnnonce = descriptionAnnonce;
         this.articleEnRetour = articleEnRetour;
         this.dateAnnonce = dateAnnonce;
         this.statu = statu;
+        this.userId = userId;
+        this.images = images;
     }
 
+    public String getUserId() {
+        return userId;
+    }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public ArrayList<String> getImages() {
+        return images;
+    }
+
+    public void setImages(ArrayList<String> images) {
+        this.images = images;
+    }
 
     public String getIdAnnonce() {
         return idAnnonce;
@@ -47,11 +68,11 @@ public class Annonce {
         this.descriptionAnnonce = descriptionAnnonce;
     }
 
-    public String getArticleEnRetour() {
+    public ArrayList<String>  getArticleEnRetour() {
         return articleEnRetour;
     }
 
-    public void setArticleEnRetour(String articleEnRetour) {
+    public void setArticleEnRetour(ArrayList<String>  articleEnRetour) {
         this.articleEnRetour = articleEnRetour;
     }
 

@@ -4,10 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ImagesStorage">
+    tools:context=".activities.annonce.ImagesStorage">
 
 
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="16dp"
 
+        />
 
     <TextView
         android:id="@+id/txtv"
@@ -19,92 +25,6 @@
         android:textColor="@color/bleu"
         android:textSize="14dp" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtv"
-        android:id="@+id/lyt"
-
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
-
-        <TableLayout
-            android:id="@+id/njb"
-            android:layout_marginLeft="150dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TableRow android:background="@drawable/bordr_table">
-
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint=" Nom d'article "
-                    android:id="@+id/nom_annonce"
-                    android:inputType="text"
-                     />
-            </TableRow>
-        </TableLayout>
-        <TableLayout
-            android:id="@+id/nb"
-android:layout_marginTop="20dp"
-            android:layout_width="300dp"
-            android:layout_marginLeft="65dp"
-            android:layout_height="wrap_content">
-
-            <TableRow android:background="@drawable/bordr_table">
-
-                <EditText
-                    android:layout_width="200dp"
-                    android:layout_height="100dp"
-                    android:hint=" Description "
-                    android:id="@+id/desci_annonce"
-                    android:inputType="text"
-                    />
-            </TableRow>
-        </TableLayout>
-
-
-    </LinearLayout>
-
-
-    <Spinner
-        android:id="@+id/spinner_cat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lyt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="300dp"
-        android:layout_marginTop="70dp" />
-
-    <ImageView
-        android:id="@+id/image_view"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="16dp"
-
-         />
-    <!--app:srcCompat="@drawable/ic_shopping-->
-
-    <!--   <ProgressBar
-           android:id="@+id/progress_bar"
-           style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_above="@+id/button_upload"
-           android:layout_alignParentStart="true"
-           android:layout_marginBottom="16dp" />-->
-
-    <Button
-        android:id="@+id/button_upload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="14dp"
-        android:layout_marginBottom="6dp"
-        android:text="Upload" />
-
     <Button
         android:id="@+id/button_sheet"
         android:layout_width="wrap_content"
@@ -115,6 +35,18 @@ android:layout_marginTop="20dp"
         android:layout_marginStart="143dp"
         android:layout_marginBottom="79dp"
         android:text="bottom sheet" />
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:textAllCaps="false"
+        android:text="Next" />
 
 
 

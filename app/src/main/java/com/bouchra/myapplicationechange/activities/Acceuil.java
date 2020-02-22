@@ -2,7 +2,6 @@ package com.bouchra.myapplicationechange.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.activities.annonce.AnnonceActivity;
 import com.bouchra.myapplicationechange.fragments.Single_choice_classification;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,16 +38,15 @@ private  Button esy , google, loadImage;
         esy = findViewById(R.id.button4);
         google=findViewById(R.id.button5);
         loadImage=findViewById(R.id.button6);
-        loadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent loaddimage = new Intent(Acceuil.this, ImagesStorage.class);
-                startActivity(loaddimage);finish();
-            }
+        loadImage.setOnClickListener(v -> {
+            Intent loaddimage = new Intent(Acceuil.this, AnnonceActivity.class);
+            startActivity(loaddimage);
+            finish();
         });
         google.setOnClickListener(v -> {
             Intent googlemap = new Intent(Acceuil.this, GoogleMaps.class);
-            startActivity(googlemap); finish();
+            startActivity(googlemap);
+            finish();
         });
         esy.setOnClickListener(v -> {
             Intent ProfilUs = new Intent(Acceuil.this, essai.class);

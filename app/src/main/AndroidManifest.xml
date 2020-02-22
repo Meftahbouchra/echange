@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+
     <application
         android:name="androidx.multidex.MultiDexApplication"
         android:allowBackup="true"
@@ -17,8 +18,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.Article_en_retour"></activity>
-        <activity android:name=".activities.ImagesStorage">
+        <activity android:name=".activities.annonce.AnnonceActivity"></activity>
+        <activity android:name=".activities.annonce.Article_en_retour" />
+        <activity android:name=".activities.annonce.ImagesStorage">
 
             <!-- nkado ndro kima hadik taa activit lwla -->
         </activity>
@@ -78,7 +80,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/fille_paths"></meta-data>
+                android:resource="@xml/fille_paths" />
         </provider>
     </application>
 
