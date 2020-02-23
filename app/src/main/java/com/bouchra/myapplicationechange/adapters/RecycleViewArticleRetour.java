@@ -60,7 +60,9 @@ public class RecycleViewArticleRetour extends RecyclerView.Adapter<RecycleViewAr
             list.remove(position);
             // adapter hna khas ndirolah refresh
             // ins pour refresh vta3 view
+
             this.notifyDataSetChanged();
+
         });
 
     }

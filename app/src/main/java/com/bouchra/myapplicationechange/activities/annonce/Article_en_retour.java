@@ -40,7 +40,32 @@ public class Article_en_retour extends AppCompatActivity {
 
         textView.setOnClickListener(v -> {
             String x = editText.getText().toString();
-            if( !x.isEmpty()){
+
+             if (posts.size() < 10){
+                 if( !x.isEmpty()){
+                     posts.add(x);
+                     editText.setText("");
+                     postAdapter = new RecycleViewArticleRetour(this, posts);
+                     recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                     recyclerView.setAdapter(postAdapter);
+
+
+                 }else{
+                     Toast.makeText(this, "remplir le champs", Toast.LENGTH_SHORT).show();
+                 }
+
+
+
+             }else {
+                 editText.setEnabled(false);
+                 editText.setText("");
+                 Toast.makeText(this, "Dèsolè, il n'ya pas pour ajouter plus d'article", Toast.LENGTH_SHORT).show();
+             }// vous avez atteint la limite des postes possible
+
+
+
+
+          /*  if( !x.isEmpty()){
                 if (posts.size() < 10) {
                     posts.add(x);
                     editText.setText("");
@@ -60,7 +85,7 @@ public class Article_en_retour extends AppCompatActivity {
             }else{
                 Toast.makeText(this, "remplir le champs", Toast.LENGTH_SHORT).show();
             }
-
+*/
         });
 
 

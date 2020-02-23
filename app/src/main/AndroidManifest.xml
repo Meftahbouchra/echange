@@ -18,9 +18,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.annonce.AnnonceActivity"></activity>
-        <activity android:name=".activities.annonce.Article_en_retour" />
-        <activity android:name=".activities.annonce.ImagesStorage">
+        <activity android:name=".activities.annonce.AnnonceActivity"
+            android:theme="@style/AppTheme.FullScreen"></activity>
+        <activity android:name=".activities.annonce.Article_en_retour"
+            android:theme="@style/AppTheme.FullScreen"/>
+        <activity android:name=".activities.annonce.ImagesStorage"
+            android:theme="@style/AppTheme.FullScreen">
 
             <!-- nkado ndro kima hadik taa activit lwla -->
         </activity>

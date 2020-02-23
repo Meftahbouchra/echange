@@ -4,88 +4,107 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.annonce.AnnonceActivity">
 
-    <LinearLayout
+    tools:context=".activities.annonce.AnnonceActivity"
+    android:background="@color/Login_form_details_medium">
+
+    <TextView
+        android:id="@+id/intro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtv"
-        android:id="@+id/lyt"
+        android:layout_alignParentStart="true"
+        android:textSize="19sp"
+        android:textColor="@color/Login_form_details_ligh"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="122dp"
+        android:layout_marginTop="60dp"
+        android:text="Ajouter votre annonce" />
 
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
+    <EditText
+        android:id="@+id/nom_annonce"
+        android:layout_width="232dp"
+        android:layout_height="52dp"
+        android:layout_below="@+id/intro"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_vertical"
+        android:textColorHint="@color/black"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="86dp"
+        android:layout_marginBottom="492dp"
+        android:paddingLeft="10dp"
 
-        <TableLayout
-            android:id="@+id/njb"
-            android:layout_marginLeft="150dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        android:background="@drawable/bordr_table"
+        android:hint=" Nom d'article "
+        android:inputType="text" />
 
-            <TableRow android:background="@drawable/bordr_table">
-
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint=" Nom d'article "
-                    android:id="@+id/nom_annonce"
-                    android:inputType="text"
-                    />
-            </TableRow>
-        </TableLayout>
-        <TableLayout
-            android:id="@+id/nb"
-            android:layout_marginTop="20dp"
-            android:layout_width="300dp"
-            android:layout_marginLeft="65dp"
-            android:layout_height="wrap_content">
-
-            <TableRow android:background="@drawable/bordr_table">
-
-                <EditText
-                    android:layout_width="200dp"
-                    android:layout_height="100dp"
-                    android:hint=" Description "
-                    android:id="@+id/desci_annonce"
-                    android:inputType="text"
-                    />
-            </TableRow>
-        </TableLayout>
-
-
-    </LinearLayout>
-
+    <EditText
+        android:id="@+id/desci_annonce"
+        android:layout_width="232dp"
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="94dp"
+        android:layout_marginBottom="272dp"
+        android:paddingLeft="10dp"
+        android:background="@drawable/bordr_table"
+        android:paddingBottom="150dp"
+      android:hint="Description"
+        android:inputType="text"
+        android:textColorHint="@color/black" />
 
     <Spinner
         android:id="@+id/spinner_cat"
-        android:layout_width="match_parent"
+        android:layout_width="232dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lyt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="300dp"
-        android:layout_marginTop="70dp" />
-
-
-    <!--app:srcCompat="@drawable/ic_shopping-->
-
-    <!--   <ProgressBar
-           android:id="@+id/progress_bar"
-           style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_above="@+id/button_upload"
-           android:layout_alignParentStart="true"
-           android:layout_marginBottom="16dp" />-->
+        android:layout_below="@+id/desci_annonce"
+        android:layout_marginStart="94dp"
+        android:layout_marginTop="-250dp" />
+    <Spinner
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/spinner_ville"
+        android:layout_width="161dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner_cat" />
+    <Spinner
+        android:layout_marginTop="20dp"
+        android:id="@+id/spinner_wilaya"
+        android:layout_width="161dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner_cat"
+        android:layout_marginLeft="220dp"
+        />
 
     <Button
         android:id="@+id/next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="14dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginBottom="20dp"
         android:text="Suivant"
+        android:textColor="@color/Login_form_details"
+        android:background="@drawable/btn_suiv"
         android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/annuler"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/spinner_ville"
+     android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp"
+       android:textColor="@color/Login_form_details_ligh"
+        android:layout_marginTop="122dp"
+        android:text="Annuler"
+        android:background="@color/gris"
+        android:textAllCaps="false"/>
+
+
 
 
 </RelativeLayout>

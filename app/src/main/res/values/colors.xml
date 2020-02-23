@@ -8,11 +8,12 @@
     <color name="bleuk">#021163</color>
     <color name="purple">#AC1DC4</color>
     <color name="Login_form_details">#ccffffff</color>
-    <color name="Login_form_details_medium">#66ffffff</color>
+    <color name="Login_form_details_medium">#66968B8B</color>
     <color name="Login_form">#871B9B</color>
     <color name="Login_form_details_ligh">#4B045C</color>
     <color name="purpletrasp">#D56AE7</color>
     <color name="bleutransp">#537BEE</color>
     <color name="gold">#DACA3E</color>
     <color name="grey">#BBBBBB</color>
+    <color name="gris">#A8A5AD</color>
 </resources>

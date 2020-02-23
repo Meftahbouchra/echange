@@ -45,6 +45,10 @@ public class Connect extends Fragment {
         imageButton = view.findViewById(R.id.btnplac);
         txt_forgtpaswrd = view.findViewById(R.id.tvoublie);
         sins=view.findViewById(R.id.go_insc);
+       imageButton.setOnClickListener(v -> {
+           getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment,new Sinscrire(),"insr").commit();
+       });
+
 
         sins.setOnClickListener(v -> {
            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment,new Sinscrire(),"inscrire").commit();
