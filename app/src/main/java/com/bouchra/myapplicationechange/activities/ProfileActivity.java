@@ -106,7 +106,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     public void goToAcc(View view) {
-        Intent intt = new Intent(ProfileActivity.this, Acceuil.class);
+        Intent intt = new Intent(ProfileActivity.this, debut.class);
         startActivity(intt);
     }
 }

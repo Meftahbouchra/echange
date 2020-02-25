@@ -26,6 +26,7 @@ public class CommentaireAdapter extends RecyclerView.Adapter<CommentaireAdapter.
         this.commentaires = commentaires;
     }
 
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

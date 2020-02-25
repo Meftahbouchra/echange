@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.fragments.Acceuil;
 import com.bouchra.myapplicationechange.fragments.Connect;
 import com.bouchra.myapplicationechange.fragments.Sinscrire;
 import com.facebook.AccessToken;

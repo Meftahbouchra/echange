@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.activities.Acceuil;
+import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -91,7 +91,7 @@ public class Sinscrire extends Fragment {
                         usr.setIdMembre(ID);
                         databaseReference.setValue(usr).addOnCompleteListener(task2 -> {
                             if (task2.isSuccessful()) {
-                                startActivity(new Intent(getActivity(), Acceuil.class));
+                                startActivity(new Intent(getActivity(), debut.class));
                                 getActivity().finish();
                             } else {
                                 Toast.makeText(getContext(), "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();

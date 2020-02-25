@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.activities.Acceuil;
+import com.bouchra.myapplicationechange.activities.debut;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -54,6 +54,7 @@ public class Connect extends Fragment {
            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment,new Sinscrire(),"inscrire").commit();
 
         });
+
         btnn_Login.setOnClickListener(v -> {
             eemail = txtt_email.getText().toString();
             ppassword = txtt_password.getText().toString();
@@ -80,7 +81,7 @@ public class Connect extends Fragment {
     private void loginUser() {
         mAut.signInWithEmailAndPassword(eemail, ppassword).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                startActivity(new Intent(getContext(), Acceuil.class));
+                startActivity(new Intent(getContext(), debut.class));
                 getActivity().finish();
             } else {
                 Toast.makeText(getContext(), " impossible de se connecter ,vèrifier vos donnèes", Toast.LENGTH_SHORT).show();
