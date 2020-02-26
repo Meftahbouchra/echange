@@ -20,17 +20,17 @@ import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.GoogleMaps;
 import com.bouchra.myapplicationechange.activities.MainActivity;
 import com.bouchra.myapplicationechange.activities.annonce.AnnonceActivity;
-import com.bouchra.myapplicationechange.activities.essai;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
 public class Acceuil extends Fragment implements Single_choice_classification.SingleChoiceListener{
     private FirebaseAuth firebaseAuth;
-    private Button button_Profil;
+
     private LinearLayout linearLayout1,linearLayout2;
     private TextView textView1,textView2;
-    private  Button esy , google, loadImage;
+    private  Button  google;
+    private LinearLayout addAnnonce;
 
    public Acceuil(){
 
@@ -44,35 +44,27 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         linearLayout2=view.findViewById(R.id.layout2);
         textView1=view.findViewById(R.id.txt11);
         textView2=view.findViewById(R.id.txt22);
-        esy = view.findViewById(R.id.button4);
+
         google=view.findViewById(R.id.button5);
-        loadImage=view.findViewById(R.id.button6);
-        loadImage.setOnClickListener(v -> {
+
+        addAnnonce=view.findViewById(R.id.ajou_annonce);
+        addAnnonce.setOnClickListener(v -> {
             Intent loaddimage = new Intent(getActivity(), AnnonceActivity.class);
             startActivity(loaddimage);
             getActivity().finish();
         });
+
         google.setOnClickListener(v -> {
             Intent googlemap = new Intent(getActivity(), GoogleMaps.class);
             startActivity(googlemap);
             getActivity().finish();
         });
-        esy.setOnClickListener(v -> {
-            Intent ProfilUs = new Intent(getActivity(), essai.class);
-            startActivity(ProfilUs);
-            getActivity().finish();
-        });
+
 
 
         // init
         firebaseAuth=FirebaseAuth.getInstance();
-        button_Profil= view.findViewById(R.id.button3);
-        // hadi nrmlm tkon f navigation ya3ni l menu
-        button_Profil.setOnClickListener(v -> {
-            Intent ProfilUs = new Intent(getActivity(), profilUser.class);
-            startActivity(ProfilUs);
-            getActivity().finish();
-        });
+
         linearLayout2.setOnClickListener(v -> {
 
             DialogFragment singleChoiceDialog = new Single_choice_classification();

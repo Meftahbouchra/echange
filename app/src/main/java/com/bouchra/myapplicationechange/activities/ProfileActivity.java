@@ -98,7 +98,7 @@ public class ProfileActivity extends AppCompatActivity {
 */
 
     }
-
+//logout
     private void updateUI() {
         startActivity(new Intent(ProfileActivity.this, MainActivity.class));
         finish();

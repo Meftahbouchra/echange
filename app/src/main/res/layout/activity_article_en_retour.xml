@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Login_form_details_medium"
+    android:background="#efefef"
     tools:context=".activities.annonce.Article_en_retour">
 
     <TextView

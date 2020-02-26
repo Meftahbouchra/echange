@@ -36,7 +36,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_Key" />
 
-        <activity android:name=".activities.essai" />
         <activity android:name=".activities.profilUser" />
         <activity
             android:name=".fragments.Acceuil"
