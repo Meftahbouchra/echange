@@ -34,7 +34,7 @@ public class plus extends Fragment {
         View view =  inflater.inflate(R.layout.activity_plus, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        annonce=view.findViewById(R.id.annonce);
+      //  annonce=view.findViewById(R.id.annonce);
         message=view.findViewById(R.id.message);
         notification=view.findViewById(R.id.notification);
         historique=view.findViewById(R.id.historique);
