@@ -3,6 +3,7 @@
     package="com.bouchra.myapplicationechange">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -17,7 +18,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.debut"></activity>
+        <activity android:name=".activities.ChatActivity"></activity>
+        <activity android:name=".activities.debut" />
         <activity
             android:name=".activities.annonce.AnnonceActivity"
             android:theme="@style/AppTheme.FullScreen" />

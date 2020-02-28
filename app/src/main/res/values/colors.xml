@@ -16,4 +16,7 @@
     <color name="gold">#DACA3E</color>
     <color name="grey">#BBBBBB</color>
     <color name="gris">#A8A5AD</color>
+    <color name="orange">#FF7D00</color>
+    <color name="background">#e9e3dd</color>
+
 </resources>

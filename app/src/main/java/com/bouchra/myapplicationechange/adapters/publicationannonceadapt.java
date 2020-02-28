@@ -55,7 +55,7 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
         holder.textView.setText(a.getTitreAnnonce());
       //  holder.imageView.setImageBitmap(a.getImages());
         //Loading image from Glide library.
-        Log.e("Url" ,a.getImages().get(0) );
+        Log.e("Url" ,a.getImages().get(0));
         Glide.with(context)
                 .load(a.getImages().get(0))
                 .centerCrop()
