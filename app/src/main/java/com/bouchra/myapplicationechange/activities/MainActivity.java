@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.fragments.Acceuil;
 import com.bouchra.myapplicationechange.fragments.Connect;
 import com.bouchra.myapplicationechange.fragments.Sinscrire;
 import com.facebook.AccessToken;
@@ -189,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                         // Sign in success, update UI with the signed-in user's informatio
                         FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(MainActivity.this, "" + user.getEmail(), Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(MainActivity.this, Acceuil.class));
+                        startActivity(new Intent(MainActivity.this, debut.class));
                         finish();
                         // updateUI(user);
                     } else {

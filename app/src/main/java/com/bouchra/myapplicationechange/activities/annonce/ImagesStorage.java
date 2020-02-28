@@ -198,17 +198,19 @@ private void  Fileuploader(){
         ref.putStream(stream)
                 .addOnSuccessListener(taskSnapshot -> {
                     Toast.makeText(ImagesStorage.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                        })
+                    taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
+                        annonce.getImages().add(String.valueOf(task));
+                        Log.e("Image link" , String.valueOf(task));
+                        Intent ajou = new Intent(ImagesStorage.this, Article_en_retour.class);
+                        ajou.putExtra("annonce",annonce); //key* value
+                        startActivity(ajou);
+                        finish();
+                       }
+                    ); })
                 .addOnFailureListener(e -> Toast.makeText(ImagesStorage.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show())
                 .addOnProgressListener(taskSnapshot -> {
                     double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
                             .getTotalByteCount());
-                }).addOnCompleteListener(task -> {
-                    annonce.getImages().add(String.valueOf(task.getResult()));
-                    Intent ajou = new Intent(ImagesStorage.this, Article_en_retour.class);
-                    ajou.putExtra("annonce",annonce); //key* value
-                    startActivity(ajou);
-                    finish();
                 });
     } catch (FileNotFoundException e) {
         e.printStackTrace();

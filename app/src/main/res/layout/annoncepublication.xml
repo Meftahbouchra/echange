@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/card_items"
+    android:layout_marginHorizontal="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+<ImageView
+    android:foreground="@drawable/card_items"
+    android:id="@+id/img_article"
+    android:layout_width="match_parent"
+    android:src="@color/black"
+    android:layout_height="match_parent"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gold"
+        android:id="@+id/titte_annonce"
+        android:layout_marginTop="110dp"/>
+</RelativeLayout>

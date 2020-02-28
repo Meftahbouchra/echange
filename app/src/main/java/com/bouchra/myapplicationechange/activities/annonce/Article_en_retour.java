@@ -92,7 +92,7 @@ public class Article_en_retour extends AppCompatActivity {
         findViewById(R.id.ok).setOnClickListener(v -> {
             annonce.getArticleEnRetour().addAll(posts);
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Annonce");
-            databaseReference.setValue(annonce).addOnCompleteListener(task2 -> {
+            databaseReference.child(annonce.getIdAnnonce()).setValue(annonce).addOnCompleteListener(task2 -> {
                 if (task2.isSuccessful()) {
                     finish();
                 } else {

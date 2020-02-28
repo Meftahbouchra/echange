@@ -3,6 +3,7 @@ package com.bouchra.myapplicationechange.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +16,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.GoogleMaps;
 import com.bouchra.myapplicationechange.activities.MainActivity;
 import com.bouchra.myapplicationechange.activities.annonce.AnnonceActivity;
+import com.bouchra.myapplicationechange.adapters.publicationannonceadapt;
+import com.bouchra.myapplicationechange.models.Annonce;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 
 public class Acceuil extends Fragment implements Single_choice_classification.SingleChoiceListener{
@@ -32,7 +44,13 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     private  Button  google;
     private LinearLayout addAnnonce;
 
-   public Acceuil(){
+
+    private publicationannonceadapt publicAdapter;
+    private ArrayList<Annonce> annonces;
+    private RecyclerView recyclerView ;
+
+
+    public Acceuil(){
 
    }
 
@@ -44,7 +62,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         linearLayout2=view.findViewById(R.id.layout2);
         textView1=view.findViewById(R.id.txt11);
         textView2=view.findViewById(R.id.txt22);
-
+        recyclerView=view.findViewById(R.id.recyle_public);
         google=view.findViewById(R.id.button5);
 
         addAnnonce=view.findViewById(R.id.ajou_annonce);
@@ -59,10 +77,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
             startActivity(googlemap);
             getActivity().finish();
         });
-
-
-
-        // init
+ // init
         firebaseAuth=FirebaseAuth.getInstance();
 
         linearLayout2.setOnClickListener(v -> {
@@ -71,6 +86,32 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
             singleChoiceDialog.setCancelable(false);
             singleChoiceDialog.show(getActivity().getSupportFragmentManager(),"Single Choice Dialog");
         });
+
+        //recycle view publication annonces
+        annonces = new ArrayList<>();
+        publicAdapter = new publicationannonceadapt(getContext(), annonces);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(publicAdapter);
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Annonce");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Log.e("Count " ,""+snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    Log.e("Data here" , postSnapshot.toString());
+                    annonces.add(postSnapshot.getValue(Annonce.class));
+                    publicAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
     return view;
     }
     private  void checkUserStatus(){

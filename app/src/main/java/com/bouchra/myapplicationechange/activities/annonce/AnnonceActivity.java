@@ -42,6 +42,9 @@ public class AnnonceActivity extends AppCompatActivity implements AdapterView.On
                 annonce.setDateAnnonce(new Date());
                 annonce.setStatu("created");
                 annonce.setUserId("user_id");
+                annonce.setWilaya("alger");
+                annonce.setCommune("alger");
+                annonce.setIdAnnonce(String.valueOf(annonce.getDateAnnonce().hashCode()) + annonce.getUserId().hashCode());
                 Intent ajou = new Intent(AnnonceActivity.this, ImagesStorage.class);
                 ajou.putExtra("annonce",annonce); //key* value
                 startActivity(ajou);

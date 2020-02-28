@@ -11,21 +11,42 @@ public class Annonce implements Serializable {// bch nkdo nrsloha ù blasa lblsa
     private ArrayList<String> articleEnRetour = new ArrayList<>();
     private Date dateAnnonce;
     private String  statu;
-    private String  userId;
-    private ArrayList<String> images = new ArrayList<>();
+    private  String wilaya;
+    private String commune;
 
-    public Annonce() {
-    }
-
-    public Annonce(String idAnnonce, String titreAnnonce, String descriptionAnnonce, ArrayList<String> articleEnRetour, Date dateAnnonce, String statu, String userId, ArrayList<String> images) {
+    public Annonce(String idAnnonce, String titreAnnonce, String descriptionAnnonce, ArrayList<String> articleEnRetour, Date dateAnnonce, String statu, String wilaya, String commune, String userId, ArrayList<String> images) {
         this.idAnnonce = idAnnonce;
         this.titreAnnonce = titreAnnonce;
         this.descriptionAnnonce = descriptionAnnonce;
         this.articleEnRetour = articleEnRetour;
         this.dateAnnonce = dateAnnonce;
         this.statu = statu;
+        this.wilaya = wilaya;
+        this.commune = commune;
         this.userId = userId;
         this.images = images;
+    }
+
+    private String  userId;
+    private ArrayList<String> images = new ArrayList<>();
+
+    public Annonce() {
+    }
+
+    public String getWilaya() {
+        return wilaya;
+    }
+
+    public void setWilaya(String wilaya) {
+        this.wilaya = wilaya;
+    }
+
+    public String getCommune() {
+        return commune;
+    }
+
+    public void setCommune(String commune) {
+        this.commune = commune;
     }
 
     public String getUserId() {

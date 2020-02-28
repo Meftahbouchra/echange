@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.fragments.Acceuil;
-import com.bouchra.myapplicationechange.fragments.profilUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class debut extends AppCompatActivity {
@@ -38,8 +37,8 @@ public class debut extends AppCompatActivity {
                             selectedFragment = new Acceuil();
                             break;
                         case R.id.nav_profil :
-                            selectedFragment = new profilUser();
-                            break;
+                         /*   selectedFragment = new profilUser();
+                            break;*/
                        /* case R.id.nav_plus :
                             selectedFragment = new ;
                             break;

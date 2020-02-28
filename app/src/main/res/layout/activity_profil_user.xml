@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.profilUser">
+    tools:context=".activities.profilUser">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,7 +35,8 @@
                     android:textSize="21sp"/>
             </LinearLayout>
             <androidx.cardview.widget.CardView
-                android:layout_width="400dp"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="24dp"
                 android:layout_height="120dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="275dp">

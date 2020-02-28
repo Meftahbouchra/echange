@@ -237,6 +237,13 @@
             android:layout_marginStart="263dp"
             android:layout_marginBottom="414dp"
             android:text="Maps" />
+        <androidx.recyclerview.widget.RecyclerView
+         android:layout_marginTop="300dp"
+            android:nestedScrollingEnabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recyle_public">
+        </androidx.recyclerview.widget.RecyclerView>
 
 
     </RelativeLayout>
