@@ -42,12 +42,12 @@ public class plus extends Fragment {
         parteger=view.findViewById(R.id.parteger);
         lougout=view.findViewById(R.id.lougout);
         //loug out
-    lougout.setOnClickListener(v -> {
+        lougout.setOnClickListener(v -> {
 
              firebaseAuth.signOut();
              updateUI();
 
-     });
+        });
       //partager un message
         parteger.setOnClickListener(v -> {
         Intent myIntent =new Intent (Intent.ACTION_SEND);
