@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +43,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     private LinearLayout linearLayout1,linearLayout2;
     private TextView textView1,textView2;
     private  Button  google;
-    private LinearLayout addAnnonce;
+    private RelativeLayout addAnnonce;
 
 
     private publicationannonceadapt publicAdapter;
@@ -69,13 +70,11 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         addAnnonce.setOnClickListener(v -> {
             Intent loaddimage = new Intent(getActivity(), AnnonceActivity.class);
             startActivity(loaddimage);
-            getActivity().finish();
         });
 
         google.setOnClickListener(v -> {
             Intent googlemap = new Intent(getActivity(), GoogleMaps.class);
             startActivity(googlemap);
-            getActivity().finish();
         });
  // init
         firebaseAuth=FirebaseAuth.getInstance();

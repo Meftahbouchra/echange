@@ -69,9 +69,8 @@
         android:layout_weight="2"
         android:orientation="horizontal">
         <Spinner
-            android:autofillHints="faz"
             android:layout_marginEnd="8dp"
-            android:id="@+id/spinner_ville"
+            android:id="@+id/spinner_wilaya"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="40dp"
@@ -80,7 +79,7 @@
         <Spinner
             android:layout_marginStart="8dp"
             android:background="@drawable/card_items"
-            android:id="@+id/spinner_wilaya"
+            android:id="@+id/spinner_ville"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="40dp"

@@ -51,8 +51,6 @@ public class ProfileActivity extends AppCompatActivity {
 
             if (FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())) {
                 facebookUserTd = profile.getUid();
-
-
             }
 
         }

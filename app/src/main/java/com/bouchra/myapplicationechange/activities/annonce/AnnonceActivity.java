@@ -14,15 +14,31 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.models.Commune;
+import com.bouchra.myapplicationechange.models.Wilaya;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class AnnonceActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AnnonceActivity extends AppCompatActivity {
     private Button next;
     private EditText titreAnnonce , descAnnonce;
     private String titre_Annonce = "";
+    private String selectedWilaya , selectedVille;
     private String desc_Annonce = "";
     private Boolean isSelected = false;
+    private Spinner wilayaSpinner , villeSpinner;
+    ArrayList<Wilaya> wilaya = new ArrayList<Wilaya>();
+    ArrayList<Commune> communes = new ArrayList<Commune>();
+    String[] wilayaname ;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +46,8 @@ public class AnnonceActivity extends AppCompatActivity implements AdapterView.On
         titreAnnonce=findViewById(R.id.nom_annonce);
         descAnnonce=findViewById(R.id.desci_annonce);
         next = findViewById(R.id.next);
+        villeSpinner = findViewById(R.id.spinner_ville);
+        wilayaSpinner = findViewById(R.id.spinner_wilaya);
         // btn ajouter des article en retour
         next.setOnClickListener(v -> {
             titre_Annonce = titreAnnonce.getText().toString();
@@ -42,8 +60,9 @@ public class AnnonceActivity extends AppCompatActivity implements AdapterView.On
                 annonce.setDateAnnonce(new Date());
                 annonce.setStatu("created");
                 annonce.setUserId("user_id");
-                annonce.setWilaya("alger");
-                annonce.setCommune("alger");
+                annonce.setWilaya(selectedWilaya.split(" ")[1
+                        ]);
+                annonce.setCommune(selectedVille);
                 annonce.setIdAnnonce(String.valueOf(annonce.getDateAnnonce().hashCode()) + annonce.getUserId().hashCode());
                 Intent ajou = new Intent(AnnonceActivity.this, ImagesStorage.class);
                 ajou.putExtra("annonce",annonce); //key* value
@@ -60,22 +79,98 @@ public class AnnonceActivity extends AppCompatActivity implements AdapterView.On
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.choix_categorie, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-    }
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String text = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
-        isSelected = true;
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
+                String text = parent.getItemAtPosition(position).toString();
+                Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
+                isSelected = true;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(readFileFromRawDirectory(R.raw.wilayas));
+            wilayaname = new String[jsonArray.length()];
+            for(int i = 0 ; i < jsonArray.length() ; i++){
+                try {
+                    wilaya.add(new Wilaya(Integer.parseInt(jsonArray.getJSONObject(i).getString("id")) , jsonArray.getJSONObject(i).getString("nom")));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                wilayaname[i] = wilaya.get(i).getId() + " "+ wilaya.get(i).getName();
+            }
+            ArrayAdapter<String> wilayaAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,  wilayaname);
+            wilayaSpinner.setAdapter(wilayaAdapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            JSONArray jsonArrayCommune = new JSONArray(readFileFromRawDirectory(R.raw.communes));
+            for(int i = 0 ; i < jsonArrayCommune.length() ; i++){
+                communes.add(new Commune(Integer.parseInt(jsonArrayCommune.getJSONObject(i).getString("id")),Integer.parseInt(jsonArrayCommune.getJSONObject(i).getString("wilaya_id")) , jsonArrayCommune.getJSONObject(i).getString("nom")));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        wilayaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
+                selectedWilaya = parent.getItemAtPosition(position).toString();
+                int selectedId = Integer.parseInt(selectedWilaya.subSequence(0,2).toString().trim());
+                ArrayList<Commune> communeSelected = new ArrayList<Commune>();
+                for (int i = 0 ; i < communes.size() ; i++)
+                if(selectedId == communes.get(i).getWilaya_id()) {
+                    communeSelected.add(communes.get(i));
+                }
+                String[] communeName = new String[communeSelected.size()];
+                for(int i = 0 ; i < communeSelected.size() ; i++) communeName[i] = communeSelected.get(i).getName();
+                ArrayAdapter<String> communeAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, communeName );
+                villeSpinner.setAdapter(communeAdapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+
+        villeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
+                selectedVille = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        isSelected = false;
-    }
 
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
+    private String readFileFromRawDirectory(int resourceId) {
+        InputStream iStream = getApplicationContext().getResources().openRawResource(resourceId);
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream() ;
+        try {
+            byte[] buffer = new byte[iStream.available()];
+            iStream.read(buffer);
+            byteStream.write(buffer);
+            byteStream.close();
+            iStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return byteStream.toString();
     }
 }
