@@ -37,8 +37,8 @@ public class debut extends AppCompatActivity {
                        case R.id.nav_home :
                             selectedFragment = new Acceuil();
                             break;
-                        case R.id.nav_profil :
-                         /*   selectedFragment = new profilUser();
+                        /*case R.id.nav_profil :
+                           selectedFragment = new profilUser();
                             break;*/
                        case R.id.nav_plus :
                             selectedFragment = new plus();

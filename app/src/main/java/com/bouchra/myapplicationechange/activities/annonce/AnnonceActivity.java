@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Commune;
 import com.bouchra.myapplicationechange.models.Wilaya;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class AnnonceActivity extends AppCompatActivity {
-    private Button next;
+    private Button next,annuler;
     private EditText titreAnnonce , descAnnonce;
     private String titre_Annonce = "";
     private String selectedWilaya , selectedVille;
@@ -48,6 +49,12 @@ public class AnnonceActivity extends AppCompatActivity {
         next = findViewById(R.id.next);
         villeSpinner = findViewById(R.id.spinner_ville);
         wilayaSpinner = findViewById(R.id.spinner_wilaya);
+        annuler=findViewById(R.id.annuler);
+        annuler.setOnClickListener(v -> {
+            Intent annul = new Intent(AnnonceActivity.this, debut.class);
+            startActivity(annul);
+            finish();
+        });
         // btn ajouter des article en retour
         next.setOnClickListener(v -> {
             titre_Annonce = titreAnnonce.getText().toString();

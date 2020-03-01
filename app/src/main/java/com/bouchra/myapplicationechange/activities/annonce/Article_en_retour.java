@@ -1,5 +1,6 @@
 package com.bouchra.myapplicationechange.activities.annonce;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.adapters.RecycleViewArticleRetour;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.google.firebase.database.DatabaseReference;
@@ -101,6 +103,12 @@ public class Article_en_retour extends AppCompatActivity {
             });
 
         });
+       findViewById(R.id.annuler).setOnClickListener(v -> {
+            Intent annul = new Intent(Article_en_retour.this, debut.class);
+        startActivity(annul);
+        finish();
+       });
+
 
 
     }

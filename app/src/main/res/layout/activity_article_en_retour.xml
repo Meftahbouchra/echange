@@ -86,9 +86,8 @@
         android:layout_height="40dp"
         android:layout_below="@+id/rec_retour"
         android:layout_marginLeft="20dp"
-      android:layout_marginTop="-40dp"
+        android:layout_marginTop="-40dp"
         android:textColor="@color/Login_form_details_ligh"
-
         android:text="Annuler"
         android:background="@color/gris"
         android:textAllCaps="false"/>

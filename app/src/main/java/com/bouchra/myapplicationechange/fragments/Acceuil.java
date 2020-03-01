@@ -46,6 +46,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     private RelativeLayout addAnnonce;
 
 
+
     private publicationannonceadapt publicAdapter;
     private ArrayList<Annonce> annonces;
     private RecyclerView recyclerView ;
@@ -65,6 +66,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         textView2=view.findViewById(R.id.txt22);
         recyclerView=view.findViewById(R.id.recyle_public);
         google=view.findViewById(R.id.button5);
+
 
         addAnnonce=view.findViewById(R.id.ajou_annonce);
         addAnnonce.setOnClickListener(v -> {
@@ -93,8 +95,11 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         recyclerView.setAdapter(publicAdapter);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Annonce");
+//Pour lire des données sur un chemin et écouter les modifications,
+// utilisez la méthode addValueEventListener() ou addListenerForSingleValueEvent()pour ajouter un ValueEventListenerà un DatabaseReference.
         ref.addValueEventListener(new ValueEventListener() {
             @Override
+            //onDataChange()méthode pour lire un instantané statique du contenu d'un chemin donné!!au moment de l'événement
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e("Count " ,""+snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
@@ -106,7 +111,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+// Getting model failed, log a message
             }
 
         });

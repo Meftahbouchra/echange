@@ -18,6 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.DetailAnnonce"></activity>
         <activity android:name=".activities.debut" />
         <activity
             android:name=".activities.annonce.AnnonceActivity"
