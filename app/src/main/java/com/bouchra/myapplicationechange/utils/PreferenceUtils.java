@@ -6,6 +6,8 @@ import android.content.SharedPreferences.Editor;
 
 import com.bouchra.myapplicationechange.models.Membre;
 
+import java.util.Date;
+
 
 public class PreferenceUtils {
 
@@ -34,6 +36,14 @@ public class PreferenceUtils {
 
   public Membre getMember() {
         Membre member = new Membre();
+        member.setIdMembre(pref.getString(ID_MEMBER , ""));
+        member.setNomMembre(pref.getString(NOM_MEMBER , ""));
+        member.setNumTel(pref.getInt(NUM_MEMBER , 0));
+        member.setEmail(pref.getString(EMAIL_MEMBER , ""));
+        member.setAdresseMembre(pref.getString(ADDR_MEMBER , ""));
+        member.setLienCompteFb(pref.getString(FB_MEMBER , ""));
+        member.setLienCompteGoogle(pref.getString(GOOGLE_MEMBER , ""));
+        member.setDateInscription(new Date(pref.getLong(DATE_MEMBER , new Date().getTime())));
         return member;
     }
 
