@@ -60,15 +60,15 @@ private  RelativeLayout relativeLayout;//////////////////////////////////////pro
         //RECEIVE OUR DATA
        // getIncomingIntent();
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
+        Log.e("User is :", FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).toString());
         FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 try {
                     if (dataSnapshot.getValue() != null) {
                         try {
-                            membre = (Membre) dataSnapshot.getValue();
-                            name_user.setText(membre.getNomMembre());
-
+                            name_user.setText(dataSnapshot.child("nomMembre").getValue().toString());
+                            Log.e("User is :", dataSnapshot.getValue().toString());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
