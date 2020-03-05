@@ -3,16 +3,24 @@ package com.bouchra.myapplicationechange.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.models.Membre;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 
@@ -30,7 +38,9 @@ private  RelativeLayout relativeLayout;//////////////////////////////////////pro
     private TextView txtRetout;
     private TextView name_user;
     private CircleImageView imgUser;
-  private  Context cont;
+    private  Context cont;
+    private PreferenceUtils preferenceUtils;
+    private Membre membre;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,15 +53,6 @@ private  RelativeLayout relativeLayout;//////////////////////////////////////pro
         });
 
         initViews();
-// name_user.setText(PreferenceUtils.getNAme(cont));
-
-       // name_user.setText(PreferenceUtils.getName(c));
-       /* String photoUrl = "https://graph.facebook.com/" + facebookUserTd + "/picture?height=500";
-        PreferenceUtils.savePassword(photoUrl, this);
-        Picasso.get().load(photoUrl).into(profile_img);*/
-      // PreferenceUtils.getPhoto(c);
-       // Picasso.get().load(PreferenceUtils.getPhoto(c)).into(imgUser);
-
 
         txtRetout.setOnClickListener(v -> {
             finish();
@@ -59,6 +60,31 @@ private  RelativeLayout relativeLayout;//////////////////////////////////////pro
         //RECEIVE OUR DATA
        // getIncomingIntent();
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
+        FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    if (dataSnapshot.getValue() != null) {
+                        try {
+                            membre = (Membre) dataSnapshot.getValue();
+                            name_user.setText(membre.getNomMembre());
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Log.e("TAG", " it's null.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         tite.setText(annonce.getTitreAnnonce());
         desc.setText(annonce.getDescriptionAnnonce());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy"); // +heur
@@ -69,42 +95,8 @@ private  RelativeLayout relativeLayout;//////////////////////////////////////pro
             retour.setText(retour.getText() + "\n" + annonce.getArticleEnRetour().get(i));
         }
 
-    /*
-ref= FirebaseDatabase.getInstance().getReference().child("Annonce");
-ref.addValueEventListener(new ValueEventListener() {
-    @Override
-    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        String TITLE=dataSnapshot.child("titreAnnonce").getValue().toString();
-        String DES=dataSnapshot.child("descriptionAnnonce").getValue().toString();
-    // String RETOUR=dataSnapshot.child("articleEnRetour").getValue().toString();
-        String TIME=dataSnapshot.child("dateAnnonce").getValue().toString();
-        tite.setText(TITLE);
-        desc.setText(DES);
-        time.setText(TIME);
-
     }
 
-
-
-    @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-    }
-}); */
-
-
-    }
-   /* private void getIncomingIntent(){
-        if(getIntent().hasExtra("image_url") && getIntent().hasExtra("image_name")){
-
-
-            String imageUrl = getIntent().getStringExtra("image_url");
-            String imageName = getIntent().getStringExtra("image_name");
-
-            setImage(imageUrl, imageName);
-        }
-    }
-*/
     private void setImage(String imageUrl, String imageName){
 
 
