@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 
 import com.bouchra.myapplicationechange.models.Membre;
 
+
 public class PreferenceUtils {
 
     SharedPreferences pref;
@@ -17,12 +18,12 @@ public class PreferenceUtils {
     public static final String MEMBER = "user";
     public static final String ID_MEMBER = "id_user";
     public static final String NOM_MEMBER = "nom_user";
-    public static final String NUM_MEMBER = "key_user";
-    public static final String ID_MEMBER = "key_user";
-    public static final String ID_MEMBER = "key_user";
-    public static final String ID_MEMBER = "key_user";
-    public static final String ID_MEMBER = "key_user";
-    public static final String ID_MEMBER = "key_user";
+    public static final String NUM_MEMBER = "num_user";
+    public static final String EMAIL_MEMBER = "email_user";
+    public static final String ADDR_MEMBER = "addr_user";
+    public static final String FB_MEMBER = "fb_user";
+    public static final String GOOGLE_MEMBER = "google_user";
+    public static final String DATE_MEMBER = "date_user";
 
     public PreferenceUtils(Context context) {
         this.context = context;
@@ -36,8 +37,15 @@ public class PreferenceUtils {
         return member;
     }
 
-    public void setMember(Member member) {
-
+    public void setMember(Membre member) {
+        editor.putString(ID_MEMBER , member.getIdMembre());
+        editor.putString(NOM_MEMBER , member.getNomMembre());
+        editor.putInt(NUM_MEMBER , member.getNumTel());
+        editor.putString(EMAIL_MEMBER , member.getEmail());
+        editor.putString(ADDR_MEMBER , member.getAdresseMembre());
+        editor.putString(FB_MEMBER , member.getLienCompteFb());
+        editor.putString(GOOGLE_MEMBER , member.getLienCompteGoogle());
+        editor.putLong(DATE_MEMBER , member.getDateInscription().getTime());
         editor.commit();
     }
 

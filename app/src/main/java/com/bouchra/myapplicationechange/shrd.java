@@ -27,10 +27,10 @@ public class shrd extends AppCompatActivity {
         editText2=findViewById(R.id.e2);
         String mot=editText1.getText().toString();
         save.setOnClickListener(v -> {
-            PreferenceUtils.saveName(mot,context);
+            //PreferenceUtils.saveName(mot,context);
         });
         Show.setOnClickListener(v -> {
-editText2.setText(PreferenceUtils.getNAme(context));
+            //editText2.setText(PreferenceUtils.getNAme(context));
         });
     }
 
