@@ -1,5 +1,6 @@
 package com.bouchra.myapplicationechange.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -15,6 +16,8 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.text.SimpleDateFormat;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class DetailAnnonce extends AppCompatActivity {
 private  RelativeLayout relativeLayout;//////////////////////////////////////profil
     private TextView tite ;
@@ -25,6 +28,9 @@ private  RelativeLayout relativeLayout;//////////////////////////////////////pro
     private TextView time;
     private DatabaseReference ref;
     private TextView txtRetout;
+    private TextView name_user;
+    private CircleImageView imgUser;
+  private  Context cont;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +41,18 @@ private  RelativeLayout relativeLayout;//////////////////////////////////////pro
             startActivity(new Intent(DetailAnnonce.this, profilUser.class));
             finish();
         });
-        txtRetout=findViewById(R.id.retour);
-        time=findViewById(R.id.date_h);
-        tite = findViewById(R.id.titte_annonce);
-        desc=findViewById(R.id.desc);
-        img=findViewById(R.id.img_annonc);
-        retour=findViewById(R.id.article_retour);
+
+        initViews();
+// name_user.setText(PreferenceUtils.getNAme(cont));
+
+       // name_user.setText(PreferenceUtils.getName(c));
+       /* String photoUrl = "https://graph.facebook.com/" + facebookUserTd + "/picture?height=500";
+        PreferenceUtils.savePassword(photoUrl, this);
+        Picasso.get().load(photoUrl).into(profile_img);*/
+      // PreferenceUtils.getPhoto(c);
+       // Picasso.get().load(PreferenceUtils.getPhoto(c)).into(imgUser);
+
+
         txtRetout.setOnClickListener(v -> {
 
             finish();
@@ -106,5 +118,18 @@ ref.addValueEventListener(new ValueEventListener() {
                 .load(imageUrl)
                 .into(img);
     }
+    private void initViews() {
+
+        txtRetout=findViewById(R.id.retour);
+        time=findViewById(R.id.date_h);
+        tite = findViewById(R.id.titte_annonce);
+        desc=findViewById(R.id.desc);
+        img=findViewById(R.id.img_annonc);
+        retour=findViewById(R.id.article_retour);
+        name_user=findViewById(R.id.nom_user);
+        imgUser=findViewById(R.id.img_user);
+
+    }
+
 
 }

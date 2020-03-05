@@ -4,12 +4,22 @@ import java.util.Date;
 
 public class Message {
     private String idMessage;
+    private String userID;
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
 
     public Message() {
     }
 
-    public Message(String idMessage, Date dateMessage, String textMessage) {
+    public Message(String idMessage, String userID, Date dateMessage, String textMessage) {
         this.idMessage = idMessage;
+        this.userID = userID;
         this.dateMessage = dateMessage;
         this.textMessage = textMessage;
     }

@@ -24,6 +24,7 @@ public class debut extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.bottom_navigation_fragment_container, new Acceuil()).commit();
     }
+
     private  BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override

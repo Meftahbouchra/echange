@@ -74,6 +74,9 @@ public class Connect extends Fragment {
             if (!eemail.isEmpty() && !ppassword.isEmpty()) {
                 if (ppassword.length() >= 6) {
                     loginUser();
+                    //shared referecnces
+                   // PreferenceUtils.saveEmail(eemail, getContext());
+                   // PreferenceUtils.savePassword(ppassword, getContext());
                 } else {
                     Toast.makeText(getContext(), "Le mot de passe doit comporter au mois 6 caractéres ", Toast.LENGTH_LONG).show();
                 }

@@ -1,5 +1,6 @@
 package com.bouchra.myapplicationechange.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -57,6 +58,10 @@ public class Sinscrire extends Fragment {
             if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
                 if (password.length() >= 6) {
                     registerUser();
+                    //shared referecnces
+                  //  PreferenceUtils.saveEmail(email, getContext());
+                  //  PreferenceUtils.savePassword(password, getContext());
+
                 } else {
                     Toast.makeText(getContext(), "Le mot de passe doit comporter au mois 6 caractéres ", Toast.LENGTH_LONG).show();
                 }
@@ -75,6 +80,7 @@ public class Sinscrire extends Fragment {
 
 
     private void registerUser() {
+        Context context=null;
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -91,6 +97,8 @@ public class Sinscrire extends Fragment {
                         usr.setIdMembre(ID);
                         databaseReference.setValue(usr).addOnCompleteListener(task2 -> {
                             if (task2.isSuccessful()) {
+                                //shared
+                               // PreferenceUtils.saveName(usr,context);
                                 startActivity(new Intent(getActivity(), debut.class));
                                 getActivity().finish();
                             } else {

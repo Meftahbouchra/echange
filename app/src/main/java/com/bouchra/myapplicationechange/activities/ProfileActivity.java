@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Membre;
+import com.bouchra.myapplicationechange.shrd;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,7 +25,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private TextView name;
     private CircleImageView profile_img;
-    private Button logOut;
+    private Button logOut,shred;
     private String pId;
     private DatabaseReference myRef;
     private String facebookUserTd = " ";
@@ -36,6 +37,11 @@ public class ProfileActivity extends AppCompatActivity {
         profile_img = findViewById(R.id.profilimG);
         name = findViewById(R.id.name);
         logOut = findViewById(R.id.logout);
+        shred=findViewById(R.id.button3);
+        shred.setOnClickListener(v -> {
+            startActivity(new Intent(ProfileActivity.this, shrd.class));
+            finish();
+        });
 
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -45,6 +51,8 @@ public class ProfileActivity extends AppCompatActivity {
         //hdo ta3 ysjl f firebase
         myRef = FirebaseDatabase.getInstance().getReference("Membre").child(pId);
         name.setText(user.getDisplayName());
+
+
 
 
         for (UserInfo profile : user.getProviderData()) {
@@ -57,7 +65,9 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         String photoUrl = "https://graph.facebook.com/" + facebookUserTd + "/picture?height=500";
+        // PreferenceUtils.savePassword(photoUrl, this);
         Picasso.get().load(photoUrl).into(profile_img);
+
         //hdo ta3 ysjl f firebase
         Membre model = new Membre();
         model.setIdMembre(pId);
@@ -66,6 +76,11 @@ public class ProfileActivity extends AppCompatActivity {
         //model.setImgMembre(photoUrl);
         myRef.setValue(model);
         //htalhna bch ykml ta3 li ywsl ll firebase
+
+        //shared referecnces
+        String nom =name.getText().toString();
+        // PreferenceUtils.saveName(nom, this);
+       // PreferenceUtils.saveName(model,this);
 
 
         logOut.setOnClickListener(v -> {

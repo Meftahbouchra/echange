@@ -40,16 +40,19 @@ public class AnnonceActivity extends AppCompatActivity {
     String[] wilayaname ;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_annonce);
+
         titreAnnonce=findViewById(R.id.nom_annonce);
         descAnnonce=findViewById(R.id.desci_annonce);
         next = findViewById(R.id.next);
         villeSpinner = findViewById(R.id.spinner_ville);
         wilayaSpinner = findViewById(R.id.spinner_wilaya);
         annuler=findViewById(R.id.annuler);
+
         annuler.setOnClickListener(v -> {
             Intent annul = new Intent(AnnonceActivity.this, debut.class);
             startActivity(annul);
@@ -59,6 +62,8 @@ public class AnnonceActivity extends AppCompatActivity {
         next.setOnClickListener(v -> {
             titre_Annonce = titreAnnonce.getText().toString();
             desc_Annonce = descAnnonce.getText().toString();
+       
+
 
             if (!titre_Annonce.isEmpty() && !desc_Annonce.isEmpty() && isSelected){
                 Annonce annonce = new Annonce();

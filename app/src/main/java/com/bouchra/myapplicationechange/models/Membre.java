@@ -1,19 +1,23 @@
 package com.bouchra.myapplicationechange.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Membre {
+public class Membre implements Serializable {
     private String idMembre;
     private String nomMembre;
     private int numTel;
     private String email;
     private String adresseMembre;
     private String motDePasse;
+    private String lienCompteFb;
+    private String lienCompteGoogle;
+    private Date dateInscription;
+
 
     public Membre() {
     }
 
-    private Date dateInscription;
 
     public Membre(String idMembre, String nomMembre, int numTel, String email, String adresseMembre, String motDePasse, Date dateInscription, String lienCompteFb, String lienCompteGoogle) {
         this.idMembre = idMembre;
@@ -99,7 +103,6 @@ public class Membre {
         this.lienCompteGoogle = lienCompteGoogle;
     }
 
-    private String lienCompteFb;
-    private String lienCompteGoogle;
+
 
 }
