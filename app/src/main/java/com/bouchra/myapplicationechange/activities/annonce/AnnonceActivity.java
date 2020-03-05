@@ -17,6 +17,7 @@ import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Commune;
 import com.bouchra.myapplicationechange.models.Wilaya;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +39,7 @@ public class AnnonceActivity extends AppCompatActivity {
     ArrayList<Wilaya> wilaya = new ArrayList<Wilaya>();
     ArrayList<Commune> communes = new ArrayList<Commune>();
     String[] wilayaname ;
-
+    private PreferenceUtils preferenceUtils;
 
 
     @Override
@@ -52,7 +53,7 @@ public class AnnonceActivity extends AppCompatActivity {
         villeSpinner = findViewById(R.id.spinner_ville);
         wilayaSpinner = findViewById(R.id.spinner_wilaya);
         annuler=findViewById(R.id.annuler);
-
+        preferenceUtils = new PreferenceUtils(this);
         annuler.setOnClickListener(v -> {
             Intent annul = new Intent(AnnonceActivity.this, debut.class);
             startActivity(annul);
@@ -71,9 +72,8 @@ public class AnnonceActivity extends AppCompatActivity {
                 annonce.setDescriptionAnnonce(desc_Annonce);
                 annonce.setDateAnnonce(new Date());
                 annonce.setStatu("created");
-                annonce.setUserId("user_id");
-                annonce.setWilaya(selectedWilaya.split(" ")[1
-                        ]);
+                annonce.setUserId(preferenceUtils.getMember().getIdMembre());
+                annonce.setWilaya(selectedWilaya.split(" ")[1]);
                 annonce.setCommune(selectedVille);
                 annonce.setIdAnnonce(String.valueOf(annonce.getDateAnnonce().hashCode()) + annonce.getUserId().hashCode());
                 Intent ajou = new Intent(AnnonceActivity.this, ImagesStorage.class);

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.MainActivity;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class plus extends Fragment {
@@ -25,6 +26,7 @@ public class plus extends Fragment {
     private TextView  lougout;
 
     private FirebaseAuth firebaseAuth;
+    private PreferenceUtils preferenceUtils;
 
 
 
@@ -41,9 +43,10 @@ public class plus extends Fragment {
         parametre=view.findViewById(R.id.parametre);
         parteger=view.findViewById(R.id.parteger);
         lougout=view.findViewById(R.id.lougout);
+        preferenceUtils = new PreferenceUtils(getActivity());
         //loug out
         lougout.setOnClickListener(v -> {
-
+             preferenceUtils.setMember(null);
              firebaseAuth.signOut();
              updateUI();
 

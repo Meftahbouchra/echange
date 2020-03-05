@@ -44,6 +44,7 @@ public class PreferenceUtils {
         member.setLienCompteFb(pref.getString(FB_MEMBER , ""));
         member.setLienCompteGoogle(pref.getString(GOOGLE_MEMBER , ""));
         member.setDateInscription(new Date(pref.getLong(DATE_MEMBER , new Date().getTime())));
+        member.setIdMembre(pref.getString(ID_MEMBER , ""));
         return member;
     }
 
@@ -60,65 +61,4 @@ public class PreferenceUtils {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-  /* public static boolean saveEmail(String email, Context context) {
-        //   SharedPreferences prefs = getsharedpreferances("nomfile",context.modeprivate)
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString(Constants.KEY_EMAIL, email);
-        prefsEditor.apply();// prefsEditor.commit();
-        return true;
-    }
-
-    public static String getEmail(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(Constants.KEY_EMAIL, null);
-    }
-
-    public static boolean savePassword(String password, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString(Constants.KEY_PASSWORD, password);
-        prefsEditor.apply();
-        return true;
-    }
-
-    public static String getPassword(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(Constants.KEY_PASSWORD, null);
-    }
-    ////////////////////////////////
-    public static boolean saveName(String password, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString(Constants.KEY_NAME, password);
-        prefsEditor.apply();
-        return true;
-    }
-
-    public static String getName(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(Constants.KEY_NAME, null);
-    }
-    public static boolean savePhoto(String password, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString(Constants.KEY_PHOTO, password);
-        prefsEditor.apply();
-        return true;
-    }
-
-    public static String getPhoto(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(Constants.KEY_PHOTO, null);
-    }*/
 }

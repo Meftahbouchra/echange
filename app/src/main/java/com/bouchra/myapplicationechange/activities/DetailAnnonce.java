@@ -54,7 +54,6 @@ private  RelativeLayout relativeLayout;//////////////////////////////////////pro
 
 
         txtRetout.setOnClickListener(v -> {
-
             finish();
         });
         //RECEIVE OUR DATA

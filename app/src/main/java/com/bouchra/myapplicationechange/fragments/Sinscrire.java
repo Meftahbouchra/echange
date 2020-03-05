@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.models.Membre;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +26,7 @@ public class Sinscrire extends Fragment {
 
     private String name = "";
     private String email = "";
+    private PreferenceUtils preferenceUtils;
 
     public Sinscrire() {
     }
@@ -44,6 +46,7 @@ public class Sinscrire extends Fragment {
         txt_username =view.findViewById(R.id.username);
         txt_password = view.findViewById(R.id.pasward);
         btn_register = view.findViewById(R.id.btnresister);
+        preferenceUtils = new PreferenceUtils(getActivity());
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -98,7 +101,7 @@ public class Sinscrire extends Fragment {
                         databaseReference.setValue(usr).addOnCompleteListener(task2 -> {
                             if (task2.isSuccessful()) {
                                 //shared
-                               // PreferenceUtils.saveName(usr,context);
+                                preferenceUtils.setMember(usr);
                                 startActivity(new Intent(getActivity(), debut.class));
                                 getActivity().finish();
                             } else {

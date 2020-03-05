@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.fragments.Connect;
 import com.bouchra.myapplicationechange.fragments.Sinscrire;
+import com.bouchra.myapplicationechange.models.Membre;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -34,8 +36,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -47,22 +52,26 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 100;
     GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseReference;
+    private PreferenceUtils preferenceUtils;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-// ta3 ggole
+        // ta3 ggole
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        preferenceUtils = new PreferenceUtils(this);
         // Initialize Firebase Auth
 
-
+        firebaseAuth = FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mCallbackManager = CallbackManager.Factory.create();
         Button loginButtonFB = findViewById(R.id.loginfb); // ta3 afcebook
@@ -153,13 +162,29 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "se connecter avec identifiant :en cas de succès");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI();
+                            String ID = firebaseAuth.getCurrentUser().getUid();
+                            databaseReference = FirebaseDatabase.getInstance().getReference("Membre").child(ID);
+                            Membre usr = new Membre();
+                            usr.setEmail(user.getEmail());
+                            usr.setNomMembre(user.getDisplayName());
+                            usr.setIdMembre(ID);
+                            usr.setNumTel(Integer.parseInt(user.getPhoneNumber()));
+                            usr.setDateInscription(new Date());
+                            databaseReference.setValue(usr).addOnCompleteListener(task2 -> {
+                                if (task2.isSuccessful()) {
+                                    //shared
+                                    preferenceUtils.setMember(usr);
+                                    startActivity(new Intent(MainActivity.this, debut.class));
+                                    finish();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
+                                }
+                            });
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:echec", task.getException());
                             Toast.makeText(MainActivity.this, "Authentification échouée .",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI();
                         }
                     }
                 });
@@ -187,9 +212,24 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's informatio
                         FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(MainActivity.this, "" + user.getEmail(), Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(MainActivity.this, debut.class));
-                        finish();
+                        String ID = firebaseAuth.getCurrentUser().getUid();
+                        databaseReference = FirebaseDatabase.getInstance().getReference("Membre").child(ID);
+                        Membre usr = new Membre();
+                        usr.setEmail(user.getEmail());
+                        usr.setNomMembre(user.getDisplayName());
+                        usr.setIdMembre(ID);
+                        usr.setNumTel(Integer.parseInt(user.getPhoneNumber()));
+                        usr.setDateInscription(new Date());
+                        databaseReference.setValue(usr).addOnCompleteListener(task2 -> {
+                            if (task2.isSuccessful()) {
+                                //shared
+                                preferenceUtils.setMember(usr);
+                                startActivity(new Intent(MainActivity.this, debut.class));
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
+                            }
+                        });
                         // updateUI(user);
                     } else {
                         // If sign in fails, display a message to the user.
