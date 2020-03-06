@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Membre;
-import com.bouchra.myapplicationechange.shrd;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,10 +25,12 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private TextView name;
     private CircleImageView profile_img;
-    private Button logOut,shred;
+    private Button logOut;
     private String pId;
     private DatabaseReference myRef;
     private String facebookUserTd = " ";
+    //logout
+    private PreferenceUtils preferenceUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +39,6 @@ public class ProfileActivity extends AppCompatActivity {
         profile_img = findViewById(R.id.profilimG);
         name = findViewById(R.id.name);
         logOut = findViewById(R.id.logout);
-        shred=findViewById(R.id.button3);
-        shred.setOnClickListener(v -> {
-            startActivity(new Intent(ProfileActivity.this, shrd.class));
-            finish();
-        });
 
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -86,6 +83,15 @@ public class ProfileActivity extends AppCompatActivity {
         logOut.setOnClickListener(v -> {
             firebaseAuth.signOut();
             updateUI();
+            //  preferenceUtils.setMember(usr);
+//        preferenceUtils = new PreferenceUtils(this);
+      /* preferenceUtils = new PreferenceUtils(this);
+            SharedPreferences.Editor editor = null;
+            editor.clear();
+            editor.apply();
+            finish();
+*/
+
 
         });
         //hna bansayi ndir ta3 dialog

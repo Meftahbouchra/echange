@@ -33,6 +33,7 @@
             android:layout_marginLeft="10dp"
             android:layout_height="match_parent"/>
         <Button
+            android:id="@+id/offre"
             android:layout_width="wrap_content"
             android:background="@color/orange"
             android:text="Faire un offre"

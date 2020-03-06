@@ -1,19 +1,64 @@
 package com.bouchra.myapplicationechange.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Offre {
     private String idOffre;
     private Date dateOffre;
     private String nomOffre;
+    // en +
+    private String annonceId;
+    private String wilaya;
+
+    public String getAnnonceId() {
+        return annonceId;
+    }
+
+    public void setAnnonceId(String annonceId) {
+        this.annonceId = annonceId;
+    }
+
+    public String getWilaya() {
+        return wilaya;
+    }
+
+    public void setWilaya(String wilaya) {
+        this.wilaya = wilaya;
+    }
+
+    public String getCommune() {
+        return commune;
+    }
+
+    public void setCommune(String commune) {
+        this.commune = commune;
+    }
+
+    public ArrayList<String> getImages() {
+        return images;
+    }
+
+    public void setImages(ArrayList<String> images) {
+        this.images = images;
+    }
+
+    private String commune;
+    private ArrayList<String> images = new ArrayList<>();
+
 
     public Offre() {
     }
 
-    public Offre(String idOffre, Date dateOffre, String nomOffre, String descriptionOffre) {
+
+    public Offre(String idOffre, Date dateOffre, String nomOffre, String annonceId, String wilaya, String commune, ArrayList<String> images, String descriptionOffre) {
         this.idOffre = idOffre;
         this.dateOffre = dateOffre;
         this.nomOffre = nomOffre;
+        this.annonceId = annonceId;
+        this.wilaya = wilaya;
+        this.commune = commune;
+        this.images = images;
         this.descriptionOffre = descriptionOffre;
     }
 

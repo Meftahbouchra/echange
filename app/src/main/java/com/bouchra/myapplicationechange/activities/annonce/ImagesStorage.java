@@ -39,7 +39,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-public class ImagesStorage extends AppCompatActivity  {
+public class ImagesStorage extends AppCompatActivity {
 
 
     StorageReference mStorageRef;
@@ -66,12 +66,12 @@ public class ImagesStorage extends AppCompatActivity  {
             bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");
         });
         findViewById(R.id.next).setOnClickListener(v -> {
-            if(imguri != null){
+            if (imguri != null) {
                 Fileuploader();
             }
         });
 
-        if (ContextCompat.checkSelfPermission(ImagesStorage.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(ImagesStorage.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
             if (ActivityCompat.shouldShowRequestPermissionRationale(ImagesStorage.this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -191,32 +191,34 @@ public class ImagesStorage extends AppCompatActivity  {
                 .onSameThread()
                 .check();
     }
-private void  Fileuploader(){
-    try {
-        InputStream stream = new FileInputStream(String.valueOf(imguri));
-        StorageReference ref = mStorageRef.child("images/"+ UUID.randomUUID().toString());
-        ref.putStream(stream)
-                .addOnSuccessListener(taskSnapshot -> {
-                    Toast.makeText(ImagesStorage.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                    taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
-                        annonce.getImages().add(String.valueOf(task));
-                        Log.e("Image link" , String.valueOf(task));
-                        Intent ajou = new Intent(ImagesStorage.this, Article_en_retour.class);
-                        ajou.putExtra("annonce",annonce); //key* value
-                        startActivity(ajou);
-                        finish();
-                       }
-                    ); })
-                .addOnFailureListener(e -> Toast.makeText(ImagesStorage.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show())
-                .addOnProgressListener(taskSnapshot -> {
-                    double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                            .getTotalByteCount());
-                });
-    } catch (FileNotFoundException e) {
-        e.printStackTrace();
-    }
 
-}
+    private void Fileuploader() {
+        try {
+            InputStream stream = new FileInputStream(String.valueOf(imguri));
+            StorageReference ref = mStorageRef.child("images/" + UUID.randomUUID().toString());
+            ref.putStream(stream)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        Toast.makeText(ImagesStorage.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
+                                    annonce.getImages().add(String.valueOf(task));
+                                    Log.e("Image link", String.valueOf(task));
+                                    Intent ajou = new Intent(ImagesStorage.this, Article_en_retour.class);
+                                    ajou.putExtra("annonce", annonce); //key* value
+                                    startActivity(ajou);
+                                    finish();
+                                }
+                        );
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(ImagesStorage.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show())
+                    .addOnProgressListener(taskSnapshot -> {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                                .getTotalByteCount());
+                    });
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 }
