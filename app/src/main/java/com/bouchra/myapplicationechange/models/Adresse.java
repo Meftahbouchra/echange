@@ -3,7 +3,7 @@ package com.bouchra.myapplicationechange.models;
 public class Adresse {
     private String idAdresse;
     private String nomVille;
-    private  String districts;
+    private String districts;
 
     public Adresse() {
     }
@@ -56,11 +56,8 @@ public class Adresse {
         this.numDePorte = numDePorte;
     }
 
-    private  String quartier;
-    private  int numDePorte;
-
-
-
+    private String quartier;
+    private int numDePorte;
 
 
 }

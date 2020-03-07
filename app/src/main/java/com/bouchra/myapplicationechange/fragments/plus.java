@@ -30,6 +30,9 @@ public class plus extends Fragment {
 
 
 
+    public plus() {
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

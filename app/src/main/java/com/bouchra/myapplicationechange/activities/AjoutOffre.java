@@ -38,7 +38,6 @@ public class AjoutOffre extends AppCompatActivity {
     private String titre = "";
     private String desc = "";
     private String idAnnc = "";
-    private Boolean isSelected = false;////////////////////////////////////
     private Spinner wilayaSpinner, villeSpinner;
     private ArrayList<Wilaya> wilaya = new ArrayList<Wilaya>();/////////////////////
     private ArrayList<Commune> communes = new ArrayList<Commune>();////////////////
@@ -146,6 +145,7 @@ public class AjoutOffre extends AppCompatActivity {
                     communeName[i] = communeSelected.get(i).getName();
                 ArrayAdapter<String> communeAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, communeName);
                 villeSpinner.setAdapter(communeAdapter);
+
             }
 
             @Override
@@ -158,6 +158,7 @@ public class AjoutOffre extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
                 selectedVille = parent.getItemAtPosition(position).toString();
+
             }
 
             @Override

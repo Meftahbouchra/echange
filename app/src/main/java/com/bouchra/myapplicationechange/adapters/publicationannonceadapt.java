@@ -64,7 +64,7 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
         Glide.with(context)
                 .load(a.getImages().get(0))
                 .centerCrop()
-                .into(holder.imageView);// abdo hado khdmoli ..asbri
+                .into(holder.imageView);
          holder.itemView.setOnClickListener(v -> {
              Intent affiche = new Intent(context, DetailAnnonce.class);
              affiche.putExtra("annonce",a );
