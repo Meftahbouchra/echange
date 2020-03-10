@@ -17,4 +17,9 @@
     </style>
 
 
+    <style name="BottomNavigationTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/orange</item>
+
+    </style>
+
 </resources>

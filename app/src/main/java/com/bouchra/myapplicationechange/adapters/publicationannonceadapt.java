@@ -24,24 +24,24 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
     private Context context;
     private ArrayList<Annonce> annonce_publ;
 
-    public publicationannonceadapt(Context context , ArrayList<Annonce> annonce_publ){
-        this.context=context;
-        this.annonce_publ=annonce_publ;
+    public publicationannonceadapt(Context context, ArrayList<Annonce> annonce_publ) {
+        this.context = context;
+        this.annonce_publ = annonce_publ;
 
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView ;
+        private ImageView imageView;
         private TextView textView;
         private RelativeLayout relativeLayout;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView=itemView.findViewById(R.id.img_article);
-            textView=itemView.findViewById(R.id.titte_annonce);
-           relativeLayout=itemView.findViewById(R.id.layout_annonce);
+            imageView = itemView.findViewById(R.id.img_article);
+            textView = itemView.findViewById(R.id.titte_annonce);
+            relativeLayout = itemView.findViewById(R.id.layout_annonce);
 
         }
     }
@@ -49,33 +49,33 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
     @NonNull
     @Override
     public publicationannonceadapt.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View vi= LayoutInflater.from(context).inflate(R.layout.annoncepublication, parent, false);
+        View vi = LayoutInflater.from(context).inflate(R.layout.annoncepublication, parent, false);
         publicationannonceadapt.ViewHolder h = new publicationannonceadapt.ViewHolder(vi);
         return h;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Annonce a=annonce_publ.get(position);
+        Annonce a = annonce_publ.get(position);
         holder.textView.setText(a.getTitreAnnonce());
-      //  holder.imageView.setImageBitmap(a.getImages());
+        //  holder.imageView.setImageBitmap(a.getImages());
         //Loading image from Glide library.
-        Log.e("Url" ,a.getImages().get(0));
+        Log.e("Url", a.getImages().get(0));
         Glide.with(context)
                 .load(a.getImages().get(0))
                 .centerCrop()
                 .into(holder.imageView);
-         holder.itemView.setOnClickListener(v -> {
-             Intent affiche = new Intent(context, DetailAnnonce.class);
-             affiche.putExtra("annonce",a );
-             context.startActivity(affiche);
+        holder.itemView.setOnClickListener(v -> {
+            Intent affiche = new Intent(context, DetailAnnonce.class);
+            affiche.putExtra("annonce", a);
+            context.startActivity(affiche);
      /*
                 Intent intent = new Intent(mContext, GalleryActivity.class);
                 intent.putExtra("image_url", mImages.get(position));
                 intent.putExtra("image_name", mImageNames.get(position));
                 mContext.startActivity(intent);*/
 
- });
+        });
 
 
     }

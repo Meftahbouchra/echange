@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
+    <SearchView
+        android:id="@+id/search"
+        android:layout_width="350dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/card_items"
+        android:padding="16dp"
+        android:layout_height="55dp"
+        android:iconifiedByDefault="false"
+       >
+    </SearchView>
     <androidx.recyclerview.widget.RecyclerView
-        android:nestedScrollingEnabled="false"
+        android:id="@+id/recyle_mesannonces"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recyle_mesannonces">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:background="#efefef"
+        android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
 
 
 </LinearLayout>

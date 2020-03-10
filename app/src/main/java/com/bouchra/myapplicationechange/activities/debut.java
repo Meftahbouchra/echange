@@ -1,6 +1,7 @@
 package com.bouchra.myapplicationechange.activities;
 
 import android.os.Bundle;
+import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -47,4 +48,10 @@ public class debut extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.bottom_navigation_fragment_container,selectedFragment).commit();
                 return  true;
             };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.men_search,menu);
+        return true;
+    }
 }

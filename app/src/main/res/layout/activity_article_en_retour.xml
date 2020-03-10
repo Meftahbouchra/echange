@@ -6,8 +6,37 @@
     android:layout_height="match_parent"
     android:background="#efefef"
     tools:context=".activities.annonce.Article_en_retour">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:id="@+id/txtv1"
+        android:orientation="horizontal">
 
-    <TextView
+        <Button
+            android:id="@+id/annuler"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/back"
+            android:backgroundTint="@color/orange" />
+
+        <TextView
+            android:id="@+id/intro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:paddingStart="5dp"
+            android:text="Que voulez-vous en retour ?"
+            android:textColor="@color/orange"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+
+ <!--   <TextView
         android:id="@+id/txtv1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +45,7 @@
         android:text="Que voulez-vous en retour ?"
         android:textColor="@color/Login_form_details_ligh"
 
-        android:textSize="19sp" />
+        android:textSize="19sp" />-->
 
     <LinearLayout
         android:id="@+id/linyar"
@@ -73,22 +102,14 @@
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="14dp"
-        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginEnd="72dp"
+        android:layout_marginBottom="26dp"
+        android:background="@drawable/btn_floating"
         android:text="Envoyer"
-        android:textColor="@color/Login_form_details"
-        android:background="@drawable/btn_suiv"
-        android:textAllCaps="false"/>
+        android:textAllCaps="false"
+        android:textColor="@color/Login_form_details" />
 
-    <Button
-        android:id="@+id/annuler"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_below="@+id/rec_retour"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="-40dp"
-        android:textColor="@color/Login_form_details_ligh"
-        android:text="Annuler"
-        android:background="@color/gris"
-        android:textAllCaps="false"/>
+
 </RelativeLayout>

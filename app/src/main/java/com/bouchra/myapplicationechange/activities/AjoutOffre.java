@@ -44,6 +44,7 @@ public class AjoutOffre extends AppCompatActivity {
     private String[] wilayaname;///////////////////////////////////
     private DatabaseReference databaseReference;
     private String selectedWilaya, selectedVille;
+    private Button annuler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,15 @@ public class AjoutOffre extends AppCompatActivity {
         pic = findViewById(R.id.img_offre);
         wilayaSpinner = findViewById(R.id.spinner_wilayaobj);
         villeSpinner = findViewById(R.id.spinner_villeobj);
+        annuler=findViewById(R.id.annuler);
+        annuler.setOnClickListener(v -> {
+          Intent an = new Intent(AjoutOffre.this,debut.class);
+          startActivity(an);
+          finish();
+           /* Intent annul = new Intent(AjoutOffre.this, Acceuil.class);
+            startActivity(annul);
+            finish();*/
+        });
         suiv = findViewById(R.id.suiv);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         buttonChoosePic.setOnClickListener(v -> {

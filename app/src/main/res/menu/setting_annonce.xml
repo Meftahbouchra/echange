@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/modifier"
+        android:icon="@drawable/ic_edit_"
+        android:title="Modifier" />
+    <item
+        android:id="@+id/Supprimer"
+        android:icon="@drawable/ic_delete"
+        android:title="Supprimer" />
+</menu>

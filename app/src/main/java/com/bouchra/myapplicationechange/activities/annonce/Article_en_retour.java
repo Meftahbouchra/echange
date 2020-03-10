@@ -43,26 +43,25 @@ public class Article_en_retour extends AppCompatActivity {
         textView.setOnClickListener(v -> {
             String x = editText.getText().toString();
 
-             if (posts.size() < 10){
-                 if( !x.isEmpty()){
-                     posts.add(x);
-                     editText.setText("");
-                     postAdapter = new RecycleViewArticleRetour(this, posts);
-                     recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                     recyclerView.setAdapter(postAdapter);
+            if (posts.size() < 10) {
+                if (!x.isEmpty()) {
+                    posts.add(x);
+                    editText.setText("");
+                    postAdapter = new RecycleViewArticleRetour(this, posts);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                    recyclerView.setAdapter(postAdapter);
 
 
-                 }else{
-                     Toast.makeText(this, "remplir le champs", Toast.LENGTH_SHORT).show();
-                 }
+                } else {
+                    Toast.makeText(this, "remplir le champs", Toast.LENGTH_SHORT).show();
+                }
 
 
-
-             }else {
-                 editText.setEnabled(false);
-                 editText.setText("");
-                 Toast.makeText(this, "Dèsolè, il n'ya pas pour ajouter plus d'article", Toast.LENGTH_SHORT).show();
-             }// vous avez atteint la limite des postes possible
+            } else {
+                editText.setEnabled(false);
+                editText.setText("");
+                Toast.makeText(this, "Dèsolè, il n'ya pas pour ajouter plus d'article", Toast.LENGTH_SHORT).show();
+            }// vous avez atteint la limite des postes possible
 
 
 
@@ -103,12 +102,11 @@ public class Article_en_retour extends AppCompatActivity {
             });
 
         });
-       findViewById(R.id.annuler).setOnClickListener(v -> {
+        findViewById(R.id.annuler).setOnClickListener(v -> {
             Intent annul = new Intent(Article_en_retour.this, debut.class);
-        startActivity(annul);
-        finish();
-       });
-
+            startActivity(annul);
+            finish();
+        });
 
 
     }
