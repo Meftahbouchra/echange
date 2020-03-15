@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.myannonce;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,9 +34,6 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
     private RecyclerView recyclerView;
     SearchView editsearch;
 
-
-
-
     Date date = new Date();
 
     public mesAnnonce() {
@@ -47,40 +45,27 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_mesannonces, container, false);
         recyclerView = view.findViewById(R.id.recyle_mesannonces);
-
-
-
-            annonces = new ArrayList<>();
-
-            myannonce = new myannonce(getContext(), annonces);
-
-
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-            recyclerView.setAdapter(myannonce);
-
-
-            final FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference ref = database.getReference("Annonce");
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    Log.e("Count ", "" + snapshot.getChildrenCount());
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        Log.e("Data here", postSnapshot.toString());
-                        annonces.add(postSnapshot.getValue(Annonce.class));
-                        myannonce.notifyDataSetChanged();
-                    }
+        annonces = new ArrayList<>();
+        myannonce = new myannonce(getContext(), annonces);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(myannonce);
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Annonce");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Log.e("Data here", postSnapshot.toString());
+                    annonces.add(postSnapshot.getValue(Annonce.class));
+                    myannonce.notifyDataSetChanged();
                 }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-// Getting model failed, log a message
-
-                }
-
-            });
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+        // Getting model failed, log a message
+            }
+        });
         // Locate the EditText in listview_main.xml
         editsearch =view.findViewById(R.id.search);
         editsearch.setOnQueryTextListener(this);

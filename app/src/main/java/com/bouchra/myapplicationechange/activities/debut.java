@@ -1,6 +1,7 @@
 package com.bouchra.myapplicationechange.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,15 +11,20 @@ import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.fragments.Acceuil;
 import com.bouchra.myapplicationechange.fragments.Posts;
 import com.bouchra.myapplicationechange.fragments.plus;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class debut extends AppCompatActivity {
+
+    private PreferenceUtils preferenceUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debut);
-
+        preferenceUtils = new PreferenceUtils(this);
+        Log.e("Here Error" , "Error");
+        Log.e("Here pref " , preferenceUtils.getMember().getIdMembre());
         BottomNavigationView botoomNav = findViewById(R.id.bottom_navigation);
         botoomNav.setOnNavigationItemSelectedListener(navListener);
 
