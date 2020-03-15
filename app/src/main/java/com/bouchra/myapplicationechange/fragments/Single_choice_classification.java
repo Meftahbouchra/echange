@@ -34,27 +34,13 @@ public class Single_choice_classification extends DialogFragment {
     ArrayList<Wilaya> wilaya = new ArrayList<Wilaya>();
 
     public interface SingleChoiceListener {
-      //  void onPositiveButtononCliked(String[] wilayaname, int position);
-  void onPositiveButtononCliked(String wilayaname);
+        void onPositiveButtononCliked(String wilayaname);
         void onNegativeButtononCliked();
-
     }
 
     SingleChoiceListener mListener;
 
 
-
-    /* @NonNull
-     @Override
-     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-         String[] list = getActivity().getResources().getStringArray(R.array.choice_item);
-         builder.setTitle("Le classement est par :")
-                 .setSingleChoiceItems(list, position, (dialog, which) -> position = which)
-                 .setPositiveButton("Ok", (dialog, which) -> mListener.onPositiveButtononCliked(list, position))
-                 .setNegativeButton("Annuler", (dialog, which) -> mListener.onNegativeButtononCliked());
-         return builder.create();
-     }*/
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -79,7 +65,6 @@ public class Single_choice_classification extends DialogFragment {
                         mListener.onPositiveButtononCliked(wilaya.get(position).getName());
                         dismiss();
                     }).setNegativeButton("annuler",(dialog, which) ->dismiss());
-
 
         } catch (JSONException e) {
             e.printStackTrace();
