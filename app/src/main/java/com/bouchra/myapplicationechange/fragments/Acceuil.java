@@ -92,7 +92,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
         //recycle view publication annonces
         annonces = new ArrayList<>();
-        publicAdapter = new publicationannonceadapt(getContext(), annonces);
+        publicAdapter = new publicationannonceadapt(getContext(), new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(publicAdapter);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -107,8 +107,9 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Log.e("Data here", postSnapshot.toString());
                     annonces.add(postSnapshot.getValue(Annonce.class));
-                    publicAdapter.notifyDataSetChanged();
                 }
+                publicAdapter.setMesannonce(annonces);
+                publicAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -166,17 +167,17 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     @Override
     public boolean onQueryTextChange(String newText) {
         Recherche(newText);
-
         return false;
     }
-public void Recherche(String keyWord){
-    ArrayList<Annonce>output=new ArrayList<>();
-    for (Annonce object: annonces) {
-        String obj=  object.getTitreAnnonce().toLowerCase();
-        if(obj.contains(keyWord.toLowerCase())) output.add(object);
+
+    public void Recherche(String keyWord){
+        ArrayList<Annonce> output=new ArrayList<>();
+        for (Annonce object: annonces) {
+            String obj=  object.getTitreAnnonce().toLowerCase();
+            if(obj.contains(keyWord.toLowerCase())) output.add(object);
+        }
+        publicAdapter.setMesannonce(output);
+        publicAdapter.notifyDataSetChanged();
     }
-    publicAdapter.setMesannonce(output);
-    publicAdapter.notifyDataSetChanged();
-}
 
 }
