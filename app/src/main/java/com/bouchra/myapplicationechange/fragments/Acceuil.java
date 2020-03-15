@@ -49,6 +49,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     private ArrayList<Annonce> annonces;
     private RecyclerView recyclerView;
     private SearchView editsearch;
+    private String wilaya = "" , searchText = "";
 
     public Acceuil() {
 
@@ -128,11 +129,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
             startActivity(new Intent(getActivity(), MainActivity.class));
             getActivity().finish();
         }
-
-
     }
-
-    // nsayi mn3amarch les case memoire kima ta3winydir fb w login w gogle ndirhom f variable whda
 
     @Override
     public void onStart() {
@@ -144,8 +141,8 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     @Override
     public void onPositiveButtononCliked(String name) {
         Toast.makeText(getContext(), "Selected item = " + name, Toast.LENGTH_SHORT).show();
-        Recherche(name);
-
+        wilaya = name;
+        Recherche(searchText , wilaya);
     }
 
     @Override
@@ -160,15 +157,16 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        Recherche(newText);
+        searchText = newText;
+        Recherche(searchText , wilaya);
         return false;
     }
 
-    public void Recherche(String keyWord){
+    public void Recherche(String keyWord , String wilaya){
         ArrayList<Annonce> output=new ArrayList<>();
         for (Annonce object: annonces) {
             String obj=  object.getTitreAnnonce().toLowerCase();
-            if(obj.contains(keyWord.toLowerCase())) output.add(object);
+            if(obj.contains(keyWord.toLowerCase()) && object.getWilaya().toLowerCase().contains(wilaya.toLowerCase())) output.add(object);
         }
         publicAdapter.setMesannonce(output);
         publicAdapter.notifyDataSetChanged();
