@@ -97,8 +97,6 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         recyclerView.setAdapter(publicAdapter);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Annonce");
-//Pour lire des données sur un chemin et écouter les modifications,
-// utilisez la méthode addValueEventListener() ou addListenerForSingleValueEvent()pour ajouter un ValueEventListenerà un DatabaseReference.
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             //onDataChange()méthode pour lire un instantané statique du contenu d'un chemin donné!!au moment de l'événement
@@ -114,7 +112,6 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-// Getting model failed, log a message
             }
 
         });
@@ -127,10 +124,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         // get current user
         FirebaseUser us = firebaseAuth.getCurrentUser();
         if (us != null) {
-            //user is signed in stay here
-// wla nkad hadi ndiha f ga" page lwla  ta3 li win ykhayar facgh  yanscrit kinlkaha m inscri yji l acceuil
         } else {
-            //user not sign in ,go to main activity " li fiha ykhayar bach y inscrit"
             startActivity(new Intent(getActivity(), MainActivity.class));
             getActivity().finish();
         }
