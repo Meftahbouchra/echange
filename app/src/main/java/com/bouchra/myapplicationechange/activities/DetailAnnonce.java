@@ -31,7 +31,7 @@ import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DetailAnnonce extends AppCompatActivity {
+public class DetailAnnonce extends AppCompatActivity  {
     private RelativeLayout relativeLayout;//////////////////////////////////////profil
     private TextView tite;
     private TextView desc;
@@ -69,48 +69,7 @@ public class DetailAnnonce extends AppCompatActivity {
             finish();
         });
         //RECEIVE OUR DATA
-        // getIncomingIntent();
-        annonce = (Annonce) getIntent().getSerializableExtra("annonce");
-        Log.e("User is :", FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).toString());
-        FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try {
-                    if (dataSnapshot.getValue() != null) {
-                        try {
-                            name_user.setText(dataSnapshot.child("nomMembre").getValue().toString());
-                            Log.e("User is :", dataSnapshot.getValue().toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        Log.e("TAG", " it's null.");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        tite.setText(annonce.getTitreAnnonce());
-        desc.setText(annonce.getDescriptionAnnonce());
-
-        Date d = new Date(new Date().getTime() + 28800000);
-      /*  String s=new SimpleDateFormat("dd/MM/yyyy kk:mm:ss").format(d);
-         String str = s.format(annonce.getDateAnnonce());*/
-        //  SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy"); // +heur
-        // String str = simpleDateFormat.format(annonce.getDateAnnonce());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
-        String str = simpleDateFormat.format(annonce.getDateAnnonce());
-        time.setText(str);
-        setImage(annonce.getImages().get(0), annonce.getTitreAnnonce());
-        for (int i = 0; i < annonce.getArticleEnRetour().size(); i++) {
-            retour.setText(retour.getText() + "\n" + annonce.getArticleEnRetour().get(i));
-        }
+         getIncomingIntent();
 
 
     }
@@ -156,7 +115,12 @@ public class DetailAnnonce extends AppCompatActivity {
 
 ///////////// fin de dalog offre
 
+public  interface affichage{
 
+    void getIncomingIntent();
+   // void  setImage(String imageUrl, String imageName);
+
+}
     private void setImage(String imageUrl, String imageName) {
 
 
@@ -179,6 +143,51 @@ public class DetailAnnonce extends AppCompatActivity {
         retour = findViewById(R.id.article_retour);
         name_user = findViewById(R.id.nom_user);
         imgUser = findViewById(R.id.img_user);
+
+    }
+
+    private void getIncomingIntent() {
+        annonce = (Annonce) getIntent().getSerializableExtra("annonce");
+        Log.e("User is :", FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).toString());
+        FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    if (dataSnapshot.getValue() != null) {
+                        try {
+                            name_user.setText(dataSnapshot.child("nomMembre").getValue().toString());
+                            Log.e("User is :", dataSnapshot.getValue().toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Log.e("TAG", " it's null.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        tite.setText(annonce.getTitreAnnonce());
+        desc.setText(annonce.getDescriptionAnnonce());
+
+        Date d = new Date(new Date().getTime() + 28800000);
+      /*  String s=new SimpleDateFormat("dd/MM/yyyy kk:mm:ss").format(d);
+         String str = s.format(annonce.getDateAnnonce());*/
+        //  SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy"); // +heur
+        // String str = simpleDateFormat.format(annonce.getDateAnnonce());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
+        String str = simpleDateFormat.format(annonce.getDateAnnonce());
+        time.setText(str);
+        setImage(annonce.getImages().get(0), annonce.getTitreAnnonce());
+        for (int i = 0; i < annonce.getArticleEnRetour().size(); i++) {
+            retour.setText(retour.getText() + "\n" + annonce.getArticleEnRetour().get(i));
+        }
 
     }
 

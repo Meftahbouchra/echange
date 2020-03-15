@@ -48,7 +48,7 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
         holder.titreAnnonce.setText(annonce.getTitreAnnonce());
         //  holder.imageView.setImageBitmap(a.getImages());
         //Loading image from Glide library.
-        Log.e("Url", annonce.getImages().get(0));
+       Log.e("Url", annonce.getImages().get(0));
         Glide.with(context)
                 .load(annonce.getImages().get(0))
                 .centerCrop()
@@ -58,9 +58,11 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
         String str = simpleDateFormat.format(annonce.getDateAnnonce());
         holder.dateh.setText(str);
         holder.itemView.setOnClickListener(v -> {
-            Intent det =new Intent(context, DetailMesannonce.class);
-            context.startActivity(det);
+            Intent affiche = new Intent(context, DetailMesannonce.class);
+            affiche.putExtra("annonce", annonce);
+            context.startActivity(affiche);
         });
+
     }
 
     @Override

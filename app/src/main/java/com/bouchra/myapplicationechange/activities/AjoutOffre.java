@@ -101,6 +101,10 @@ public class AjoutOffre extends AppCompatActivity {
                     if (task2.isSuccessful()) {
 
                         Toast.makeText(this, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
+                        Intent an = new Intent(AjoutOffre.this,debut.class);
+                        startActivity(an);
+                        finish();
+
                     } else {
                         Toast.makeText(this, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
                     }

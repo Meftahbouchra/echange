@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efefef"
+    tools:context=".activities.DemandesOffre">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/gris"
+        android:id="@+id/layout_tet"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/retour"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:drawableStart="@drawable/ic_keyboard_backspace_"
+            android:drawableTint="@color/orange" />
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/layout_tet"
+        android:nestedScrollingEnabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recyle_demandesoffres">
+    </androidx.recyclerview.widget.RecyclerView>
+</RelativeLayout>

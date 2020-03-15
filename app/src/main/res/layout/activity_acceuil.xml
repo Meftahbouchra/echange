@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/my_drawer"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".fragments.Acceuil">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.Acceuil">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -82,132 +83,133 @@
 
 
                     <TextView
-                        android:textColor="#ffffff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/btn_category"
                         android:backgroundTint="#7FBA00"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Pièces dètachèes"
                         android:textAllCaps="false"
+                        android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:textColor="#ffffff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/btn_category"
                         android:backgroundTint="#F25022"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Immobilier"
                         android:textAllCaps="false"
+                        android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:textColor="#ffffff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/btn_category"
                         android:backgroundTint="#D4DBF5"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Vetements"
                         android:textAllCaps="false"
+                        android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:textColor="#ffffff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/btn_category"
                         android:backgroundTint="#FFFF05"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
+                        android:text="Livres"
+                        android:textAllCaps="false"
+                        android:textColor="#ffffff"
+                        android:textSize="15sp" />
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Livres"
-                        android:textSize="15sp"
-                        android:textAllCaps="false" />
-                    <TextView
-                        android:textColor="#ffffff"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/btn_category"
                         android:backgroundTint="#0A1747"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Eletronique  et electromènager"
                         android:textAllCaps="false"
+                        android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:textColor="#ffffff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/btn_category"
                         android:backgroundTint="#612960"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Accessoires de mode"
                         android:textAllCaps="false"
+                        android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:textColor="#ffffff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/btn_category"
                         android:backgroundTint="#FA8AF8"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Cosmetiques et  Beautè"
                         android:textAllCaps="false"
+                        android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:textColor="#ffffff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/btn_category"
                         android:backgroundTint="#8D07F6"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Maison et fournitures"
                         android:textAllCaps="false"
+                        android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:textColor="#ffffff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/btn_category"
                         android:backgroundTint="#0029FA"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Loisirs et Dèvertissements"
                         android:textAllCaps="false"
+                        android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:textColor="#ffffff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/btn_category"
                         android:backgroundTint="#FF7D00"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Matiriaux et  Equipements"
                         android:textAllCaps="false"
+                        android:textColor="#ffffff"
                         android:textSize="15sp" />
                 </LinearLayout>
             </HorizontalScrollView>
@@ -215,74 +217,107 @@
         </ScrollView>
 
         <View
-        android:id="@+id/viw1"
-        android:layout_marginTop="10dp"
-        android:layout_below=  "@+id/layoot5"
-        android:layout_width="fill_parent"
-        android:layout_height="2px"
-        android:background="@color/black"/>
-    <LinearLayout
-            android:layout_below="@+id/viw1"
+            android:id="@+id/viw1"
+            android:layout_width="fill_parent"
+            android:layout_height="2px"
+            android:layout_below="@+id/layoot5"
+            android:layout_marginTop="10dp"
+            android:background="@color/black" />
+
+        <LinearLayout
+            android:id="@+id/bhh"
 
             android:layout_width="match_parent"
-            android:id="@+id/bhh"
             android:layout_height="85dp"
+            android:layout_below="@+id/viw1"
 
             android:orientation="horizontal">
+
             <LinearLayout
                 android:id="@+id/layout1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:paddingLeft="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:textSize="20dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_location"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/ic_location"
+                    android:backgroundTint="@color/rouge"
+                    android:textSize="20dp" />
+
+                <TextView
                     android:id="@+id/txt11"
-                    android:text="Choisissiez la ville"
-                    android:textSize="17dp"
-                    android:textColor="@color/black"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choisissiez\n   la ville"
+                    android:textColor="@color/black"
+                    android:textSize="17dp" />
             </LinearLayout>
+
+
             <LinearLayout
                 android:id="@+id/layout2"
-                android:layout_marginLeft="70dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="10dp">
+                <SearchView
+                    android:id="@+id/search"
+                    android:layout_width="250dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/round_bd"
+                    android:padding="16dp"
+                    android:layout_height="55dp"
+                    android:iconifiedByDefault="false"
 
-                    android:textSize="20dp"
-                    android:background="@drawable/ic_shuffle"/>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-               <TextView
-                    android:id="@+id/txt22"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:paddingLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Choisissiez  le classement des articles "
-                    android:textColor="@color/black"/>
+                    >
+                </SearchView>
 
-                </LinearLayout>
             </LinearLayout>
+
+
+            <!--   <LinearLayout
+                   android:id="@+id/layout2"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="70dp">
+
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginTop="15dp"
+
+                       android:background="@drawable/ic_shuffle"
+                       android:textSize="20dp" />
+
+                   <LinearLayout
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:orientation="vertical">
+
+                       <TextView
+                           android:id="@+id/txt22"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_marginTop="10dp"
+                           android:paddingLeft="10dp"
+                           android:text="Choisissiez  le classement des articles "
+                           android:textColor="@color/black"
+                           android:textSize="15sp" />
+
+                   </LinearLayout>
+               </LinearLayout>-->
         </LinearLayout>
-    <View
-        android:id="@+id/viw2"
-        android:layout_below="@+id/bhh"
-        android:layout_width="fill_parent"
-        android:layout_height="2px"
-        android:background="@color/black"/>
+
+        <View
+            android:id="@+id/viw2"
+            android:layout_width="fill_parent"
+            android:layout_height="2px"
+            android:layout_below="@+id/bhh"
+            android:background="@color/black" />
 
         <Button
             android:id="@+id/button5"
@@ -293,14 +328,14 @@
             android:layout_marginStart="263dp"
             android:layout_marginBottom="414dp"
             android:text="Maps" />
+
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="16dp"
-            android:layout_below="@+id/viw2"
-            android:nestedScrollingEnabled="false"
+            android:id="@+id/recyle_public"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/recyle_public">
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layout_below="@+id/viw2"
+            android:layout_marginTop="16dp"
+            android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
 
         <Button
             android:id="@+id/button3"
@@ -308,45 +343,43 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-
             android:layout_marginEnd="37dp"
             android:layout_marginBottom="224dp"
             android:text="Button" />
 
 
     </RelativeLayout>
+
     <RelativeLayout
-        android:layout_marginBottom="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/ajou_annonce"
         android:layout_width="300dp"
-        android:layout_marginTop="620dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:orientation="horizontal"
-        android:id="@+id/ajou_annonce"
+        android:layout_marginTop="620dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/btn_floating"
-        >
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Deposer une annonce"
-            android:textSize="17sp"
-            android:layout_marginLeft="20dp"
+            android:layout_centerInParent="true"
             android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:text="Deposer une annonce"
             android:textColor="@color/Login_form_details"
-            />
+            android:textSize="17sp" />
 
-    <ImageButton
-        android:background="@drawable/circle"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="6dp"
-        android:backgroundTint="@color/Login_form_details"
-        android:src="@drawable/ic_add_black_24dp"/>
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="6dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/Login_form_details"
+            android:src="@drawable/ic_add_black_24dp" />
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

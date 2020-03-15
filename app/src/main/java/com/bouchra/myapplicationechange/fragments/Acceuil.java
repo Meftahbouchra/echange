@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,15 +39,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-public class Acceuil extends Fragment implements Single_choice_classification.SingleChoiceListener {
+public class Acceuil extends Fragment implements Single_choice_classification.SingleChoiceListener,SearchView.OnQueryTextListener {
     private FirebaseAuth firebaseAuth;
-    private LinearLayout linearLayout1, linearLayout2;
+    private LinearLayout  linearLayout2;
     private TextView textView1, textView2;
     private Button google;
     private RelativeLayout addAnnonce;
     private publicationannonceadapt publicAdapter;
     private ArrayList<Annonce> annonces;
     private RecyclerView recyclerView;
+    private SearchView editsearch;
 
     public Acceuil() {
 
@@ -56,10 +58,10 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_acceuil, container, false);
-        linearLayout1 = view.findViewById(R.id.layout1);
-        linearLayout2 = view.findViewById(R.id.layout2);
+
+        linearLayout2 = view.findViewById(R.id.layout1);
         textView1 = view.findViewById(R.id.txt11);
-        textView2 = view.findViewById(R.id.txt22);
+       // textView2 = view.findViewById(R.id.txt22);
         recyclerView = view.findViewById(R.id.recyle_public);
         google = view.findViewById(R.id.button5);
         Button button44=view.findViewById(R.id.button3);
@@ -83,7 +85,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
         linearLayout2.setOnClickListener(v -> {
 
-            DialogFragment singleChoiceDialog = new Single_choice_classification();
+            DialogFragment singleChoiceDialog = new Single_choice_classification(this);
             singleChoiceDialog.setCancelable(false);
             singleChoiceDialog.show(getActivity().getSupportFragmentManager(), "Single Choice Dialog");
         });
@@ -115,7 +117,8 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
             }
 
         });
-
+        editsearch =view.findViewById(R.id.search);
+        editsearch.setOnQueryTextListener(this);
         return view;
     }
 
@@ -144,8 +147,10 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     }
 
     @Override
-    public void onPositiveButtononCliked(String[] list, int position) {
-        Toast.makeText(getContext(), "Selected item = " + list[position], Toast.LENGTH_SHORT).show();
+    public void onPositiveButtononCliked(String name) {
+        Toast.makeText(getContext(), "Selected item = " + name, Toast.LENGTH_SHORT).show();
+        Recherche(name);
+
     }
 
     @Override
@@ -153,5 +158,25 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         Toast.makeText(getContext(), "Dialog cancel", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Recherche(newText);
+
+        return false;
+    }
+public void Recherche(String keyWord){
+    ArrayList<Annonce>output=new ArrayList<>();
+    for (Annonce object: annonces) {
+        String obj=  object.getTitreAnnonce().toLowerCase();
+        if(obj.contains(keyWord.toLowerCase())) output.add(object);
+    }
+    publicAdapter.setMesannonce(output);
+    publicAdapter.notifyDataSetChanged();
+}
 
 }

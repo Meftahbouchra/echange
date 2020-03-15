@@ -30,7 +30,10 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
 
     }
 
-
+    public void setMesannonce(ArrayList<Annonce> output) {
+        this.annonce_publ.clear();
+        this.annonce_publ.addAll(output);
+    }
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
         private TextView textView;
