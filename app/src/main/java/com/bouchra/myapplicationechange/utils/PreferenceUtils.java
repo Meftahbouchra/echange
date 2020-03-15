@@ -60,5 +60,9 @@ public class PreferenceUtils {
         editor.commit();
     }
 
+    public void Clear(){
+        editor.clear().commit();
+    }
+
 
 }
