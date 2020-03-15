@@ -73,24 +73,16 @@ public class Single_choice_classification extends DialogFragment {
                 }
                 wilayaname[i] = wilaya.get(i).getId() + " " + wilaya.get(i).getName();
             }
-            // String[] wilayaname = getActivity().getResources().getStringArray(R.array.choice_item);
             builder.setTitle("Selectionnez une Wilaya :")
                     .setSingleChoiceItems(wilayaname, position, (dialog, which) -> position = which)
-                   // .setPositiveButton("Ok", (dialog, which) -> mListener.onPositiveButtononCliked(wilayaname, position))
                     .setPositiveButton("Ok", (dialog, which) -> {////////////////////////////////////////////////////////////
-                       //Toast.makeText(getActivity(),"hellohelloo", Toast.LENGTH_SHORT).show();// hada win sa9sit baba w gotlo 3la idari wah bon sania machi ville :P mais wville machi wilaya kol haja wahedeha la ville hiya la ville a9ayader ; 9ader f wilaya ykon bzf les villes nrml kima gli papa aya khytra jaya sla3 l ray nas mtgoodch mtmsk b haja fausse ntio li golti haja ghalta mvh ana si nta gtli ville hiya wilaya lala ,adiba ok
                         mListener.onPositiveButtononCliked(wilaya.get(position).getName());
                         dismiss();
-
-                   })
-
-                   // .setNegativeButton("Annuler", (dialog, which) -> mListener.onNegativeButtononCliked());
-                    .setNegativeButton("annuler",(dialog, which) ->dismiss());
-            builder.show();
+                    }).setNegativeButton("annuler",(dialog, which) ->dismiss());
 
 
         } catch (JSONException e) {
-            e.printStackTrace();//fhmni chdrthbobi
+            e.printStackTrace();
         }
 
         return builder.create();
@@ -114,24 +106,3 @@ public class Single_choice_classification extends DialogFragment {
 
 
 
-
-/*   String[] wilayaname ;
-    JSONArray jsonArray = null;
-        try {
-        jsonArray = new JSONArray(readFileFromRawDirectory(R.raw.wilayas));
-        wilayaname = new String[jsonArray.length()];
-        for(int i = 0 ; i < jsonArray.length() ; i++){
-            try {
-                wilaya.add(new Wilaya(Integer.parseInt(jsonArray.getJSONObject(i).getString("id")) , jsonArray.getJSONObject(i).getString("nom")));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            wilayaname[i] = wilaya.get(i).getId() + " "+ wilaya.get(i).getName();
-        }
-        ArrayAdapter<String> wilayaAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,  wilayaname);
-        wilayaSpinner.setAdapter(wilayaAdapter);
-    } catch (JSONException e) {
-        e.printStackTrace();
-
-
-        }*/
