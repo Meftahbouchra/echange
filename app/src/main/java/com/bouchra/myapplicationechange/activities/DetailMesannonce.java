@@ -2,24 +2,35 @@ package com.bouchra.myapplicationechange.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.adapters.BottomsheetManipAnnonce;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class DetailMesannonce extends AppCompatActivity  implements DetailAnnonce.affichage {
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class DetailMesannonce extends AppCompatActivity {
     private Button voirOffres;
     private Annonce annonce;
     private TextView tite;
     private TextView desc;
     private ImageView img;
     private  TextView  retour;
-   private String imageUrl;
-  private String imageName;
+  private  TextView menu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +39,13 @@ public class DetailMesannonce extends AppCompatActivity  implements DetailAnnonc
         desc=findViewById(R.id.desc);
         img=findViewById(R.id.img_annonc);
         retour=findViewById(R.id.article_retour);
+menu=findViewById(R.id.menu);
+menu.setOnClickListener(v -> {
+    BottomsheetManipAnnonce bottomsheet = new BottomsheetManipAnnonce();
+    bottomsheet.show(getSupportFragmentManager(), "manipAnnonce");
 
+
+});
         voirOffres=findViewById(R.id.voir);
         voirOffres.setOnClickListener(v -> {
             Intent voir = new Intent(DetailMesannonce.this, DemandesOffre.class);
@@ -36,9 +53,9 @@ public class DetailMesannonce extends AppCompatActivity  implements DetailAnnonc
             finish();
         });
        // setImage(imageUrl,imageName);
-        tite.setText("abcd");
-        getIncomingIntent();
-      /*  annonce = (Annonce) getIntent().getSerializableExtra("annonce");
+      //  tite.setText("abcd");
+       // getIncomingIntent();
+        annonce = (Annonce) getIntent().getSerializableExtra("annonce");
         Log.e("User is :", FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).toString());
         FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -72,11 +89,11 @@ public class DetailMesannonce extends AppCompatActivity  implements DetailAnnonc
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
         String str = simpleDateFormat.format(annonce.getDateAnnonce());
-       time.setText(str);
+    //   time.setText(str);
         setImage(annonce.getImages().get(0), annonce.getTitreAnnonce());
         for (int i = 0; i < annonce.getArticleEnRetour().size(); i++) {
             retour.setText( retour.getText() + "\n" + annonce.getArticleEnRetour().get(i));
-        }*/
+        }
 
 
    /* @Override
@@ -109,11 +126,12 @@ public class DetailMesannonce extends AppCompatActivity  implements DetailAnnonc
 
 
 
-    @Override
-    public void getIncomingIntent() {
 
-    }
-   /* private void setImage(String imageUrl, String imageName) {
+    /*  @Override
+      public void getIncomingIntent() {
+
+      }*/
+  private void setImage(String imageUrl, String imageName) {
 
 
         tite.setText(imageName);
@@ -123,5 +141,13 @@ public class DetailMesannonce extends AppCompatActivity  implements DetailAnnonc
                 .asBitmap()
                 .load(imageUrl)
                 .into(img);
-    }*/
+    }
+   public void deleteAnnonce() {
+        DatabaseReference dAnnonce= FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
+
+        DatabaseReference dOffre=FirebaseDatabase.getInstance().getReference("Offre").child(annonce.getIdAnnonce());
+        dAnnonce.removeValue();
+        dOffre.removeValue();
+
+    }
 }

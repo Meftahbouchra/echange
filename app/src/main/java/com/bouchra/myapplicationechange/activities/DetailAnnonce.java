@@ -146,7 +146,7 @@ public  interface affichage{
 
     }
 
-    private void getIncomingIntent() {
+    public void getIncomingIntent() {
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
         Log.e("User is :", FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).toString());
         FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).addValueEventListener(new ValueEventListener() {

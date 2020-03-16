@@ -25,23 +25,18 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
 
         Button button1 = v.findViewById(R.id.btn_camera);
         Button button2 = v.findViewById(R.id.btn_gallery);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Toast.makeText(getContext(), "button1", Toast.LENGTH_SHORT).show();
-                //   mListner.onButtonCliked("button1 cliked");
-                ((ImagesStorage) getActivity()).takePhotoFromCamera();
-                dismiss();
-            }
+        button1.setOnClickListener(v1 -> {
+            // Toast.makeText(getContext(), "button1", Toast.LENGTH_SHORT).show();
+            //   mListner.onButtonCliked("button1 cliked");
+            ((ImagesStorage) getActivity()).takePhotoFromCamera();
+            dismiss();
+
         });
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //   mListner.onButtonCliked("button2 cliked");
-                //  Toast.makeText(getContext(), "button2", Toast.LENGTH_SHORT).show();
-                ((ImagesStorage) getActivity()).choosePhotoFromGallary();
-                dismiss();
-            }
+        button2.setOnClickListener(v12 -> {
+            //   mListner.onButtonCliked("button2 cliked");
+            //  Toast.makeText(getContext(), "button2", Toast.LENGTH_SHORT).show();
+            ((ImagesStorage) getActivity()).choosePhotoFromGallary();
+            dismiss();
         });
 
 
