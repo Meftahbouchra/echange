@@ -83,7 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
         logOut.setOnClickListener(v -> {
             firebaseAuth.signOut();
             updateUI();
-            preferenceUtils.Clear();
+           // preferenceUtils.Clear();
         });
         //hna bansayi ndir ta3 dialog
 

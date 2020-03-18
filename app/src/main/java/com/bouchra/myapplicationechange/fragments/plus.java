@@ -18,16 +18,15 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class plus extends Fragment {
     private TextView annonce;
-    private TextView  message;
-    private TextView  notification;
-    private TextView  historique;
-    private TextView   parametre;
+    private TextView message;
+    private TextView notification;
+    private TextView historique;
+    private TextView parametre;
     private TextView parteger;
-    private TextView  lougout;
+    private TextView lougout;
 
     private FirebaseAuth firebaseAuth;
     private PreferenceUtils preferenceUtils;
-
 
 
     public plus() {
@@ -36,42 +35,45 @@ public class plus extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.activity_plus, container, false);
+        View view = inflater.inflate(R.layout.activity_plus, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
-      //  annonce=view.findViewById(R.id.annonce);
-        message=view.findViewById(R.id.message);
-        notification=view.findViewById(R.id.notification);
-        historique=view.findViewById(R.id.historique);
-        parametre=view.findViewById(R.id.parametre);
-        parteger=view.findViewById(R.id.parteger);
-        lougout=view.findViewById(R.id.lougout);
+        //  annonce=view.findViewById(R.id.annonce);
+        message = view.findViewById(R.id.message);
+        notification = view.findViewById(R.id.notification);
+        historique = view.findViewById(R.id.historique);
+        parametre = view.findViewById(R.id.parametre);
+        parteger = view.findViewById(R.id.parteger);
+        lougout = view.findViewById(R.id.lougout);
         preferenceUtils = new PreferenceUtils(getActivity());
         //loug out
         lougout.setOnClickListener(v -> {
-             preferenceUtils.setMember(null);
-             firebaseAuth.signOut();
-             updateUI();
+            firebaseAuth.signOut();
+            updateUI();
+            preferenceUtils.Clear();
+
+
 
         });
-      //partager un message
+        //partager un message
         parteger.setOnClickListener(v -> {
-        Intent myIntent =new Intent (Intent.ACTION_SEND);
+            Intent myIntent = new Intent(Intent.ACTION_SEND);
 
-        //this is to get the app link in the playstore without lunching your app
-          //  final  String appPackageName = getApplicationContext
-        //this is the  sharing part
-        myIntent.setType("txt/link");
-        String shareBody = "hey ! ";//title text
-        String shareSub="APP NAMe";//the datails of sharing content
-        myIntent.putExtra(Intent.EXTRA_SUBJECT,shareSub);
-        myIntent.putExtra(Intent.EXTRA_TEXT,shareBody);
-        startActivity(Intent.createChooser(myIntent,"share using"));// ce le msg
+            //this is to get the app link in the playstore without lunching your app
+            //  final  String appPackageName = getApplicationContext
+            //this is the  sharing part
+            myIntent.setType("txt/link");
+            String shareBody = "hey ! ";//title text
+            String shareSub = "APP NAMe";//the datails of sharing content
+            myIntent.putExtra(Intent.EXTRA_SUBJECT, shareSub);
+            myIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+            startActivity(Intent.createChooser(myIntent, "share using"));// ce le msg
 
         });
 
 
-    return view;}
+        return view;
+    }
 
     //logout
     private void updateUI() {

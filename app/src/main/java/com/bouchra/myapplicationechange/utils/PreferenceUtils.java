@@ -29,38 +29,38 @@ public class PreferenceUtils {
 
     public PreferenceUtils(Context context) {
         this.context = context;
-        pref = context.getSharedPreferences(PREF_NAME,PRIVATE_MODE);
+        pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
     }
 
 
-  public Membre getMember() {
+    public Membre getMember() {
         Membre member = new Membre();
-        member.setIdMembre(pref.getString(ID_MEMBER , ""));
-        member.setNomMembre(pref.getString(NOM_MEMBER , ""));
-        member.setNumTel(pref.getInt(NUM_MEMBER , 0));
-        member.setEmail(pref.getString(EMAIL_MEMBER , ""));
-        member.setAdresseMembre(pref.getString(ADDR_MEMBER , ""));
-        member.setLienCompteFb(pref.getString(FB_MEMBER , ""));
-        member.setLienCompteGoogle(pref.getString(GOOGLE_MEMBER , ""));
-        member.setDateInscription(new Date(pref.getLong(DATE_MEMBER , new Date().getTime())));
-        member.setIdMembre(pref.getString(ID_MEMBER , ""));
+        member.setIdMembre(pref.getString(ID_MEMBER, ""));
+        member.setNomMembre(pref.getString(NOM_MEMBER, ""));
+        member.setNumTel(pref.getInt(NUM_MEMBER, 0));
+        member.setEmail(pref.getString(EMAIL_MEMBER, ""));
+        member.setAdresseMembre(pref.getString(ADDR_MEMBER, ""));
+        member.setLienCompteFb(pref.getString(FB_MEMBER, ""));
+        member.setLienCompteGoogle(pref.getString(GOOGLE_MEMBER, ""));
+        member.setDateInscription(new Date(pref.getLong(DATE_MEMBER, new Date().getTime())));
+        member.setIdMembre(pref.getString(ID_MEMBER, ""));
         return member;
     }
 
     public void setMember(Membre member) {
-        editor.putString(ID_MEMBER , member.getIdMembre());
-        editor.putString(NOM_MEMBER , member.getNomMembre());
-        editor.putInt(NUM_MEMBER , member.getNumTel());
-        editor.putString(EMAIL_MEMBER , member.getEmail());
-        editor.putString(ADDR_MEMBER , member.getAdresseMembre());
-        editor.putString(FB_MEMBER , member.getLienCompteFb());
-        editor.putString(GOOGLE_MEMBER , member.getLienCompteGoogle());
-        editor.putLong(DATE_MEMBER , member.getDateInscription().getTime());
+        editor.putString(ID_MEMBER, member.getIdMembre());
+        editor.putString(NOM_MEMBER, member.getNomMembre());
+        editor.putInt(NUM_MEMBER, member.getNumTel());
+        editor.putString(EMAIL_MEMBER, member.getEmail());
+        editor.putString(ADDR_MEMBER, member.getAdresseMembre());
+        editor.putString(FB_MEMBER, member.getLienCompteFb());
+        editor.putString(GOOGLE_MEMBER, member.getLienCompteGoogle());
+        editor.putLong(DATE_MEMBER, member.getDateInscription().getTime());
         editor.commit();
     }
 
-    public void Clear(){
+    public void Clear() {
         editor.clear().commit();
     }
 

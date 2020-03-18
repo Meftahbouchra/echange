@@ -75,8 +75,8 @@
 
             <TextView
                 android:id="@+id/ajout_article"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="@drawable/ic_add_black_24dp" />
         </LinearLayout>
 

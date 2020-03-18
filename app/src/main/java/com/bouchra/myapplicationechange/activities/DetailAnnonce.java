@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,7 +32,7 @@ import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DetailAnnonce extends AppCompatActivity  {
+public class DetailAnnonce extends AppCompatActivity {
     private RelativeLayout relativeLayout;//////////////////////////////////////profil
     private TextView tite;
     private TextView desc;
@@ -47,6 +48,7 @@ public class DetailAnnonce extends AppCompatActivity  {
     private PreferenceUtils preferenceUtils;
     private Membre membre;
     private Button offre;
+    private Dialog MyDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +71,39 @@ public class DetailAnnonce extends AppCompatActivity  {
             finish();
         });
         //RECEIVE OUR DATA
-         getIncomingIntent();
+        getIncomingIntent();
+        img.setOnClickListener(v -> {
+            //image clicable
+            showImage();
+            //Toast.makeText(getApplicationContext(), "image clicable", Toast.LENGTH_SHORT).show();
 
+        });
+
+
+    }
+
+    private void showImage() {
+
+        View view = getLayoutInflater().inflate(R.layout.showimage, null);
+        ImageView  imageView= view.findViewById(R.id.imgclik_annonce);
+
+       Glide.with(this)
+                .asBitmap()
+                .load(annonce.getImages().get(0))
+                .into(imageView);
+
+
+        TextView close = view.findViewById(R.id.retour);
+        close.setOnClickListener(v -> {
+            MyDialog.cancel();
+
+        });
+
+        //full screen
+        MyDialog = new Dialog(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
+
+        MyDialog.setContentView(view);
+        MyDialog.show();// hadi nkd ndirha ghir f fct
 
     }
 
@@ -91,10 +124,10 @@ public class DetailAnnonce extends AppCompatActivity  {
             MyDialog.cancel();
         });
         ajout.setOnClickListener(v -> {
-            String anonceId= annonce.getIdAnnonce().toString();
-        //   Toast.makeText(this, ""+a, Toast.LENGTH_SHORT).show();
+            String anonceId = annonce.getIdAnnonce().toString();
+            //   Toast.makeText(this, ""+a, Toast.LENGTH_SHORT).show();
             Intent ajou = new Intent(DetailAnnonce.this, AjoutOffre.class);
-            ajou.putExtra("anonceId",anonceId); //key* value
+            ajou.putExtra("anonceId", anonceId); //key* value
             startActivity(ajou);
             finish();
 
@@ -115,12 +148,13 @@ public class DetailAnnonce extends AppCompatActivity  {
 
 ///////////// fin de dalog offre
 
-public  interface affichage{
+    public interface affichage {
 
-    void getIncomingIntent();
-   // void  setImage(String imageUrl, String imageName);
+        void getIncomingIntent();
+        // void  setImage(String imageUrl, String imageName);
 
-}
+    }
+
     private void setImage(String imageUrl, String imageName) {
 
 

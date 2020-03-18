@@ -74,9 +74,10 @@ dependencies {
     //CHAT
 
     implementation 'hani.momanii.supernova_emoji_library:supernova-emoji-library:0.0.2'
-    implementation 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
+    implementation 'me.himanshusoni.chatmessageview:chat-message-view:1.0.7'
     //Places SERVICES
     implementation 'com.google.android.gms:play-services-places:17.0.0'
+
 
 
 }

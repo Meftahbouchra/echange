@@ -9,9 +9,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.BottomsheetManipAnnonce;
+import com.bouchra.myapplicationechange.fragments.Modifier;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class DetailMesannonce extends AppCompatActivity {
@@ -29,32 +33,33 @@ public class DetailMesannonce extends AppCompatActivity {
     private TextView tite;
     private TextView desc;
     private ImageView img;
-    private  TextView  retour;
-  private  TextView menu;
+    private TextView retour;
+    private TextView menu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_mesannonce);
-        tite=findViewById(R.id.titte_annonce);
-        desc=findViewById(R.id.desc);
-        img=findViewById(R.id.img_annonc);
-        retour=findViewById(R.id.article_retour);
-menu=findViewById(R.id.menu);
-menu.setOnClickListener(v -> {
-    BottomsheetManipAnnonce bottomsheet = new BottomsheetManipAnnonce();
-    bottomsheet.show(getSupportFragmentManager(), "manipAnnonce");
+        tite = findViewById(R.id.titte_annonce);
+        desc = findViewById(R.id.desc);
+        img = findViewById(R.id.img_annonc);
+        retour = findViewById(R.id.article_retour);
+        menu = findViewById(R.id.menu);
+        menu.setOnClickListener(v -> {
+            BottomsheetManipAnnonce bottomsheet = new BottomsheetManipAnnonce();
+            bottomsheet.show(getSupportFragmentManager(), "manipAnnonce");
 
 
-});
-        voirOffres=findViewById(R.id.voir);
+        });
+        voirOffres = findViewById(R.id.voir);
         voirOffres.setOnClickListener(v -> {
             Intent voir = new Intent(DetailMesannonce.this, DemandesOffre.class);
             startActivity(voir);
             finish();
         });
-       // setImage(imageUrl,imageName);
-      //  tite.setText("abcd");
-       // getIncomingIntent();
+        // setImage(imageUrl,imageName);
+        //  tite.setText("abcd");
+        // getIncomingIntent();
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
         Log.e("User is :", FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).toString());
         FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).addValueEventListener(new ValueEventListener() {
@@ -63,8 +68,8 @@ menu.setOnClickListener(v -> {
                 try {
                     if (dataSnapshot.getValue() != null) {
                         try {
-                           // name_user.setText(dataSnapshot.child("nomMembre").getValue().toString());
-                            String nomUser=dataSnapshot.child("nomMembre").getValue().toString();
+                            // name_user.setText(dataSnapshot.child("nomMembre").getValue().toString());
+                            String nomUser = dataSnapshot.child("nomMembre").getValue().toString();
                             Log.e("User is :", nomUser);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -89,10 +94,10 @@ menu.setOnClickListener(v -> {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
         String str = simpleDateFormat.format(annonce.getDateAnnonce());
-    //   time.setText(str);
+        //   time.setText(str);
         setImage(annonce.getImages().get(0), annonce.getTitreAnnonce());
         for (int i = 0; i < annonce.getArticleEnRetour().size(); i++) {
-            retour.setText( retour.getText() + "\n" + annonce.getArticleEnRetour().get(i));
+            retour.setText(retour.getText() + "\n" + annonce.getArticleEnRetour().get(i));
         }
 
 
@@ -125,13 +130,11 @@ menu.setOnClickListener(v -> {
     }
 
 
-
-
     /*  @Override
       public void getIncomingIntent() {
 
       }*/
-  private void setImage(String imageUrl, String imageName) {
+    private void setImage(String imageUrl, String imageName) {
 
 
         tite.setText(imageName);
@@ -142,12 +145,38 @@ menu.setOnClickListener(v -> {
                 .load(imageUrl)
                 .into(img);
     }
-   public void deleteAnnonce() {
-        DatabaseReference dAnnonce= FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
 
-        DatabaseReference dOffre=FirebaseDatabase.getInstance().getReference("Offre").child(annonce.getIdAnnonce());
+    public void deleteAnnonce() {
+        DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
+
+        DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(annonce.getIdAnnonce());
         dAnnonce.removeValue();
         dOffre.removeValue();
+
+    }
+
+    public void goToFragmentModifier() {
+        // getSupportFragmentManager().beginTransaction().add(R.id.fragment,new Modifier(),"Modifier").commit();
+        //PACK DATA IN A BUNDLE
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction t = manager.beginTransaction();
+        final Modifier m4 = new Modifier();
+        Bundle b2 = new Bundle();
+        b2.putString("nomannonce", annonce.getTitreAnnonce());
+        b2.putString("descannonce", annonce.getDescriptionAnnonce());
+        b2.putString("imgannonce", annonce.getImages().get(0));
+        ArrayList<String> article = new ArrayList<>();
+      /*  for (int i = 0; i < annonce.getArticleEnRetour().size(); i++) {
+            article.add(annonce.getArticleEnRetour().get(i));
+
+        }
+        b2.putSerializable("article", article);//khir m put string hadi bch tfxt haja kbira*/
+
+        b2.putSerializable("article", annonce.getArticleEnRetour());
+        m4.setArguments(b2);
+        t.add(R.id.fragment, m4);
+        t.commit();
+
 
     }
 }

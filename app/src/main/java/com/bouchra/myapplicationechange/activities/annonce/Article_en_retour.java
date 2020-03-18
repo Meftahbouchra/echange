@@ -19,7 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class Article_en_retour extends AppCompatActivity {
+public class
+Article_en_retour extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecycleViewArticleRetour postAdapter;
 
@@ -27,6 +28,7 @@ public class Article_en_retour extends AppCompatActivity {
     private EditText editText;
     private TextView textView;
     private Annonce annonce;
+    ArrayList<String> posts = new ArrayList<>();
 
 
     @Override
@@ -37,31 +39,63 @@ public class Article_en_retour extends AppCompatActivity {
         textView = findViewById(R.id.ajout_article);
         recyclerView = findViewById(R.id.rec_retour);
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
-        ArrayList<String> posts = new ArrayList<>();
+
         //isEmpty ewt vide    isEmpty()
 
         textView.setOnClickListener(v -> {
-            String x = editText.getText().toString();
-
-            if (posts.size() < 10) {
-                if (!x.isEmpty()) {
-                    posts.add(x);
-                    editText.setText("");
-                    postAdapter = new RecycleViewArticleRetour(this, posts);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                    recyclerView.setAdapter(postAdapter);
+            ajoutArticle();
+        });
 
 
+        findViewById(R.id.ok).setOnClickListener(v -> {
+            annonce.getArticleEnRetour().addAll(posts);
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Annonce");
+            databaseReference.child(annonce.getIdAnnonce()).setValue(annonce).addOnCompleteListener(task2 -> {
+                if (task2.isSuccessful()) {
+                    finish();
                 } else {
-                    Toast.makeText(this, "remplir le champs", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
                 }
+            });
+
+        });
+        findViewById(R.id.annuler).setOnClickListener(v -> {
+            Intent annul = new Intent(Article_en_retour.this, debut.class);
+            startActivity(annul);
+            finish();
+        });
+
+
+    }
+
+
+    public interface ajout {
+        void ajoutArticle();
+
+    }
+
+
+    public void ajoutArticle() {
+        String x = editText.getText().toString();
+        if (posts.size() < 10) {
+            if (!x.isEmpty()) {
+                posts.add(x);
+                editText.setText("");
+                postAdapter = new RecycleViewArticleRetour(this, posts);
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                recyclerView.setAdapter(postAdapter);
 
 
             } else {
-                editText.setEnabled(false);
-                editText.setText("");
-                Toast.makeText(this, "Dèsolè, il n'ya pas pour ajouter plus d'article", Toast.LENGTH_SHORT).show();
-            }// vous avez atteint la limite des postes possible
+                Toast.makeText(this, "remplir le champs", Toast.LENGTH_SHORT).show();
+            }
+
+
+        } else {
+            editText.setEnabled(false);
+            editText.setText("");
+            Toast.makeText(this, "Dèsolè, il n'ya pas pour ajouter plus d'article", Toast.LENGTH_SHORT).show();
+        }// vous avez atteint la limite des postes possible
 
 
 
@@ -87,27 +121,5 @@ public class Article_en_retour extends AppCompatActivity {
                 Toast.makeText(this, "remplir le champs", Toast.LENGTH_SHORT).show();
             }
 */
-        });
-
-
-        findViewById(R.id.ok).setOnClickListener(v -> {
-            annonce.getArticleEnRetour().addAll(posts);
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Annonce");
-            databaseReference.child(annonce.getIdAnnonce()).setValue(annonce).addOnCompleteListener(task2 -> {
-                if (task2.isSuccessful()) {
-                    finish();
-                } else {
-                    Toast.makeText(getApplicationContext(), "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
-                }
-            });
-
-        });
-        findViewById(R.id.annuler).setOnClickListener(v -> {
-            Intent annul = new Intent(Article_en_retour.this, debut.class);
-            startActivity(annul);
-            finish();
-        });
-
-
     }
 }

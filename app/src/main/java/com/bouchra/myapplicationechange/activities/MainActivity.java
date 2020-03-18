@@ -218,7 +218,10 @@ public class MainActivity extends AppCompatActivity {
                         usr.setEmail(user.getEmail());
                         usr.setNomMembre(user.getDisplayName());
                         usr.setIdMembre(ID);
-                        usr.setNumTel(Integer.parseInt(user.getPhoneNumber()));
+                        if(user.getPhoneNumber() !=null){
+                            usr.setNumTel(Integer.parseInt(user.getPhoneNumber().replaceAll("[^0-9]","")));
+                        }
+
                         usr.setDateInscription(new Date());
                         databaseReference.setValue(usr).addOnCompleteListener(task2 -> {
                             if (task2.isSuccessful()) {
