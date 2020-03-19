@@ -36,6 +36,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
     private PreferenceUtils preferenceUtils;
+    private String facebookUserTd = " ";
 
 
     @Override
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         connect = findViewById(R.id.connecte);
 
         connect.setOnClickListener(v -> {
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment,new Connect(),"connect").commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment, new Connect(), "connect").commit();
         });
 
 // hdi tni dkhla f ta3 facebook
@@ -164,10 +166,23 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             String ID = firebaseAuth.getCurrentUser().getUid();
                             databaseReference = FirebaseDatabase.getInstance().getReference("Membre").child(ID);
+
+
+                            for (UserInfo profile : user.getProviderData()) {
+
+                                if (FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())) {
+                                    facebookUserTd = profile.getUid();
+                                }
+
+                            }
+
+
+                            String photoUrl = "https://graph.facebook.com/" + facebookUserTd + "/picture?height=500";
                             Membre usr = new Membre();
                             usr.setEmail(user.getEmail());
                             usr.setNomMembre(user.getDisplayName());
                             usr.setIdMembre(ID);
+                            usr.setPhotoUser(photoUrl);
                             //usr.setNumTel(Integer.parseInt(user.getPhoneNumber()));
                             usr.setDateInscription(new Date());
                             databaseReference.setValue(usr).addOnCompleteListener(task2 -> {
@@ -199,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void inscrire(View view) {
         // hada ta3 mn acti  nhal fragm
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment,new Sinscrire(),"inscrire").commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment, new Sinscrire(), "inscrire").commit();
     }
 /////// hadi ta3 gooooogle
 
@@ -210,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
+                        String photoesy="https://statics1.nat-nin.fr/58258-big_default_2x/louise.jpg";/////////fauuuse
                         // Sign in success, update UI with the signed-in user's informatio
                         FirebaseUser user = mAuth.getCurrentUser();
                         String ID = firebaseAuth.getCurrentUser().getUid();
@@ -218,8 +234,9 @@ public class MainActivity extends AppCompatActivity {
                         usr.setEmail(user.getEmail());
                         usr.setNomMembre(user.getDisplayName());
                         usr.setIdMembre(ID);
-                        if(user.getPhoneNumber() !=null){
-                            usr.setNumTel(Integer.parseInt(user.getPhoneNumber().replaceAll("[^0-9]","")));
+                        usr.setPhotoUser(photoesy);
+                        if (user.getPhoneNumber() != null) {
+                            usr.setNumTel(Integer.parseInt(user.getPhoneNumber().replaceAll("[^0-9]", "")));
                         }
 
                         usr.setDateInscription(new Date());
@@ -243,19 +260,20 @@ public class MainActivity extends AppCompatActivity {
 
 
                 }).addOnFailureListener(e -> {
-                    //grt and show error mesage
-                    Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+            //grt and show error mesage
+            Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
     // tgla3 l frag ila kyn ila mknch tkhroj ga3  mn had l act
     public void onBackPressed() {
-        if (getSupportFragmentManager().findFragmentByTag("connect") != null){
+        if (getSupportFragmentManager().findFragmentByTag("connect") != null) {
             getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("connect")).commit();
-        } else if (getSupportFragmentManager().findFragmentByTag("inscrire") != null){
+        } else if (getSupportFragmentManager().findFragmentByTag("inscrire") != null) {
             getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("inscrire")).commit();
-        } else { super.onBackPressed();
+        } else {
+            super.onBackPressed();
         }
     }
 }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Message;
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -22,15 +23,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int MSG_TYPE_RIGHT = 1;
     private Context mcontext;
     private ArrayList<Message> mChat;
-    //private String imageurl;
+    private String imageurl;
     FirebaseUser fuser;
     // private ArrayList<Annonce> annonces = new ArrayList<>();
 
 
-    public MessageAdapter(Context mcontext, ArrayList<Message> mChat) {
+    public MessageAdapter(Context mcontext, ArrayList<Message> mChat, String imageurl) {
         this.mcontext = mcontext;
         this.mChat = mChat;
-
+        this.imageurl = imageurl;
     }
 
     @NonNull
@@ -53,7 +54,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         Message message = mChat.get(position);
         holder.show_message.setText(message.getTextMessage());
-       // Glide.with(mcontext).load(imageurl).into(holder.profile_image);
+        Glide.with(mcontext).load(imageurl).into(holder.profile_image);
     }
 
     @Override

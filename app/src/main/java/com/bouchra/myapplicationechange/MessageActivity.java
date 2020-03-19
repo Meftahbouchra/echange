@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bouchra.myapplicationechange.adapters.MessageAdapter;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.models.Message;
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +36,7 @@ public class MessageActivity extends AppCompatActivity {
     CircleImageView profile_image;
     TextView username;
     FirebaseUser fuser;
-    DatabaseReference reference, r;
+    DatabaseReference reference, r, l;
 
 
     ImageButton btn_send;
@@ -81,8 +82,37 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Membre membre = dataSnapshot.getValue(Membre.class);
                 username.setText(membre.getNomMembre());
+                Glide.with(MessageActivity.this).load(membre.getPhotoUser()).into(profile_image);
                 //  Glide.with(MessageActivity.this).load(membre.getImg).into(profile_image); m3ndich img ta3 user
-               readMessage(fuser.getUid(), userid);
+                // readMessage(fuser.getUid(), userid,membre.getPhotoUser());
+                //////////////////////////////////////////////////////////////////////////
+                //String myid, String userid,String imageurl)
+                mchat = new ArrayList<>();
+                //   l = FirebaseDatabase.getInstance().getReference("Message");
+                l = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((fuser.getUid().hashCode()) + (userid.hashCode())));
+                l.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        mchat.clear();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                            Message message = snapshot.getValue(Message.class);// getvalue  de lbrary gson yroh yhws yjbd direct child w ydirh f object message ila li jbdth mchikima classe yhbs
+
+                            if (message.getIdreceiver().equals(fuser.getUid()) && message.getIdsender().equals(userid) ||
+                                    message.getIdreceiver().equals(userid) && message.getIdsender().equals(fuser.getUid())) {
+                                mchat.add(message);
+
+                            }
+                            messageAdapter = new MessageAdapter(MessageActivity.this, mchat, membre.getPhotoUser());
+                            recyclerView.setAdapter(messageAdapter);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
 
             }
@@ -103,7 +133,7 @@ public class MessageActivity extends AppCompatActivity {
                 chat.setIdreceiver(userid);
                 chat.setIdsender(fuser.getUid());
                 chat.setDateMessage(new Date());
-                chat.setIdMessage(String.valueOf(chat.getIdreceiver().hashCode()) + chat.getIdsender().hashCode());
+                chat.setIdMessage(String.valueOf(chat.getDateMessage().getTime()));
                 r.child(String.valueOf(chat.getDateMessage().getTime())).setValue(chat).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Votre message a été soumise avec succès ", Toast.LENGTH_LONG).show();
@@ -121,33 +151,10 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
-    private void readMessage(String myid, String userid) {
-        mchat = new ArrayList<>();
-        reference = FirebaseDatabase.getInstance().getReference("Message");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mchat.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Message message = snapshot.getValue(Message.class);
-                    //if (message.getIdreceiver().equals(myid) && message.getIdsender().equals(userid) ||
-                            if(message.getIdreceiver().equals(userid) && message.getIdsender().equals(myid)) {
-                        mchat.add(message);
-
-                    }
-                    messageAdapter = new MessageAdapter(MessageActivity.this, mchat);
-                    recyclerView.setAdapter(messageAdapter);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+  /*  private void readMessage(String myid, String userid,String imageurl) {
 
 
-    }
+    }*/
 }
    /* private void sendMessage(String sender, String receiver,String message){
 

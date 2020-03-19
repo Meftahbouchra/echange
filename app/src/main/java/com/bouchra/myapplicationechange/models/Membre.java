@@ -13,22 +13,32 @@ public class Membre implements Serializable {
     private String lienCompteFb;
     private String lienCompteGoogle;
     private Date dateInscription;
+    private String photoUser;
 
 
     public Membre() {
     }
 
 
-    public Membre(String idMembre, String nomMembre, int numTel, String email, String adresseMembre, String motDePasse, Date dateInscription, String lienCompteFb, String lienCompteGoogle) {
+    public Membre(String idMembre, String nomMembre, int numTel, String email, String adresseMembre, String motDePasse, String lienCompteFb, String lienCompteGoogle, Date dateInscription, String photoUser) {
         this.idMembre = idMembre;
         this.nomMembre = nomMembre;
         this.numTel = numTel;
         this.email = email;
         this.adresseMembre = adresseMembre;
         this.motDePasse = motDePasse;
-        this.dateInscription = dateInscription;
         this.lienCompteFb = lienCompteFb;
         this.lienCompteGoogle = lienCompteGoogle;
+        this.dateInscription = dateInscription;
+        this.photoUser = photoUser;
+    }
+
+    public String getPhotoUser() {
+        return photoUser;
+    }
+
+    public void setPhotoUser(String photoUser) {
+        this.photoUser = photoUser;
     }
 
     public String getIdMembre() {

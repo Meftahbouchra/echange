@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Date;
+
 public class Sinscrire extends Fragment {
     private TextInputEditText txt_email, txt_username, txt_password;
     private Button btn_register;
@@ -90,7 +92,7 @@ public class Sinscrire extends Fragment {
 
 
                         //hdo ta3 ysjl f firebase
-
+                        String imageUser="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSNe5yo7hl-b5UHwropa_-4hNehtgV4w6wkFM1gw-o59SW93FNt";
                         ID = firebaseAuth.getCurrentUser().getUid();
                         databaseReference = FirebaseDatabase.getInstance().getReference("Membre").child(ID);
                         Membre usr = new Membre();
@@ -98,6 +100,8 @@ public class Sinscrire extends Fragment {
                         usr.setNomMembre(name);
                         usr.setMotDePasse(password);
                         usr.setIdMembre(ID);
+                        usr.setPhotoUser(imageUser);
+                        usr.setDateInscription(new Date());
                         databaseReference.setValue(usr).addOnCompleteListener(task2 -> {
                             if (task2.isSuccessful()) {
                                 //shared

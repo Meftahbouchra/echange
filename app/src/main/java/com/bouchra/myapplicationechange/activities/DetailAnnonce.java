@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,18 +45,20 @@ public class DetailAnnonce extends AppCompatActivity {
     private DatabaseReference ref;
     private TextView txtRetout;
     private TextView name_user;
-    private CircleImageView imgUser;
+    private CircleImageView imgUser;//img_user
     private Context cont;
     private PreferenceUtils preferenceUtils;
     private Membre membre;
     private Button offre;
     private Dialog MyDialog;
-private TextView sendMsg; //send_Msg
+    private TextView sendMsg; //send_Msg
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_annonce);
         relativeLayout = findViewById(R.id.relative_profie);
+        imgUser = findViewById(R.id.img_user);
         offre = findViewById(R.id.offre);
         offre.setOnClickListener(v -> {
             MyDialog();
@@ -79,13 +82,13 @@ private TextView sendMsg; //send_Msg
             //Toast.makeText(getApplicationContext(), "image clicable", Toast.LENGTH_SHORT).show();
 
         });
-        sendMsg=findViewById(R.id.send_Msg);
+        sendMsg = findViewById(R.id.send_Msg);
         sendMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //annonce.getUserId()
-                Intent intent=new Intent(DetailAnnonce.this, MessageActivity.class);
-                intent.putExtra("user",annonce.getUserId());
+                Intent intent = new Intent(DetailAnnonce.this, MessageActivity.class);
+                intent.putExtra("user", annonce.getUserId());
                 startActivity(intent);
 
             }
@@ -96,9 +99,9 @@ private TextView sendMsg; //send_Msg
     private void showImage() {
 
         View view = getLayoutInflater().inflate(R.layout.showimage, null);
-        ImageView  imageView= view.findViewById(R.id.imgclik_annonce);
+        ImageView imageView = view.findViewById(R.id.imgclik_annonce);
 
-       Glide.with(this)
+        Glide.with(this)
                 .asBitmap()
                 .load(annonce.getImages().get(0))
                 .into(imageView);
@@ -201,6 +204,14 @@ private TextView sendMsg; //send_Msg
                     if (dataSnapshot.getValue() != null) {
                         try {
                             name_user.setText(dataSnapshot.child("nomMembre").getValue().toString());
+                            //imgUser.setImageURI(dataSnapshot.child("photoUser").);
+                            String photouser = dataSnapshot.child("photoUser").getValue().toString();
+                            Picasso.get().load(photouser).into(imgUser);
+
+                           /* Glide.with(DetailAnnonce.this)
+                                    .asBitmap()
+                                    .load(photouser)
+                                    .into(imgUser);*/
                             Log.e("User is :", dataSnapshot.getValue().toString());
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -220,6 +231,7 @@ private TextView sendMsg; //send_Msg
         });
         tite.setText(annonce.getTitreAnnonce());
         desc.setText(annonce.getDescriptionAnnonce());
+
 
         Date d = new Date(new Date().getTime() + 28800000);
       /*  String s=new SimpleDateFormat("dd/MM/yyyy kk:mm:ss").format(d);

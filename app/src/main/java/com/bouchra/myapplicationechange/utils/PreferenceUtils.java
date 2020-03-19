@@ -26,6 +26,7 @@ public class PreferenceUtils {
     public static final String FB_MEMBER = "fb_user";
     public static final String GOOGLE_MEMBER = "google_user";
     public static final String DATE_MEMBER = "date_user";
+    public static final String PHOTO_USER="photo_user";
 
     public PreferenceUtils(Context context) {
         this.context = context;
@@ -45,6 +46,7 @@ public class PreferenceUtils {
         member.setLienCompteGoogle(pref.getString(GOOGLE_MEMBER, ""));
         member.setDateInscription(new Date(pref.getLong(DATE_MEMBER, new Date().getTime())));
         member.setIdMembre(pref.getString(ID_MEMBER, ""));
+        member.setPhotoUser(pref.getString(PHOTO_USER,""));
         return member;
     }
 
@@ -57,6 +59,7 @@ public class PreferenceUtils {
         editor.putString(FB_MEMBER, member.getLienCompteFb());
         editor.putString(GOOGLE_MEMBER, member.getLienCompteGoogle());
         editor.putLong(DATE_MEMBER, member.getDateInscription().getTime());
+        editor.putString(PHOTO_USER,member.getPhotoUser());
         editor.commit();
     }
 
