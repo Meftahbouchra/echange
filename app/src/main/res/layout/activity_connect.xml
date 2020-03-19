@@ -38,7 +38,7 @@
         android:layout_width="134dp"
         android:layout_height="134dp"
         android:layout_below="@+id/l1l"
-        android:src="@drawable/circletransparent"
+        app:srcCompat="@drawable/circletransparent"
         android:layout_marginTop="-80dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="-100dp"/>
@@ -46,7 +46,7 @@
         android:id="@+id/circle2"
         android:layout_width="134dp"
         android:layout_height="134dp"
-        android:src="@drawable/circletransparent"
+        app:srcCompat="@drawable/circletransparent"
         android:layout_marginBottom="50dp"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="-100dp"/>
@@ -54,7 +54,7 @@
         android:id="@+id/circle3"
         android:layout_width="182dp"
         android:layout_height="182dp"
-        android:src="@drawable/circle"
+        app:srcCompat="@drawable/circle"
         android:layout_alignParentRight="true"
         android:layout_marginRight="-80dp"
         android:layout_marginBottom="-30dp"
@@ -63,7 +63,7 @@
         android:id="@+id/circle4"
         android:layout_width="134dp"
         android:layout_height="134dp"
-        android:src="@drawable/circletransparent"
+        app:srcCompat="@drawable/circletransparent"
        android:layout_toLeftOf="@id/circle3"
         android:layout_marginBottom="-50dp"
         android:layout_marginRight="-50dp"
@@ -178,7 +178,7 @@
             android:id="@+id/btnplac"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_add_foreground"
+            app:srcCompat="@drawable/ic_add_foreground"
             android:background="@drawable/btn_login"
 
             />

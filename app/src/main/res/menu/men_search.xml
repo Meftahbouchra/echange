@@ -6,5 +6,5 @@
     android:title="srerch"
     android:icon="@drawable/ic_search"
     app:showAsAction="ifRoom|collapseActionView"
-    app:actionViewClass="android.widget.SearchView" />
+    app:actionViewClass="androidx.appcompat.widget.SearchView" />
 </menu>

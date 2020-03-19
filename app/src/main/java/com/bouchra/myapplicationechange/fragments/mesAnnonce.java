@@ -5,10 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.myannonce;
 import com.bouchra.myapplicationechange.models.Annonce;
-import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -67,8 +66,8 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
             }
         });
         // Locate the EditText in listview_main.xml
-        editsearch =view.findViewById(R.id.search);
-        editsearch.setOnQueryTextListener(this);
+    /*    editsearch =view.findViewById(R.id.search);/////////////////////////////////////////////////
+        editsearch.setOnQueryTextListener(this);*/
         // récupère la chaîne de requête actuellement dans le champ de texte
         return view;
     }

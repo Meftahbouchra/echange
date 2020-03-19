@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -116,8 +116,8 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
             }
 
         });
-        editsearch =view.findViewById(R.id.search);
-        editsearch.setOnQueryTextListener(this);
+      /*editsearch = view.findViewById(R.id.search);////////////////////////////////////////////////////
+        editsearch.setOnQueryTextListener(this);*/
         return view;
     }
 

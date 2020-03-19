@@ -38,14 +38,14 @@
         android:layout_width="134dp"
         android:layout_height="134dp"
         android:layout_below="@+id/l1l"
-        android:src="@drawable/circletransparent"
+        app:srcCompat="@drawable/circletransparent"
         android:layout_marginTop="-5dp"
         android:layout_marginLeft="-25dp"/>
     <ImageView
         android:id="@+id/circle3"
         android:layout_width="182dp"
         android:layout_height="182dp"
-        android:src="@drawable/circle"
+        app:srcCompat="@drawable/circle"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="-80dp"
         android:layout_marginBottom="-30dp"
@@ -54,7 +54,7 @@
         android:id="@+id/circle4"
         android:layout_width="134dp"
         android:layout_height="134dp"
-        android:src="@drawable/circletransparent"
+        app:srcCompat="@drawable/circletransparent"
         android:layout_alignParentRight="true"
         android:layout_marginRight="-100dp" />
 

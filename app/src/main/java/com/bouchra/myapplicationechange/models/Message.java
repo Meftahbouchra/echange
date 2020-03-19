@@ -4,25 +4,36 @@ import java.util.Date;
 
 public class Message {
     private String idMessage;
-    private String userID;
+    private String idsender;
+    private String idreceiver;
 
-    public String getUserID() {
-        return userID;
+    public Message(String idMessage, String idsender, String idreceiver, Date dateMessage, String textMessage) {
+        this.idMessage = idMessage;
+        this.idsender = idsender;
+        this.idreceiver = idreceiver;
+        this.dateMessage = dateMessage;
+        this.textMessage = textMessage;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public String getIdsender() {
+        return idsender;
+    }
+
+    public void setIdsender(String idsender) {
+        this.idsender = idsender;
+    }
+
+    public String getIdreceiver() {
+        return idreceiver;
+    }
+
+    public void setIdreceiver(String idreceiver) {
+        this.idreceiver = idreceiver;
     }
 
     public Message() {
     }
 
-    public Message(String idMessage, String userID, Date dateMessage, String textMessage) {
-        this.idMessage = idMessage;
-        this.userID = userID;
-        this.dateMessage = dateMessage;
-        this.textMessage = textMessage;
-    }
 
     public String getIdMessage() {
         return idMessage;

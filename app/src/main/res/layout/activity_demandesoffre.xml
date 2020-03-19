@@ -29,7 +29,8 @@
         android:layout_below="@+id/titte_annonce"
         android:layout_marginTop="30dp"
         android:background="@drawable/card_items"
-        android:src="#ffffff" />
+      android:src="#ffffff"
+        /><!--app:srcCompat="#ffffff"-->
 
     <TextView
         android:id="@+id/desc_offre"

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bouchra.myapplicationechange.MessageActivity;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Membre;
@@ -49,7 +50,7 @@ public class DetailAnnonce extends AppCompatActivity {
     private Membre membre;
     private Button offre;
     private Dialog MyDialog;
-
+private TextView sendMsg; //send_Msg
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +79,17 @@ public class DetailAnnonce extends AppCompatActivity {
             //Toast.makeText(getApplicationContext(), "image clicable", Toast.LENGTH_SHORT).show();
 
         });
+        sendMsg=findViewById(R.id.send_Msg);
+        sendMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //annonce.getUserId()
+                Intent intent=new Intent(DetailAnnonce.this, MessageActivity.class);
+                intent.putExtra("user",annonce.getUserId());
+                startActivity(intent);
 
+            }
+        });
 
     }
 

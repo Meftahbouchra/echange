@@ -63,7 +63,7 @@
             android:layout_marginHorizontal="32dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/card_items"
-            android:src="@drawable/user" />
+            app:srcCompat="@drawable/user" />
 
         <EditText
             android:id="@+id/desci_annonce"

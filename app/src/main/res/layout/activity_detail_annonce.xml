@@ -30,6 +30,7 @@
                 android:drawableTint="@color/orange" />
 
             <TextView
+                android:id="@+id/send_Msg"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
@@ -153,7 +154,7 @@
             android:layout_marginHorizontal="32dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/card_items"
-            android:src="@drawable/user" />
+            app:srcCompat="@drawable/user" />
 
         <LinearLayout
             android:layout_width="match_parent"
