@@ -10,6 +10,7 @@ public class Offre {
     // en +
     private String annonceId;
     private String wilaya;
+    private String idUser;
 
 
     public String getAnnonceId() {
