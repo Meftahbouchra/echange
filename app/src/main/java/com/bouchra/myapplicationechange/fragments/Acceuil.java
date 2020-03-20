@@ -28,6 +28,7 @@ import com.bouchra.myapplicationechange.activities.MainActivity;
 import com.bouchra.myapplicationechange.activities.annonce.AnnonceActivity;
 import com.bouchra.myapplicationechange.adapters.publicationannonceadapt;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,9 +40,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-public class Acceuil extends Fragment implements Single_choice_classification.SingleChoiceListener,SearchView.OnQueryTextListener {
+public class Acceuil extends Fragment implements Single_choice_classification.SingleChoiceListener, SearchView.OnQueryTextListener {
     private FirebaseAuth firebaseAuth;
-    private LinearLayout  linearLayout2;
+    private LinearLayout linearLayout2;
     private TextView textView1, textView2;
     private Button google;
     private RelativeLayout addAnnonce;
@@ -49,7 +50,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     private ArrayList<Annonce> annonces;
     private RecyclerView recyclerView;
     private SearchView editsearch;
-    private String wilaya = "" , searchText = "";
+    private String wilaya = "", searchText = "";
 
     public Acceuil() {
 
@@ -62,10 +63,10 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
         linearLayout2 = view.findViewById(R.id.layout1);
         textView1 = view.findViewById(R.id.txt11);
-       // textView2 = view.findViewById(R.id.txt22);
+        // textView2 = view.findViewById(R.id.txt22);
         recyclerView = view.findViewById(R.id.recyle_public);
         google = view.findViewById(R.id.button5);
-        Button button44=view.findViewById(R.id.button3);
+        Button button44 = view.findViewById(R.id.button3);
         button44.setOnClickListener(v -> {
             Intent goin = new Intent(getActivity(), DetailMesannonce.class);
             startActivity(goin);
@@ -98,6 +99,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         recyclerView.setAdapter(publicAdapter);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Annonce");
+        PreferenceUtils preferenceUtils = new PreferenceUtils(getContext());
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             //onDataChange()méthode pour lire un instantané statique du contenu d'un chemin donné!!au moment de l'événement
@@ -105,7 +107,13 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                 Log.e("Count ", "" + snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Log.e("Data here", postSnapshot.toString());
-                    annonces.add(postSnapshot.getValue(Annonce.class));
+                    String user = postSnapshot.child("userId").getValue().toString();
+
+                    if (!user.equals(preferenceUtils.getMember().getIdMembre())) {
+                        annonces.add(postSnapshot.getValue(Annonce.class));
+                    }
+
+
                 }
                 publicAdapter.setMesannonce(annonces);
                 publicAdapter.notifyDataSetChanged();
@@ -142,7 +150,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     public void onPositiveButtononCliked(String name) {
         Toast.makeText(getContext(), "Selected item = " + name, Toast.LENGTH_SHORT).show();
         wilaya = name;
-        Recherche(searchText , wilaya);
+        Recherche(searchText, wilaya);
     }
 
     @Override
@@ -158,15 +166,16 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     @Override
     public boolean onQueryTextChange(String newText) {
         searchText = newText;
-        Recherche(searchText , wilaya);
+        Recherche(searchText, wilaya);
         return false;
     }
 
-    public void Recherche(String keyWord , String wilaya){
-        ArrayList<Annonce> output=new ArrayList<>();
-        for (Annonce object: annonces) {
-            String obj=  object.getTitreAnnonce().toLowerCase();
-            if(obj.contains(keyWord.toLowerCase()) && object.getWilaya().toLowerCase().contains(wilaya.toLowerCase())) output.add(object);
+    public void Recherche(String keyWord, String wilaya) {
+        ArrayList<Annonce> output = new ArrayList<>();
+        for (Annonce object : annonces) {
+            String obj = object.getTitreAnnonce().toLowerCase();
+            if (obj.contains(keyWord.toLowerCase()) && object.getWilaya().toLowerCase().contains(wilaya.toLowerCase()))
+                output.add(object);
         }
         publicAdapter.setMesannonce(output);
         publicAdapter.notifyDataSetChanged();

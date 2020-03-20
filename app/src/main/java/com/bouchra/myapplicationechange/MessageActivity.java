@@ -89,7 +89,8 @@ public class MessageActivity extends AppCompatActivity {
                 //String myid, String userid,String imageurl)
                 mchat = new ArrayList<>();
                 //   l = FirebaseDatabase.getInstance().getReference("Message");
-                l = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((fuser.getUid().hashCode()) + (userid.hashCode())));
+               l = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((fuser.getUid().hashCode()) + (userid.hashCode())));
+
                 l.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -127,7 +128,8 @@ public class MessageActivity extends AppCompatActivity {
             if (!msg.equals("")) {
                 // sendMessage(fuser.getUid(), userid, msg);
                 //DatabaseReference r = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf(fuser.getUid().hashCode())+userid.hashCode());
-                r = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((fuser.getUid().hashCode()) + (userid.hashCode())));
+              r = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((fuser.getUid().hashCode()) + (userid.hashCode())));
+
                 Message chat = new Message();
                 chat.setTextMessage(msg);
                 chat.setIdreceiver(userid);

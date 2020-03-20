@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.myannonce;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListener{
+public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListener {
 
 
     private myannonce myannonce;
@@ -38,6 +39,7 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
     public mesAnnonce() {
     }
 
+
     ///////////////////////////// kiykliki ykad ymodifier lannonce ta3ah
     @Nullable
     @Override
@@ -48,21 +50,31 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
         myannonce = new myannonce(getContext(), annonces);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(myannonce);
+        ////
+
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Annonce");
+        PreferenceUtils preferenceUtils;
+        preferenceUtils = new PreferenceUtils(getContext());
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e("Count ", "" + snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Log.e("Data here", postSnapshot.toString());
-                    annonces.add(postSnapshot.getValue(Annonce.class));
-                    myannonce.notifyDataSetChanged();
+                    String user = postSnapshot.child("userId").getValue().toString();
+                    if (user.equals(preferenceUtils.getMember().getIdMembre())) {
+                        annonces.add(postSnapshot.getValue(Annonce.class));
+                        myannonce.notifyDataSetChanged();
+                    }
+
+
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-        // Getting model failed, log a message
+                // Getting model failed, log a message
             }
         });
         // Locate the EditText in listview_main.xml
@@ -79,10 +91,10 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        ArrayList<Annonce>output=new ArrayList<>();
-        for (Annonce object: annonces) {
-           String obj=  object.getTitreAnnonce().toLowerCase();
-           if(obj.contains(newText.toLowerCase())) output.add(object);
+        ArrayList<Annonce> output = new ArrayList<>();
+        for (Annonce object : annonces) {
+            String obj = object.getTitreAnnonce().toLowerCase();
+            if (obj.contains(newText.toLowerCase())) output.add(object);
         }
         myannonce.setMesannonce(output);
         myannonce.notifyDataSetChanged();

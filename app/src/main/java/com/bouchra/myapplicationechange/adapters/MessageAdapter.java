@@ -82,8 +82,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         fuser = FirebaseAuth.getInstance().getCurrentUser();
         if (mChat.get(position).getIdsender().equals(fuser.getUid())) {
             return MSG_TYPE_RIGHT;
+           // return MSG_TYPE_LEFT;
         } else {
             return MSG_TYPE_LEFT;
+            //return MSG_TYPE_RIGHT;
         }
     }
 }

@@ -11,6 +11,7 @@ public class Offre {
     private String annonceId;
     private String wilaya;
 
+
     public String getAnnonceId() {
         return annonceId;
     }
