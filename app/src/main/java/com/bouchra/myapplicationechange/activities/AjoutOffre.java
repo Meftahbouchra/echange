@@ -40,9 +40,9 @@ public class AjoutOffre extends AppCompatActivity {
     private String desc = "";
     private String idAnnc = "";
     private Spinner wilayaSpinner, villeSpinner;
-    private ArrayList<Wilaya> wilaya = new ArrayList<Wilaya>();/////////////////////
-    private ArrayList<Commune> communes = new ArrayList<Commune>();////////////////
-    private String[] wilayaname;///////////////////////////////////
+    private ArrayList<Wilaya> wilaya = new ArrayList<Wilaya>();
+    private ArrayList<Commune> communes = new ArrayList<Commune>();
+    private String[] wilayaname;
     private DatabaseReference databaseReference;
     private String selectedWilaya, selectedVille;
     private Button annuler;

@@ -6,11 +6,21 @@ public class Message {
     private String idMessage;
     private String idsender;
     private String idreceiver;
+    private  String nomsender;
 
-    public Message(String idMessage, String idsender, String idreceiver, Date dateMessage, String textMessage) {
+    public String getNomsender() {
+        return nomsender;
+    }
+
+    public void setNomsender(String nomsender) {
+        this.nomsender = nomsender;
+    }
+
+    public Message(String idMessage, String idsender, String idreceiver, String nomsender, Date dateMessage, String textMessage) {
         this.idMessage = idMessage;
         this.idsender = idsender;
         this.idreceiver = idreceiver;
+        this.nomsender = nomsender;
         this.dateMessage = dateMessage;
         this.textMessage = textMessage;
     }

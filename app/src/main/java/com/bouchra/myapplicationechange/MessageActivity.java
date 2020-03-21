@@ -17,9 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bouchra.myapplicationechange.adapters.MessageAdapter;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.models.Message;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,19 +30,17 @@ import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-//////////////////////////////////////////////////////////khasni nzid nfwt l fire base nom sender
+
 public class MessageActivity extends AppCompatActivity {
     CircleImageView profile_image;
     TextView username;
-    FirebaseUser fuser;
+    // FirebaseUser fuser;
     DatabaseReference reference, r, l;
-
-
     ImageButton btn_send;
     EditText txt_send;
     MessageAdapter messageAdapter;
     ArrayList<Message> mchat;
-    RecyclerView recyclerView;//recycle_view
+    RecyclerView recyclerView;
 
     Intent intent;
 
@@ -75,7 +72,8 @@ public class MessageActivity extends AppCompatActivity {
 
         intent = getIntent();
         String userid = intent.getStringExtra("user");
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
+        // fuser = FirebaseAuth.getInstance().getCurrentUser();
+        PreferenceUtils preferenceUtils = new PreferenceUtils(this);
         reference = FirebaseDatabase.getInstance().getReference("Membre").child(userid);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -83,13 +81,10 @@ public class MessageActivity extends AppCompatActivity {
                 Membre membre = dataSnapshot.getValue(Membre.class);
                 username.setText(membre.getNomMembre());
                 Glide.with(MessageActivity.this).load(membre.getPhotoUser()).into(profile_image);
-                //  Glide.with(MessageActivity.this).load(membre.getImg).into(profile_image); m3ndich img ta3 user
-                // readMessage(fuser.getUid(), userid,membre.getPhotoUser());
-                //////////////////////////////////////////////////////////////////////////
-                //String myid, String userid,String imageurl)
+
                 mchat = new ArrayList<>();
-                //   l = FirebaseDatabase.getInstance().getReference("Message");
-               l = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((fuser.getUid().hashCode()) + (userid.hashCode())));
+
+                l = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((preferenceUtils.getMember().getIdMembre().hashCode()) + (userid.hashCode())));
 
                 l.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -99,8 +94,8 @@ public class MessageActivity extends AppCompatActivity {
 
                             Message message = snapshot.getValue(Message.class);// getvalue  de lbrary gson yroh yhws yjbd direct child w ydirh f object message ila li jbdth mchikima classe yhbs
 
-                            if (message.getIdreceiver().equals(fuser.getUid()) && message.getIdsender().equals(userid) ||
-                                    message.getIdreceiver().equals(userid) && message.getIdsender().equals(fuser.getUid())) {
+                            if (message.getIdreceiver().equals(preferenceUtils.getMember().getIdMembre()) && message.getIdsender().equals(userid) ||
+                                    message.getIdreceiver().equals(userid) && message.getIdsender().equals(preferenceUtils.getMember().getIdMembre())) {
                                 mchat.add(message);
 
                             }
@@ -126,14 +121,14 @@ public class MessageActivity extends AppCompatActivity {
         btn_send.setOnClickListener(v -> {
             String msg = txt_send.getText().toString();
             if (!msg.equals("")) {
-                // sendMessage(fuser.getUid(), userid, msg);
-                //DatabaseReference r = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf(fuser.getUid().hashCode())+userid.hashCode());
-              r = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((fuser.getUid().hashCode()) + (userid.hashCode())));
+
+                r = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((preferenceUtils.getMember().getIdMembre().hashCode()) + (userid.hashCode())));
 
                 Message chat = new Message();
                 chat.setTextMessage(msg);
                 chat.setIdreceiver(userid);
-                chat.setIdsender(fuser.getUid());
+                chat.setIdsender(preferenceUtils.getMember().getIdMembre());
+                chat.setNomsender(preferenceUtils.getMember().getNomMembre());
                 chat.setDateMessage(new Date());
                 chat.setIdMessage(String.valueOf(chat.getDateMessage().getTime()));
                 r.child(String.valueOf(chat.getDateMessage().getTime())).setValue(chat).addOnCompleteListener(task -> {
@@ -153,28 +148,5 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
-  /*  private void readMessage(String myid, String userid,String imageurl) {
 
-
-    }*/
 }
-   /* private void sendMessage(String sender, String receiver,String message){
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf(fuser.getUid().hashCode())+userid.hashCode());
-        Message msg=new Message();
-       msg.setTextMessage(message);
-       msg.setIdreceiver(receiver);
-       msg.setIdsender(sender);
-       msg.setDateMessage(new Date());
-       msg.setIdMessage(String.valueOf(msg.getIdreceiver().hashCode())+msg.getIdsender().hashCode());
-        reference.setValue(msg).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(this, "Votre message a été soumise auec succès ", Toast.LENGTH_LONG).show();
-
-            }else {
-                Toast.makeText(this, "Votre message a été soumise auec succès ", Toast.LENGTH_LONG).show();
-            }
-
-        });
-    }
-}*/
