@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.models.Membre;
-import com.bouchra.myapplicationechange.models.Message;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,12 +24,9 @@ import java.util.ArrayList;
 public class chatFragment extends Fragment {
     private RecyclerView recyclerView;
     private userAdapter userAdapter;
-    private ArrayList<Membre> mUsers;
+    private ArrayList<Membre> mUsers,onlyUsers;
+    private PreferenceUtils preferenceUtils;
 
-    // FirebaseUser fuser;
-    DatabaseReference reference,r;
-
-    private ArrayList<String> userListe;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,36 +36,28 @@ public class chatFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycle_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        PreferenceUtils preferenceUtils = new PreferenceUtils(getContext());
-        // fuser= FirebaseAuth.getInstance().getCurrentUser();
-        userListe = new ArrayList<>();
-        reference = FirebaseDatabase.getInstance().getReference("Message");
+        preferenceUtils = new PreferenceUtils(getContext());
+     /*   userAdapter = new userAdapter(getContext(), mUsers);
+        recyclerView.setAdapter(userAdapter);*/
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Membre");
         reference.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userListe.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                  /*  Membre utilisateur = new Membre();
-                    String roomUser = snapshot.child(String.valueOf((preferenceUtils.getMember().getIdMembre().hashCode()) + (utilisateur.getIdMembre().hashCode()))).getValue().toString();*/
-                 //  Message m = new Message();
-                // String msg=snapshot.child(m.getIdMessage()).getValue().toString();
-                    r = FirebaseDatabase.getInstance().getReference(snapshot.toString());
-                    r.addValueEventListener(new ValueEventListener() {
+                    mUsers=new ArrayList<>();
+                    Membre membre = snapshot.getValue(Membre.class);
+                    mUsers.add(membre);
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Message");
+                    ref.addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                                Message message=dataSnapshot1.getValue(Message.class);
-                                if(message.getIdsender().equals(preferenceUtils.getMember().getIdMembre())){
-                                    userListe.add(message.getIdreceiver());
-                                }
-                                if(message.getIdreceiver().equals(preferenceUtils.getMember().getIdMembre())){
-                                    userListe.add(message.getIdsender());
-                                }
-
-
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
+                            onlyUsers = new ArrayList<>();
+                            for(Membre user : mUsers){
+                                String hash = String.valueOf(user.getIdMembre().hashCode() + preferenceUtils.getMember().getIdMembre().hashCode());
+                                if(dataSnapshot2.hasChild(hash))onlyUsers.add(user);
                             }
-                            redChat();
+                            userAdapter = new userAdapter(getContext(), onlyUsers);
+                            recyclerView.setAdapter(userAdapter);
 
                         }
 
@@ -78,76 +66,14 @@ public class chatFragment extends Fragment {
 
                         }
                     });
-
-
                 }
-               // redChat();
             }
 
-
-            /*  @Override
-              public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                  userListe.clear();
-                  for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                      Message message=snapshot.getValue(Message.class);
-                      if(message.getIdsender().equals(preferenceUtils.getMember().getIdMembre())){
-                          userListe.add(message.getIdreceiver());
-                      }
-                      if(message.getIdreceiver().equals(preferenceUtils.getMember().getIdMembre())){
-                          userListe.add(message.getIdsender());
-                      }
-                  }
-                  redChat();
-              }
-  */
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
         return view;
     }
-
-    private void redChat() {
-        mUsers = new ArrayList<>();
-        reference = FirebaseDatabase.getInstance().getReference("Membre");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mUsers.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Membre membre = snapshot.getValue(Membre.class);
-                    //display 1 user from messages
-                    for (String id : userListe) {
-                        if (membre.getIdMembre().equals(id)) {
-                            if (mUsers.size() != 0) {
-                                for (Membre m : mUsers) {
-                                    if (!membre.getIdMembre().equals(m.getIdMembre())) {
-                                        mUsers.add(membre);
-                                    }
-                                }
-                            } else {
-                                mUsers.add(membre);
-                            }
-                        }
-
-                    }
-
-
-                }
-                userAdapter = new userAdapter(getContext(), mUsers);
-                recyclerView.setAdapter(userAdapter);
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
 }
