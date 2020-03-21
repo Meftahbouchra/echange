@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.demandesoffre;
+import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,13 +23,13 @@ import java.util.ArrayList;
 public class DemandesOffre extends AppCompatActivity {
 
     private demandesoffre demandesoffre;
-    private ArrayList<Offre>offres ;
+    private ArrayList<Offre> offres;
     private RecyclerView recyclerView;
+    private ArrayList<Membre> membres;
 
 
     public DemandesOffre() {
     }
-
 
 
     @Override
@@ -38,8 +39,10 @@ public class DemandesOffre extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyle_demandesoffres);
 
         offres = new ArrayList<>();
+        membres = new ArrayList<>();
 
-        demandesoffre = new demandesoffre(this, offres);
+
+        demandesoffre = new demandesoffre(this, offres, membres);
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -54,8 +57,32 @@ public class DemandesOffre extends AppCompatActivity {
                 Log.e("Count ", "" + snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Log.e("Data here", postSnapshot.toString());
-                    offres.add(postSnapshot.getValue(Offre.class));
-                    demandesoffre.notifyDataSetChanged();
+                    String iduser = postSnapshot.child("idUser").getValue().toString();// id user f offre
+                    DatabaseReference refe = FirebaseDatabase.getInstance().getReference("Membre");
+                    refe.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot postSnapshott : dataSnapshot.getChildren()) {
+                                String iduserMembre = postSnapshott.child("idMembre").getValue().toString(); //ism att ta3 id membre
+                                if (iduser.equals(iduserMembre)) {
+
+                                    membres.add(postSnapshott.getValue(Membre.class));
+                                    offres.add(postSnapshot.getValue(Offre.class));
+                                    demandesoffre.notifyDataSetChanged();
+                                }
+
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
                 }
             }
 
@@ -66,5 +93,7 @@ public class DemandesOffre extends AppCompatActivity {
             }
 
         });
+
+
     }
 }

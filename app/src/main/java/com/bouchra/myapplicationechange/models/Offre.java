@@ -12,6 +12,13 @@ public class Offre {
     private String wilaya;
     private String idUser;
 
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
 
     public String getAnnonceId() {
         return annonceId;
@@ -53,12 +60,13 @@ public class Offre {
     }
 
 
-    public Offre(String idOffre, Date dateOffre, String nomOffre, String annonceId, String wilaya, String commune, ArrayList<String> images, String descriptionOffre) {
+    public Offre(String idOffre, Date dateOffre, String nomOffre, String annonceId, String wilaya, String idUser, String commune, ArrayList<String> images, String descriptionOffre) {
         this.idOffre = idOffre;
         this.dateOffre = dateOffre;
         this.nomOffre = nomOffre;
         this.annonceId = annonceId;
         this.wilaya = wilaya;
+        this.idUser = idUser;
         this.commune = commune;
         this.images = images;
         this.descriptionOffre = descriptionOffre;

@@ -54,7 +54,6 @@ public class plus extends Fragment {
             preferenceUtils.Clear();
 
 
-
         });
         //goto message
         message.setOnClickListener(v -> {

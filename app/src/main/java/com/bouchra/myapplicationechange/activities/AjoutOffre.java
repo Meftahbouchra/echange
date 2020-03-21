@@ -17,6 +17,7 @@ import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Commune;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bouchra.myapplicationechange.models.Wilaya;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -56,11 +57,11 @@ public class AjoutOffre extends AppCompatActivity {
         pic = findViewById(R.id.img_offre);
         wilayaSpinner = findViewById(R.id.spinner_wilayaobj);
         villeSpinner = findViewById(R.id.spinner_villeobj);
-        annuler=findViewById(R.id.annuler);
+        annuler = findViewById(R.id.annuler);
         annuler.setOnClickListener(v -> {
-          Intent an = new Intent(AjoutOffre.this,debut.class);
-          startActivity(an);
-          finish();
+            Intent an = new Intent(AjoutOffre.this, debut.class);
+            startActivity(an);
+            finish();
            /* Intent annul = new Intent(AjoutOffre.this, Acceuil.class);
             startActivity(annul);
             finish();*/
@@ -85,6 +86,7 @@ public class AjoutOffre extends AppCompatActivity {
         suiv.setOnClickListener(v -> {
             titre = titleObjet.getText().toString();
             desc = descObjet.getText().toString();
+            PreferenceUtils preferenceUtils = new PreferenceUtils(this);
             if (!titre.isEmpty() && !desc.isEmpty()) {
                 databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(idAnnc);
                 Offre offre = new Offre();
@@ -95,13 +97,14 @@ public class AjoutOffre extends AppCompatActivity {
                 offre.setNomOffre(titre);
                 offre.setWilaya(selectedWilaya.split(" ")[1]);
                 offre.setCommune(selectedVille);
+                offre.setIdUser(preferenceUtils.getMember().getIdMembre());
                 // offre.setImages();
                 // khasni id user li dar l offre
                 databaseReference.setValue(offre).addOnCompleteListener(task2 -> {
                     if (task2.isSuccessful()) {
 
                         Toast.makeText(this, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
-                        Intent an = new Intent(AjoutOffre.this,debut.class);
+                        Intent an = new Intent(AjoutOffre.this, debut.class);
                         startActivity(an);
                         finish();
 

@@ -11,20 +11,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.models.Offre;
+import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder> {
 
     private Context context;
     private ArrayList<Offre> offresdemande=new ArrayList<>();
     private ArrayList<Offre>mesDemandeDoffres;
+    private ArrayList<Membre>membres;
 
-    public demandesoffre(Context context, ArrayList<Offre> mesDemandeDoffres) {
+    public demandesoffre(Context context, ArrayList<Offre> mesDemandeDoffres, ArrayList<Membre>membres) {
         this.context = context;
         this.mesDemandeDoffres = mesDemandeDoffres;
+        this.membres=membres;
     }
 
     @NonNull
@@ -53,6 +59,16 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
        holder.villeOffre.setText(offre.getWilaya()+",");
        holder.communeOffre.setText(offre.getCommune());
 
+       Membre membre= membres.get(position);
+       holder.nameUser.setText(membre.getNomMembre());
+       //     Picasso.get().load(photouser).into(imgUser);
+      //  holder.imageUser.setImageURI();
+        Glide.with(context)
+                .load(membre.getPhotoUser())
+                .centerCrop()
+                .into(holder.imageUser);
+
+
 
     }
 
@@ -69,6 +85,8 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
         private TextView communeOffre;
         private TextView timeOffre;////////////
         private ImageView imageOffre;///////////
+        private CircleImageView imageUser;//img_user
+        private TextView nameUser;//nom_user
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -80,6 +98,10 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
             communeOffre=itemView.findViewById(R.id.commune);
             timeOffre=itemView.findViewById(R.id.datH);
             imageOffre=itemView.findViewById(R.id.img_offre);
+            imageUser=itemView.findViewById(R.id.img_user);
+            nameUser=itemView.findViewById(R.id.nom_user);
+
+
 
 
         }
