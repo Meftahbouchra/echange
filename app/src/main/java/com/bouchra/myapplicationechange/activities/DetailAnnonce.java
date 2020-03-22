@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bouchra.myapplicationechange.MessageActivity;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Membre;
@@ -82,15 +83,11 @@ public class DetailAnnonce extends AppCompatActivity {
 
         });
         sendMsg = findViewById(R.id.send_Msg);
-        sendMsg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //annonce.getUserId()
-              /*  Intent intent = new Intent(DetailAnnonce.this, MessageActivity.class);
-                intent.putExtra("user", annonce.getUserId());
-                startActivity(intent);*/
+        sendMsg.setOnClickListener(v -> {
+            Intent intent = new Intent(DetailAnnonce.this, MessageActivity.class);
+            intent.putExtra("user", annonce.getUserId());
+            startActivity(intent);
 
-            }
         });
 
     }

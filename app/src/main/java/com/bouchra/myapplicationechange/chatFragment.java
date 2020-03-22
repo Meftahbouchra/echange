@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class chatFragment extends Fragment {
     private RecyclerView recyclerView;
     private userAdapter userAdapter;
-    private ArrayList<Membre> mUsers,onlyUsers;
+    private ArrayList<Membre> mUsers, onlyUsers;
     private PreferenceUtils preferenceUtils;
 
 
@@ -37,40 +37,39 @@ public class chatFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         preferenceUtils = new PreferenceUtils(getContext());
-     /*   userAdapter = new userAdapter(getContext(), mUsers);
-        recyclerView.setAdapter(userAdapter);*/
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Membre");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mUsers = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    mUsers=new ArrayList<>();
                     Membre membre = snapshot.getValue(Membre.class);
                     mUsers.add(membre);
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Message");
-                    ref.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
-                            onlyUsers = new ArrayList<>();
-                            for(Membre user : mUsers){
-                                String hash = String.valueOf(user.getIdMembre().hashCode() + preferenceUtils.getMember().getIdMembre().hashCode());
-                                if(dataSnapshot2.hasChild(hash))onlyUsers.add(user);
-                            }
-                            userAdapter = new userAdapter(getContext(), onlyUsers);
-                            recyclerView.setAdapter(userAdapter);
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Message");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
+                onlyUsers = new ArrayList<>();
+                for (Membre user : mUsers) {
+                    String hash = String.valueOf(user.getIdMembre().hashCode() + preferenceUtils.getMember().getIdMembre().hashCode());
+                    if (dataSnapshot2.hasChild(hash)) onlyUsers.add(user);
+                }
+                userAdapter = new userAdapter(getContext(), onlyUsers);
+                recyclerView.setAdapter(userAdapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
 
