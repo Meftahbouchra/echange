@@ -69,11 +69,6 @@ Article_en_retour extends AppCompatActivity {
     }
 
 
-    public interface ajout {
-        void ajoutArticle();
-
-    }
-
 
     public void ajoutArticle() {
         String x = editText.getText().toString();

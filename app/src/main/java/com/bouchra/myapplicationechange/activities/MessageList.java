@@ -1,15 +1,14 @@
-package com.bouchra.myapplicationechange;
+package com.bouchra.myapplicationechange.activities;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bouchra.myapplicationechange.adapters.messagesAdapter;
+import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.database.DataSnapshot;
@@ -20,23 +19,21 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-
-public class chatFragment extends Fragment {
+public class MessageList extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private userAdapter userAdapter;
+    private messagesAdapter userAdapter;
     private ArrayList<Membre> mUsers, onlyUsers;
     private PreferenceUtils preferenceUtils;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_chat, container, false);
-        recyclerView = view.findViewById(R.id.recycle_view);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.masaagelist);
+        recyclerView = findViewById(R.id.recycle_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        preferenceUtils = new PreferenceUtils(getContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        preferenceUtils = new PreferenceUtils(this);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Membre");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -62,7 +59,7 @@ public class chatFragment extends Fragment {
                     String hash = String.valueOf(user.getIdMembre().hashCode() + preferenceUtils.getMember().getIdMembre().hashCode());
                     if (dataSnapshot2.hasChild(hash)) onlyUsers.add(user);
                 }
-                userAdapter = new userAdapter(getContext(), onlyUsers);
+                userAdapter = new messagesAdapter(MessageList.this, onlyUsers);
                 recyclerView.setAdapter(userAdapter);
 
             }
@@ -73,6 +70,5 @@ public class chatFragment extends Fragment {
             }
         });
 
-        return view;
     }
 }

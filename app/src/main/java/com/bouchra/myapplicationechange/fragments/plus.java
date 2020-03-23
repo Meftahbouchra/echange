@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.bouchra.myapplicationechange.Main2Activity;
+import com.bouchra.myapplicationechange.activities.MessageList;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.MainActivity;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
@@ -57,7 +57,7 @@ public class plus extends Fragment {
         });
         //goto message
         message.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), Main2Activity.class);
+            Intent intent = new Intent(getContext(), MessageList.class);
            startActivity(intent);
         });
         //partager un message

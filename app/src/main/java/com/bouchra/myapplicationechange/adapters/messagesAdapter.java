@@ -1,4 +1,4 @@
-package com.bouchra.myapplicationechange;
+package com.bouchra.myapplicationechange.adapters;
 
 
 import android.content.Context;
@@ -12,18 +12,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.activities.MessageActivity;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-public class userAdapter extends RecyclerView.Adapter<userAdapter.ViewHolder> {
+public class messagesAdapter extends RecyclerView.Adapter<messagesAdapter.ViewHolder> {
 
     private Context mcontext;
     private ArrayList<Membre> mUsers;
 
 
-    public userAdapter(Context mcontext, ArrayList<Membre> mUsers) {
+    public messagesAdapter(Context mcontext, ArrayList<Membre> mUsers) {
         this.mcontext = mcontext;
         this.mUsers = mUsers;
     }
@@ -34,11 +36,11 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext).inflate(R.layout.user_item, parent, false);
 
-        return new userAdapter.ViewHolder(view);
+        return new messagesAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull userAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull messagesAdapter.ViewHolder holder, int position) {
 
         Membre membre = mUsers.get(position);
         holder.username.setText(membre.getNomMembre());

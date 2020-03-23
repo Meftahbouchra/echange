@@ -8,7 +8,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:23641542062:android:e0a1d166735200fec70c3f",
+        "mobilesdk_app_id": "1:23641542062:android:4a1e62daf8674240c70c3f",
         "android_client_info": {
           "package_name": "com.bouchra.myapplicationechange"
         }
@@ -36,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "23641542062-9p5572g1m5eb1dhdd56gspgn8tqqfiq1.apps.googleusercontent.com",
+              "client_id": "23641542062-5jsimfjp28vhe6gn9ur2cias3gjna17b.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

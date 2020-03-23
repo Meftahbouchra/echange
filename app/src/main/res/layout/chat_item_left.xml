@@ -20,5 +20,15 @@
         android:text="heloo"
         android:id="@+id/show_message"
         android:textSize="18sp"/>
+    <TextView
+       android:layout_below="@+id/show_message"
+        android:id="@+id/datH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="12sp"
+        android:layout_marginLeft="50dp"
+        android:gravity="center"
+        android:text="date heure" />
 
 </RelativeLayout>

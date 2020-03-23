@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_marginTop="15dp"
+   android:background="@color/Login_form_details"
     android:layout_height="wrap_content"
     android:padding="10dp">
 
@@ -14,9 +16,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="hello word"
+        android:textStyle="bold"
         android:id="@+id/username"
         android:layout_toRightOf="@id/profileomage"
         android:layout_toEndOf="@id/profileomage"
         android:layout_marginLeft="10dp"
-        android:layout_centerVertical="true"/>
+        android:layout_marginTop="5dp"
+      />
 </RelativeLayout>

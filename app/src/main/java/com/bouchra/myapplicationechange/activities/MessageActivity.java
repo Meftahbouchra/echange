@@ -1,4 +1,4 @@
-package com.bouchra.myapplicationechange;
+package com.bouchra.myapplicationechange.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,21 +14,31 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.MessageAdapter;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.models.Message;
+import com.bouchra.myapplicationechange.notification.APIService;
+import com.bouchra.myapplicationechange.notification.Client;
+import com.bouchra.myapplicationechange.notification.Data;
+import com.bouchra.myapplicationechange.notification.Response;
+import com.bouchra.myapplicationechange.notification.Sender;
+import com.bouchra.myapplicationechange.notification.Token;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 
 public class MessageActivity extends AppCompatActivity {
@@ -41,6 +51,9 @@ public class MessageActivity extends AppCompatActivity {
     MessageAdapter messageAdapter;
     ArrayList<Message> mchat;
     RecyclerView recyclerView;
+    APIService apiService;
+    boolean notify = false;
+    PreferenceUtils preferenceUtils;
 
     Intent intent;
 
@@ -49,6 +62,7 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
+        preferenceUtils = new PreferenceUtils(this);
         Toolbar toolbar = findViewById(R.id.tollbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -60,10 +74,16 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
         recyclerView = findViewById(R.id.recycle_view);
-        recyclerView.setHasFixedSize(true);
+
+        //layout ( linear layout) for recycleview
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        //recycleview properties
+        recyclerView.setHasFixedSize(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        //create api service
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
+
         profile_image = findViewById(R.id.profile_image);
         username = findViewById(R.id.username);
 
@@ -73,7 +93,7 @@ public class MessageActivity extends AppCompatActivity {
         intent = getIntent();
         String userid = intent.getStringExtra("user");
         // fuser = FirebaseAuth.getInstance().getCurrentUser();
-        PreferenceUtils preferenceUtils = new PreferenceUtils(this);
+
         reference = FirebaseDatabase.getInstance().getReference("Membre").child(userid);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -119,8 +139,9 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
         btn_send.setOnClickListener(v -> {
+            notify = true;
             String msg = txt_send.getText().toString();
-            if (!msg.equals("")) {
+            if (!msg.equals("")) {//TextUtils.isEmpty(msg)
 
                 r = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((preferenceUtils.getMember().getIdMembre().hashCode()) + (userid.hashCode())));
 
@@ -145,6 +166,59 @@ public class MessageActivity extends AppCompatActivity {
             }
             txt_send.setText("");
 
+            DatabaseReference database = FirebaseDatabase.getInstance().getReference("Membre").child(preferenceUtils.getMember().getIdMembre());
+            database.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Membre user = dataSnapshot.getValue(Membre.class);
+                    if (notify) {
+                        senNotification(userid, user.getNomMembre(), msg);
+                    }
+                    notify = false;
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        });
+
+
+    }
+
+    private void senNotification(final String userid, final String name, final String message) {
+        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = allTokens.orderByKey().equalTo(userid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Token token = ds.getValue(Token.class);
+                    Data data = new Data(preferenceUtils.getMember().getIdMembre(), name + ": " + message, "Nouveau message", userid, R.drawable.user); // logo of application
+
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<Response>() {
+                                @Override
+                                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                                    Toast.makeText(MessageActivity.this, "" + response.message(), Toast.LENGTH_SHORT).show();
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<Response> call, Throwable t) {
+
+                                }
+                            });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
         });
     }
 

@@ -27,6 +27,16 @@
             android:text="hello"
             android:textColor="#fff"
             android:textSize="18sp" />
+        <TextView
+            android:layout_below="@+id/show_message"
+            android:id="@+id/datH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:layout_marginLeft="210dp"
+            android:gravity="center"
+            android:text="date heure" />
     </RelativeLayout>
 
 </RelativeLayout>

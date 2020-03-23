@@ -12,11 +12,10 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.activities.annonce.Article_en_retour;
 import com.bumptech.glide.Glide;
 
 
-public class Modifier extends Fragment implements Article_en_retour.ajout {
+public class Modifier extends Fragment  {
     private EditText nomAnnonce;
     private ImageView imgAnnonc;//
     private EditText desciAnnonce;//
@@ -38,7 +37,7 @@ public class Modifier extends Fragment implements Article_en_retour.ajout {
         editText = view.findViewById(R.id.edittxt_article);
         textView = view.findViewById(R.id.ajout_article);
         textView.setOnClickListener(v -> {
-            // ajoutArticle();
+           // ( (Article_en_retour)getActivity()).ajoutArticle();
             Toast.makeText(getContext(), "heloooooooooooo", Toast.LENGTH_SHORT).show();
         });
 
@@ -61,10 +60,7 @@ public class Modifier extends Fragment implements Article_en_retour.ajout {
     }
 
 
-    @Override
-    public void ajoutArticle() {
 
-    }
 }
 
 
