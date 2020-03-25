@@ -22,21 +22,24 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:autoLink="web"
             android:background="@drawable/background_right_message"
             android:padding="8dp"
             android:text="hello"
             android:textColor="#fff"
+            android:textColorLink="@color/black"
             android:textSize="18sp" />
+
         <TextView
-            android:layout_below="@+id/show_message"
             android:id="@+id/datH"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="12sp"
+            android:layout_below="@+id/show_message"
             android:layout_marginLeft="210dp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:text="date heure" />
+            android:text="date heure"
+            android:textSize="12sp" />
     </RelativeLayout>
 
 </RelativeLayout>

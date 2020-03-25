@@ -27,7 +27,7 @@
                 android:drawableTint="@color/orange" />
 
             <TextView
-                android:id="@+id/menu"
+                android:id="@+id/enregister"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="290dp"
@@ -80,14 +80,6 @@
             android:paddingBottom="150dp"
             android:textColorHint="@color/gris" />
 
-        <Spinner
-
-            android:id="@+id/spinner_cat"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="32dp"
-            android:background="@drawable/card_items" />
 
         <LinearLayout
             android:layout_width="match_parent"

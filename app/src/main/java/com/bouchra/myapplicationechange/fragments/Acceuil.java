@@ -67,6 +67,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         recyclerView = view.findViewById(R.id.recyle_public);
         google = view.findViewById(R.id.button5);
         Button button44 = view.findViewById(R.id.button3);
+
         button44.setOnClickListener(v -> {
             Intent goin = new Intent(getActivity(), DetailMesannonce.class);
             startActivity(goin);
@@ -102,11 +103,11 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         PreferenceUtils preferenceUtils = new PreferenceUtils(getContext());
         ref.addValueEventListener(new ValueEventListener() {
             @Override
-            //onDataChange()méthode pour lire un instantané statique du contenu d'un chemin donné!!au moment de l'événement
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(DataSnapshot snapshot) {// //onDataChange()méthode pour lire un instantané statique du contenu d'un chemin donné!!au moment de l'événement
                 Log.e("Count ", "" + snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Log.e("Data here", postSnapshot.toString());
+                    Log.e("USER", postSnapshot.child("userId").getValue().toString());
                     String user = postSnapshot.child("userId").getValue().toString();
 
                     if (!user.equals(preferenceUtils.getMember().getIdMembre())) {

@@ -20,15 +20,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+//Nous recevrons un message dans ce service.
+/*
 
-public class FirebaseMessaging extends FirebaseMessagingService {
+Vous pouvez également contrôler le titre, l'icone.....
+ */
+public class FirebaseMessaging extends FirebaseMessagingService {//service pour gerer l'envoi de msg
     @Override
-    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {// nous affichons  la notification contenant le message envoyé.
         super.onMessageReceived(remoteMessage);
 
         //get current user from shared preferences
-     /* SharedPreferences sp = getSharedPreferences("SP_USER",MODE_PRIVATE);
-        String savedCurrentUser=sp.getString("Current_USERID","None");*/
         PreferenceUtils preferenceUtils = new PreferenceUtils(this);
         String savedCurrentUser = preferenceUtils.getMember().getIdMembre();
         String sent = remoteMessage.getData().get("sent");
@@ -109,3 +111,4 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
     }
 }
+//Ajouter des services dans AndroidManifest

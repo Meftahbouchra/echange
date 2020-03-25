@@ -31,7 +31,7 @@ public class GoogleMaps extends FragmentActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mapApi=googleMap;
         //position : LatLng
-        LatLng oran = new LatLng(35.635880, 0.621053);
+        LatLng oran = new LatLng(35.6361224, -0.618167);
         //afficher un marqueur et titre: le text de lz fenetre affiche quand on clique dessus
         mapApi.addMarker(new MarkerOptions().position(oran).title("oran"));
        // centrer la caméra de la carte sur la position

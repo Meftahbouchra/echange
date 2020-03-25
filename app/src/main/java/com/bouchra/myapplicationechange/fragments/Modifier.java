@@ -15,16 +15,16 @@ import com.bouchra.myapplicationechange.R;
 import com.bumptech.glide.Glide;
 
 
-public class Modifier extends Fragment  {
+public class Modifier extends Fragment {
     private EditText nomAnnonce;
-    private ImageView imgAnnonc;//
-    private EditText desciAnnonce;//
+    private ImageView imgAnnonc;
+    private EditText desciAnnonce;
     private EditText editText;
-    //
+    private TextView enregister;
     private TextView textView;
-    //
 
-    public Modifier() {// Required empty public constructor
+
+    public Modifier() {
     }
 
     @Override
@@ -36,8 +36,10 @@ public class Modifier extends Fragment  {
         desciAnnonce = view.findViewById(R.id.desci_annonce);
         editText = view.findViewById(R.id.edittxt_article);
         textView = view.findViewById(R.id.ajout_article);
+        enregister = view.findViewById(R.id.enregister);
+
         textView.setOnClickListener(v -> {
-           // ( (Article_en_retour)getActivity()).ajoutArticle();
+            // ( (Article_en_retour)getActivity()).ajoutArticle();
             Toast.makeText(getContext(), "heloooooooooooo", Toast.LENGTH_SHORT).show();
         });
 
@@ -47,6 +49,7 @@ public class Modifier extends Fragment  {
         String titre = this.getArguments().getString("nomannonce");
         String description = this.getArguments().getString("descannonce");
         String image = this.getArguments().getString("imgannonce");
+        String idannonce = this.getArguments().getString("idanoonce");
         nomAnnonce.setText(titre);
         desciAnnonce.setText(description);
         Glide.with(this)
@@ -54,11 +57,32 @@ public class Modifier extends Fragment  {
                 .load(image)
                 .into(imgAnnonc);
 
-
+        enregister.setOnClickListener(v -> {
+          //updateAnnonce(idannonce);
+            Toast.makeText(getContext(), "modifer here", Toast.LENGTH_SHORT).show();
+        });
         return view;
 
     }
 
+   /* private void updateAnnonce(String id) {
+        String titre_Annonce = nomAnnonce.getText().toString();
+        String desc_Annonce = desciAnnonce.getText().toString();
+
+        if (!titre_Annonce.isEmpty() && !desc_Annonce.isEmpty()) {
+            ////getting the specified artist reference
+            DatabaseReference refannonce = FirebaseDatabase.getInstance().getReference("Annonce").child(id);
+            Annonce annonce = new Annonce();
+            //updating annonce
+            annonce.setDescriptionAnnonce(desc_Annonce);
+            annonce.setTitreAnnonce(titre_Annonce);
+            refannonce.setValue(annonce);
+        } else {
+            Toast.makeText(getContext(), "Vous devez remplir les champs", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }*/
 
 
 }

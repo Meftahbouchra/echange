@@ -150,7 +150,7 @@ public class DetailMesannonce extends AppCompatActivity {
         DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
 
         DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(annonce.getIdAnnonce());
-        dAnnonce.removeValue();
+        dAnnonce.removeValue();//removeValue ()  : utilisé pour supprimer les données.
         dOffre.removeValue();
 
     }
@@ -165,6 +165,7 @@ public class DetailMesannonce extends AppCompatActivity {
         b2.putString("nomannonce", annonce.getTitreAnnonce());
         b2.putString("descannonce", annonce.getDescriptionAnnonce());
         b2.putString("imgannonce", annonce.getImages().get(0));
+        b2.putString("idanoonce",annonce.getIdAnnonce());
         ArrayList<String> article = new ArrayList<>();
       /*  for (int i = 0; i < annonce.getArticleEnRetour().size(); i++) {
             article.add(annonce.getArticleEnRetour().get(i));

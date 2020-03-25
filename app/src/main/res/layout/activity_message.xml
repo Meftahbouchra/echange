@@ -51,6 +51,12 @@
         android:layout_alignParentBottom="true"
         android:background="#fff"
         android:padding="5dp">
+        <ImageButton
+            android:id="@+id/btn_send_location"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_location"
+            android:backgroundTint="@color/orange" />
 
         <EditText
             android:id="@+id/txt_send"
@@ -58,6 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/btn_send"
+            android:layout_toRightOf="@id/btn_send_location"
             android:background="@android:color/transparent"
             android:hint="typre a message...." />
 

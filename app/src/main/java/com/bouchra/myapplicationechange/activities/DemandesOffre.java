@@ -51,9 +51,14 @@ public class DemandesOffre extends AppCompatActivity {
         recyclerView.setAdapter(demandesoffre);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Offre");
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {//Nous attacherons un ValueEventListener à la référence pour lire les données.
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(DataSnapshot snapshot) {/*
+            Chaque fois que vous changez quelque chose dans la base de données,
+            la méthode onDataChange () sera exécutée. Il contient toutes les données
+            à l'intérieur du chemin spécifié dans la référence. Nous pouvons utiliser l' objet
+             DataSnapshot pour lire toutes les données à l'intérieur de la référence
+            */
                 Log.e("Count ", "" + snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Log.e("Data here", postSnapshot.toString());
@@ -78,7 +83,7 @@ public class DemandesOffre extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+//Si une erreur se produit, la méthode onCancelled () sera appelée.
                         }
                     });
 

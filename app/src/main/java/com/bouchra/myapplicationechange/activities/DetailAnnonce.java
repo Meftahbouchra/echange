@@ -190,6 +190,7 @@ public class DetailAnnonce extends AppCompatActivity {
     }
 
     public void getIncomingIntent() {
+        //obtenir la référence de la base de données
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
         Log.e("User is :", FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).toString());
         FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).addValueEventListener(new ValueEventListener() {
