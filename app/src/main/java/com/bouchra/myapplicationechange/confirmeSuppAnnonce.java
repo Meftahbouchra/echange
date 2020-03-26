@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.bouchra.myapplicationechange.activities.DetailMesannonce;
 
-public class confirme extends AppCompatDialogFragment {
+public class confirmeSuppAnnonce extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

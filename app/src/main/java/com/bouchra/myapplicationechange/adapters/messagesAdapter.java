@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.MessageActivity;
 import com.bouchra.myapplicationechange.models.Membre;
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -44,7 +44,8 @@ public class messagesAdapter extends RecyclerView.Adapter<messagesAdapter.ViewHo
 
         Membre membre = mUsers.get(position);
         holder.username.setText(membre.getNomMembre());
-        Glide.with(mcontext).load(membre.getPhotoUser()).into(holder.userimage);
+        //Glide.with(mcontext).load(membre.getPhotoUser()).into(holder.userimage);
+        Picasso.get().load(membre.getPhotoUser()).into(holder.userimage);
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mcontext, MessageActivity.class);
             intent.putExtra("user", membre.getIdMembre());

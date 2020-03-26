@@ -18,6 +18,8 @@
         android:background="@drawable/backgroung_left_massage"
         android:padding="8dp"
         android:text="heloo"
+        android:autoLink="web"
+        android:textColorLink="@color/black"
         android:id="@+id/show_message"
         android:textSize="18sp"/>
     <TextView

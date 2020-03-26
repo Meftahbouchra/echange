@@ -64,8 +64,11 @@ public class DetailAnnonce extends AppCompatActivity {
         });
         // go to prifil
         relativeLayout.setOnClickListener(v -> {
-            startActivity(new Intent(DetailAnnonce.this, profilUser.class));
-            finish();
+          /*  startActivity(new Intent(DetailAnnonce.this, profilUser.class));
+            finish();*/
+            Intent profil = new Intent(DetailAnnonce.this, profilUser.class);
+            profil.putExtra("user", annonce.getUserId());
+            startActivity(profil);
         });
 
         initViews();

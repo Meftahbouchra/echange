@@ -1,5 +1,6 @@
 package com.bouchra.myapplicationechange.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -40,9 +41,10 @@ public class DemandesOffre extends AppCompatActivity {
 
         offres = new ArrayList<>();
         membres = new ArrayList<>();
+        Intent ajou = getIntent();
+        String idAnnc = ajou.getStringExtra("nomAnnonce");
 
-
-        demandesoffre = new demandesoffre(this, offres, membres);
+        demandesoffre = new demandesoffre(this, offres, membres,idAnnc);
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

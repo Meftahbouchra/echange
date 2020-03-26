@@ -10,7 +10,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -148,7 +147,7 @@ public class MessageActivity extends AppCompatActivity {
         btn_send.setOnClickListener(v -> {
             notify = true;
             String msg = txt_send.getText().toString();
-            if (TextUtils.isEmpty(msg)) {
+            if (!msg.equals("")) {//TextUtils.isEmpty(msg)
 
                 r = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((preferenceUtils.getMember().getIdMembre().hashCode()) + (userid.hashCode())));
 

@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        String photoesy="https://statics1.nat-nin.fr/58258-big_default_2x/louise.jpg";/////////fauuuse
+                        String photoesy="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSNe5yo7hl-b5UHwropa_-4hNehtgV4w6wkFM1gw-o59SW93FNt";
                         // Sign in success, update UI with the signed-in user's informatio
                         FirebaseUser user = mAuth.getCurrentUser();
                         String ID = firebaseAuth.getCurrentUser().getUid();

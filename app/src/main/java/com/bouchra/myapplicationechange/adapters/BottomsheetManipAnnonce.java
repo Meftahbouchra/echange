@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.DetailMesannonce;
-import com.bouchra.myapplicationechange.confirme;
+import com.bouchra.myapplicationechange.confirmeSuppAnnonce;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BottomsheetManipAnnonce extends BottomSheetDialogFragment {
@@ -45,8 +45,8 @@ public class BottomsheetManipAnnonce extends BottomSheetDialogFragment {
 
 
     private void openDialog() {
-        confirme confirme = new confirme();
-        confirme.show(getFragmentManager(), "confirme");
+        confirmeSuppAnnonce confirmeSuppAnnonce = new confirmeSuppAnnonce();
+        confirmeSuppAnnonce.show(getFragmentManager(), "confirmeSuppAnnonce");
 
 
     }

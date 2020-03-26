@@ -24,7 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class DetailMesannonce extends AppCompatActivity {
@@ -53,9 +52,11 @@ public class DetailMesannonce extends AppCompatActivity {
         });
         voirOffres = findViewById(R.id.voir);
         voirOffres.setOnClickListener(v -> {
-            Intent voir = new Intent(DetailMesannonce.this, DemandesOffre.class);
-            startActivity(voir);
+            Intent ajou = new Intent(DetailMesannonce.this, DemandesOffre.class);
+            ajou.putExtra("nomAnnonce", annonce.getTitreAnnonce()); //key* value
+            startActivity(ajou);
             finish();
+
         });
         // setImage(imageUrl,imageName);
         //  tite.setText("abcd");
@@ -162,18 +163,7 @@ public class DetailMesannonce extends AppCompatActivity {
         FragmentTransaction t = manager.beginTransaction();
         final Modifier m4 = new Modifier();
         Bundle b2 = new Bundle();
-        b2.putString("nomannonce", annonce.getTitreAnnonce());
-        b2.putString("descannonce", annonce.getDescriptionAnnonce());
-        b2.putString("imgannonce", annonce.getImages().get(0));
-        b2.putString("idanoonce",annonce.getIdAnnonce());
-        ArrayList<String> article = new ArrayList<>();
-      /*  for (int i = 0; i < annonce.getArticleEnRetour().size(); i++) {
-            article.add(annonce.getArticleEnRetour().get(i));
-
-        }
-        b2.putSerializable("article", article);//khir m put string hadi bch tfxt haja kbira*/
-
-        b2.putSerializable("article", annonce.getArticleEnRetour());
+        b2.putSerializable("annonce", annonce);
         m4.setArguments(b2);
         t.add(R.id.fragment, m4);
         t.commit();
