@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <!--ACCESS_COARSE_LOCATION, l'API renvoie un emplacement avec une précision approximativement
      équivalente à un bloc de ville. C'est pourquoi nous utiliserons également l' autorisation
       ACCESS_FINE_LOCATION pour obtenir les informations de localisation les plus pertinentes.-->

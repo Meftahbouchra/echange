@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.demandesoffre;
+import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class DemandesOffre extends AppCompatActivity {
 
@@ -27,6 +29,8 @@ public class DemandesOffre extends AppCompatActivity {
     private ArrayList<Offre> offres;
     private RecyclerView recyclerView;
     private ArrayList<Membre> membres;
+  //  private ArrayList<Annonce>annonces;
+    private String annonce;//if offre
 
 
     public DemandesOffre() {
@@ -42,9 +46,11 @@ public class DemandesOffre extends AppCompatActivity {
         offres = new ArrayList<>();
         membres = new ArrayList<>();
         Intent ajou = getIntent();
-        String idAnnc = ajou.getStringExtra("nomAnnonce");
+        String nomAnnon = ajou.getStringExtra("nomAnnonce");
 
-        demandesoffre = new demandesoffre(this, offres, membres,idAnnc);
+        String IdAnnonce=ajou.getStringExtra("idAnnonce");
+
+        demandesoffre = new demandesoffre(this, offres, membres, nomAnnon,annonce);
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -52,7 +58,7 @@ public class DemandesOffre extends AppCompatActivity {
 
         recyclerView.setAdapter(demandesoffre);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Offre");
+        DatabaseReference ref = database.getReference("Offre").child(IdAnnonce);
         ref.addValueEventListener(new ValueEventListener() {//Nous attacherons un ValueEventListener à la référence pour lire les données.
             @Override
             public void onDataChange(DataSnapshot snapshot) {/*
@@ -100,7 +106,86 @@ public class DemandesOffre extends AppCompatActivity {
             }
 
         });
+        //////////////////////////////////////////////////////////
+        String idAnnonce = ajou.getStringExtra("idAnnonce");
+         FirebaseDatabase databasee = FirebaseDatabase.getInstance();
+        DatabaseReference reff = databasee.getReference("Annonce").child(idAnnonce);
+        reff.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    if (dataSnapshot.getValue() != null) {
+                        try {
+
+                            String Idoffre = dataSnapshot.child("idOffreSelected").getValue().toString();
+                            Log.e("iiiiiiiiiiiiid offre is", Idoffre);
+                            annonce=Idoffre;
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Log.e("TAG", " it's null.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Getting model failed, log a message
+            }
+        });
 
 
     }
+
+    public void selectedoffre(String idOffre) {
+        Intent ajou = getIntent();
+        String idAnnonce = ajou.getStringExtra("idAnnonce");
+
+        String descp = ajou.getStringExtra("descp");
+       // String date = ajou.getStringExtra("date");
+        String statu = ajou.getStringExtra("statu");
+        String userid = ajou.getStringExtra("userid");
+        String commune = ajou.getStringExtra("commune");
+        String wilaya = ajou.getStringExtra("wilaya");
+        ArrayList<String>articleret = ajou.getStringArrayListExtra("articleret");
+        ArrayList<String>images = ajou.getStringArrayListExtra("images");
+        String nomAnnon = ajou.getStringExtra("nomAnnonce");
+        String date = ajou.getStringExtra("date");
+
+
+
+        DatabaseReference databaseReference;
+        databaseReference = FirebaseDatabase.getInstance().getReference("Annonce").child(idAnnonce); // nkharaj id ta3 annonce
+        Annonce annonce = new Annonce();
+       annonce.setArticleEnRetour(articleret);
+       annonce.setImages(images);
+       annonce.setWilaya(wilaya);
+       annonce.setCommune(commune);
+       annonce.setIdAnnonce(idAnnonce);
+       annonce.setUserId(userid);
+       annonce.setStatu(statu);
+       annonce.setTitreAnnonce(nomAnnon);
+       annonce.setDescriptionAnnonce(descp);
+
+       // SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
+      //  String str = simpleDateFormat.format(date);
+       // annonce.setDateAnnonce(str);
+        annonce.setDateAnnonce(new Date());////////////////////////////////////////////////////***************************************
+// hda  li zdnah
+        annonce.setIdOffreSelected(idOffre);
+        databaseReference.setValue(annonce).addOnCompleteListener(task2 -> {
+            if (task2.isSuccessful()) {
+
+
+            }
+        });
+
+
+    }
+
 }

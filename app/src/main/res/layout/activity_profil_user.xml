@@ -22,20 +22,20 @@
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image_user"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="45dp"
-                    android:id="@+id/image_user"
                     android:src="@drawable/user" />
 
                 <TextView
+                    android:id="@+id/nom_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:text="Meftah Bouchra"
-                    android:id="@+id/nom_user"
                     android:textColor="#fff"
                     android:textSize="21sp"
                     android:textStyle="bold" />
@@ -133,9 +133,9 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/zone_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/zone_email"
                 android:orientation="horizontal"
                 android:paddingLeft="25dp">
 
@@ -145,36 +145,36 @@
                     app:srcCompat="@drawable/ic_email" />
 
                 <TextView
+                    android:id="@+id/mail_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="20dp"
                     android:text="meftahbouchra.31@gmail.com"
-                    android:id="@+id/mail_user"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/zone_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
-                android:id="@+id/zone_phone"
                 android:orientation="horizontal"
                 android:paddingLeft="25dp">
 
                 <ImageView
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    app:srcCompat="@drawable/ic_local_phone" />
+                    app:srcCompat="@drawable/ic_perm_phone_msg_black_24dp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tel_user"
 
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="20dp"
                     android:text="+213"
-                    android:id="@+id/tel_user"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -191,11 +191,11 @@
                     app:srcCompat="@drawable/ic_location" />
 
                 <TextView
+                    android:id="@+id/adress_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="20dp"
-                    android:id="@+id/adress_user"
                     android:text="Add to group"
                     android:textStyle="bold" />
             </LinearLayout>

@@ -6,15 +6,24 @@ import java.util.Date;
 
 public class Annonce implements Serializable {// bch nkdo nrsloha ù blasa lblsa whdkhra
     private String idAnnonce;
-    private String  titreAnnonce;
-    private String  descriptionAnnonce;
+    private String titreAnnonce;
+    private String descriptionAnnonce;
     private ArrayList<String> articleEnRetour = new ArrayList<>();
     private Date dateAnnonce;
-    private String  statu;
-    private  String wilaya;
+    private String statu;
+    private String wilaya;
     private String commune;
+    private String IdOffreSelected;
 
-    public Annonce(String idAnnonce, String titreAnnonce, String descriptionAnnonce, ArrayList<String> articleEnRetour, Date dateAnnonce, String statu, String wilaya, String commune, String userId, ArrayList<String> images) {
+    public String getIdOffreSelected() {
+        return IdOffreSelected;
+    }
+
+    public void setIdOffreSelected(String idOffreSelected) {
+        IdOffreSelected = idOffreSelected;
+    }
+
+    public Annonce(String idAnnonce, String titreAnnonce, String descriptionAnnonce, ArrayList<String> articleEnRetour, Date dateAnnonce, String statu, String wilaya, String commune, String idOffreSelected, String userId, ArrayList<String> images) {
         this.idAnnonce = idAnnonce;
         this.titreAnnonce = titreAnnonce;
         this.descriptionAnnonce = descriptionAnnonce;
@@ -23,11 +32,12 @@ public class Annonce implements Serializable {// bch nkdo nrsloha ù blasa lblsa
         this.statu = statu;
         this.wilaya = wilaya;
         this.commune = commune;
+        this.IdOffreSelected = idOffreSelected;
         this.userId = userId;
         this.images = images;
     }
 
-    private String  userId;
+    private String userId;
     private ArrayList<String> images = new ArrayList<>();
 
     public Annonce() {
@@ -89,11 +99,11 @@ public class Annonce implements Serializable {// bch nkdo nrsloha ù blasa lblsa
         this.descriptionAnnonce = descriptionAnnonce;
     }
 
-    public ArrayList<String>  getArticleEnRetour() {
+    public ArrayList<String> getArticleEnRetour() {
         return articleEnRetour;
     }
 
-    public void setArticleEnRetour(ArrayList<String>  articleEnRetour) {
+    public void setArticleEnRetour(ArrayList<String> articleEnRetour) {
         this.articleEnRetour = articleEnRetour;
     }
 

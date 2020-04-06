@@ -2,6 +2,7 @@ package com.bouchra.myapplicationechange.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,16 +28,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder> {
 
     private Context context;
-    private ArrayList<Offre> offresdemande = new ArrayList<>();
+    // private ArrayList<Offre> offresdemande = new ArrayList<>();
     private ArrayList<Offre> mesDemandeDoffres;
     private ArrayList<Membre> membres;
-    private  String nomAnnonce;
+    private String nomAnnonce;
+    // private  ArrayList<Annonce>annonces;/////////////////////////////////////////////mna njbd id offre li selecterd
+    private String annonce;
 
-    public demandesoffre(Context context, ArrayList<Offre> mesDemandeDoffres, ArrayList<Membre> membres,String nomAnnonce) {
+    public demandesoffre(Context context, ArrayList<Offre> mesDemandeDoffres, ArrayList<Membre> membres, String nomAnnonce,String annonce) {
+        this.context = context;
+
         this.mesDemandeDoffres = mesDemandeDoffres;
         this.membres = membres;
-        this.context = context;
-       this.nomAnnonce=nomAnnonce;
+        this.nomAnnonce = nomAnnonce;
+        this.annonce=annonce;
+
     }
 
     @NonNull
@@ -49,6 +55,7 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull demandesoffre.ViewHolder holder, int position) {
+        //////////********************************************************  offre
         Offre offre = mesDemandeDoffres.get(position);
         holder.titreOffre.setText(offre.getNomOffre());
         //Loading image from Glide library.
@@ -64,10 +71,21 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
         holder.descriptionOffre.setText(offre.getDescriptionOffre());
         holder.villeOffre.setText(offre.getWilaya() + ",");
         holder.communeOffre.setText(offre.getCommune());
-
+/////////////**************************membre
         Membre membre = membres.get(position);
         holder.nameUser.setText(membre.getNomMembre());
         Picasso.get().load(membre.getPhotoUser()).into(holder.imageUser);
+
+        if (offre.getIdOffre().equals(annonce)) {
+
+            holder.itemView.setBackgroundResource(R.drawable.card_offre_accepted);
+
+        } else {
+            holder.itemView.setBackgroundResource(R.drawable.card_offre_refuse);
+        }
+        Log.e("eeeeeeeed offre is", offre.getIdOffre());
+        Log.e("iiiiiiiiid offre is", annonce);
+
 
        /* Glide.with(context)
                 .load(membre.getPhotoUser())
@@ -77,15 +95,16 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
             @Override
             public void onClick(View v) {
                 ConfirmeOffre confirmeOffre = new ConfirmeOffre();
-               Bundle b2 = new Bundle();
+                Bundle b2 = new Bundle();
                 b2.putString("nomOffre", offre.getNomOffre());
                 b2.putString("nomAnnonce", nomAnnonce);
+                b2.putString("idOffre", offre.getIdOffre());
                 confirmeOffre.setArguments(b2);
                 confirmeOffre.show(((AppCompatActivity) context).getSupportFragmentManager(), "fragment");
 
             }
         });
-holder.relativeLayout.setBackgroundResource(R.drawable.card_offre_accepted);
+//holder.relativeLayout.setBackgroundResource(R.drawable.card_offre_accepted);
 
     }
 
@@ -118,12 +137,12 @@ holder.relativeLayout.setBackgroundResource(R.drawable.card_offre_accepted);
             imageOffre = itemView.findViewById(R.id.img_offre);
             imageUser = itemView.findViewById(R.id.img_user);
             nameUser = itemView.findViewById(R.id.nom_user);
-            relativeLayout=itemView.findViewById(R.id.layout_offre);
-
-
+            relativeLayout = itemView.findViewById(R.id.layout_offre);
 
 
         }
+
+
     }
 
 

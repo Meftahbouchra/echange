@@ -100,7 +100,8 @@ public class AjoutOffre extends AppCompatActivity {
                 offre.setIdUser(preferenceUtils.getMember().getIdMembre());
                 // offre.setImages();
                 // khasni id user li dar l offre
-                databaseReference.setValue(offre).addOnCompleteListener(task2 -> {/*
+
+                databaseReference.child(String.valueOf(offre.getDateOffre().hashCode()) + offre.getAnnonceId().hashCode()).setValue(offre).addOnCompleteListener(task2 -> {/*
                 setValue () -  Cette méthode prendra un objet de classe java modèle qui contiendra toutes les variables
                  à stocker dans la référence. La même méthode sera utilisée pour mettre à jour les valeurs car elle écrase
                  les données de la référence spécifiée.

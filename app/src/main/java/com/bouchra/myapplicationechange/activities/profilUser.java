@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.adapters.BottomSheetPhoneNumber;
 import com.bouchra.myapplicationechange.adapters.CommentaireAdapter;
 import com.bouchra.myapplicationechange.models.Commentaire;
 import com.bouchra.myapplicationechange.models.Membre;
@@ -42,7 +43,7 @@ public class profilUser extends AppCompatActivity {
     private TextView telUser;
     private TextView adressUser;
     private LinearLayout zoneEmail;
-     private  LinearLayout zonePhone;
+    private LinearLayout zonePhone;
 
     Date date = new Date();
 
@@ -59,8 +60,8 @@ public class profilUser extends AppCompatActivity {
         mailUser = findViewById(R.id.mail_user);
         telUser = findViewById(R.id.tel_user);
         adressUser = findViewById(R.id.adress_user);
-        zoneEmail=findViewById(R.id.zone_email);
-        zonePhone=findViewById(R.id.zone_phone);
+        zoneEmail = findViewById(R.id.zone_email);
+        zonePhone = findViewById(R.id.zone_phone);
         // recycle view with out base da donne
         recyclerView = findViewById(R.id.recyle_commentaire);
         commentaires = new ArrayList<>();
@@ -78,7 +79,7 @@ public class profilUser extends AppCompatActivity {
                 Membre membre = dataSnapshot.getValue(Membre.class);
                 Picasso.get().load(membre.getPhotoUser()).into(imageUser);
                 nomUser.setText(membre.getNomMembre());
-               mailUser.setText(membre.getEmail());
+                mailUser.setText(membre.getEmail());
 
 
                 try {
@@ -98,8 +99,10 @@ public class profilUser extends AppCompatActivity {
 
             }
         });
+        //call or send sms
         zonePhone.setOnClickListener(v -> {
-
+            BottomSheetPhoneNumber bottomSheetPhoneNumber = new BottomSheetPhoneNumber();
+            bottomSheetPhoneNumber.show(getSupportFragmentManager(), "bottomSheetPhoneNumber");
 
         });
         // send email
@@ -112,8 +115,26 @@ public class profilUser extends AppCompatActivity {
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + email));
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
             emailIntent.putExtra(Intent.EXTRA_TEXT, body);
-            startActivity(Intent.createChooser(emailIntent,chooserTitle));
+            startActivity(Intent.createChooser(emailIntent, chooserTitle));
         });
+    }
+
+    //URI: est une chaine de caracteres utilisee pour identifier une ressource
+    //uri.parse: methode cree un nv object a partir dun format correct "String"->passee la chaine String
+    public void sendSms() {
+        //ACTION_VIEW :display thr data in the intent uRL
+        String message = ""; // body here
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + telUser.getText().toString()));
+        intent.putExtra("sms_body", message);
+        startActivity(intent);
+
+    }
+
+    public void Call() {
+        //ACTION_DIAL :start a phonr dialer and use preset numbers in the data to dial
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + telUser.getText().toString()));
+        startActivity(intent);
     }
 
 }
