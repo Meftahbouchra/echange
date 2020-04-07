@@ -35,14 +35,20 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
     // private  ArrayList<Annonce>annonces;/////////////////////////////////////////////mna njbd id offre li selecterd
     private String annonce;
 
-    public demandesoffre(Context context, ArrayList<Offre> mesDemandeDoffres, ArrayList<Membre> membres, String nomAnnonce,String annonce) {
+    public demandesoffre(Context context, ArrayList<Offre> mesDemandeDoffres, ArrayList<Membre> membres, String nomAnnonce, String annonce) {
         this.context = context;
 
         this.mesDemandeDoffres = mesDemandeDoffres;
         this.membres = membres;
         this.nomAnnonce = nomAnnonce;
-        this.annonce=annonce;
+        this.annonce = annonce;
 
+    }
+
+
+    public void setAnnonce(String annonce){
+        this.annonce = annonce;//ry7i ma tkhrbi
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -76,15 +82,32 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
         holder.nameUser.setText(membre.getNomMembre());
         Picasso.get().load(membre.getPhotoUser()).into(holder.imageUser);
 
-        if (offre.getIdOffre().equals(annonce)) {
+        if (annonce != null) {
 
+        } else {
+            annonce = " ";
+        }
+        Log.e("id offre selected is", annonce);
+        if (offre.getIdOffre().equals(annonce)) {
             holder.itemView.setBackgroundResource(R.drawable.card_offre_accepted);
 
         } else {
+
             holder.itemView.setBackgroundResource(R.drawable.card_offre_refuse);
         }
+
+       /*if (!annonce.equals(null)) {
+
+
+           holder.itemView.setBackgroundResource(R.drawable.card_offre_accepted);
+
+        } else {
+
+           holder.itemView.setBackgroundResource(R.drawable.card_offre_refuse);
+
+        }*/
         Log.e("eeeeeeeed offre is", offre.getIdOffre());
-        Log.e("iiiiiiiiid offre is", annonce);
+
 
 
        /* Glide.with(context)

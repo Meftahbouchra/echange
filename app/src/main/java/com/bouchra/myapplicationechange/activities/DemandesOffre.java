@@ -43,7 +43,7 @@ public class DemandesOffre extends AppCompatActivity {
         setContentView(R.layout.activity_demandes_offre);
         recyclerView = findViewById(R.id.recyle_demandesoffres);
 
-        offres = new ArrayList<>();
+        offres = new ArrayList<>();// sbor nwrilk ok
         membres = new ArrayList<>();
         Intent ajou = getIntent();
         String nomAnnon = ajou.getStringExtra("nomAnnonce");
@@ -109,28 +109,23 @@ public class DemandesOffre extends AppCompatActivity {
         //////////////////////////////////////////////////////////
         String idAnnonce = ajou.getStringExtra("idAnnonce");
          FirebaseDatabase databasee = FirebaseDatabase.getInstance();
-        DatabaseReference reff = databasee.getReference("Annonce").child(idAnnonce);
+        DatabaseReference reff = databasee.getReference("Annonce").child(idAnnonce);//hna
         reff.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try {
+                String Idoffre="";
                     if (dataSnapshot.getValue() != null) {
-                        try {
+                        Idoffre = dataSnapshot.child("idOffreSelected").getValue().toString();
 
-                            String Idoffre = dataSnapshot.child("idOffreSelected").getValue().toString();
-                            Log.e("iiiiiiiiiiiiid offre is", Idoffre);
-                            annonce=Idoffre;
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        annonce=Idoffre;
+                        demandesoffre.setAnnonce(annonce);
                     } else {
                         Log.e("TAG", " it's null.");
+                        annonce=" ";
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                Log.e("id Offre", Idoffre);
+                Log.e("id annonce", annonce);
+
             }
 
             @Override

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
@@ -59,7 +60,7 @@ import retrofit2.Callback;
 public class MessageActivity extends AppCompatActivity {
     private CircleImageView profile_image;
     private TextView username;
-    private ImageButton btn_send, btn_send_location;
+    private ImageButton btn_send, btn_send_location, btn_send_image;
     private EditText txt_send;
     private RecyclerView recyclerView;
     private int PERMISSION_ID = 44;//nous aide à identifier l'action de l'utilisateur avec quelle demande d'autorisation
@@ -71,6 +72,19 @@ public class MessageActivity extends AppCompatActivity {
     private ArrayList<Message> mchat;
     private APIService apiService;
     private MessageAdapter messageAdapter;
+
+    ///////////////******************************* add a msg image
+    //permission constants
+    private static final int CAMERA_REQUEST_CODE = 100;
+    private static final int STORAGE_REQUEST_CODE = 200;
+    //image pick constants
+    private static final int IMAGE_PICK_CAMERA_CODE = 300;
+    private static final int IMAGE_PICK_GALLERY_CODE = 400;
+    //permissions arry
+    String[] cameraPermission;
+    String[] storagePermission;
+    //image picked will be samed in this uri
+    Uri image_uri = null;
 
 
     @Override
@@ -86,6 +100,12 @@ public class MessageActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         btn_send = findViewById(R.id.btn_send);
         txt_send = findViewById(R.id.txt_send);
+        btn_send_image = findViewById(R.id.btn_send_image);
+        //******************************************************************
+        //init permission arrys
+        cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -163,7 +183,7 @@ public class MessageActivity extends AppCompatActivity {
                         Toast.makeText(this, "Votre message a été soumise avec succès ", Toast.LENGTH_LONG).show();
 
                     } else {
-                        Toast.makeText(this, "Votre message a été soumise avec succès ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Erreur !! ", Toast.LENGTH_LONG).show();
                     }
 
                 });
@@ -200,6 +220,11 @@ public class MessageActivity extends AppCompatActivity {
            Dans certains appareils, si vous désactivez la position et la rallumez, les informations de position enregistrées précédemment seront effacées.
            Si l'utilisateur n'a jamais activé la localisation avant d'utiliser votre application, cette fois, les informations de localisation précédentes seront également nulles.
             De plus, cette méthode vérifiera d'abord si notre autorisation est accordée ou non et si le paramètre de localisation est activé.*/
+        });
+        //click button  to omport image
+        btn_send_image.setOnClickListener(v1 -> {
+//show image pick dalog
+            Toast.makeText(this, "send image lessage!!!!!!!!! rah 3ndi lfog ta3 les permission", Toast.LENGTH_SHORT).show();
         });
     }
 

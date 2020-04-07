@@ -3,6 +3,9 @@ package com.bouchra.myapplicationechange.activities;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Annonce;
@@ -28,6 +32,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -51,6 +57,7 @@ public class DetailAnnonce extends AppCompatActivity {
     private Button offre;
     private Dialog MyDialog;
     private TextView sendMsg; //send_Msg
+    private TextView shar_publication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +98,55 @@ public class DetailAnnonce extends AppCompatActivity {
             startActivity(intent);
 
         });
+        //share Post *FileProvider*
+        shar_publication.setOnClickListener(v -> {
+            String nom = tite.getText().toString().trim();
+            String description = desc.getText().toString().trim();
+            //get image from image View
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) img.getDrawable();
+            //convert image to bitmap
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+
+            share(nom, description, bitmap);
+
+
+        });
 
     }
+
+    private void share(String nom, String description, Bitmap bitmap) {
+        //concatenate title and desc to share
+        String shareBody = nom + "\n" + description;
+        //first we will save the image  in cache, get the saved image uri
+        Uri uri = saveImgeToShare(bitmap);
+        //share intent
+        Intent sInent = new Intent(Intent.ACTION_SEND);
+        sInent.putExtra(Intent.EXTRA_STREAM, uri);
+        sInent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        sInent.putExtra(Intent.EXTRA_SUBJECT, " ");
+        sInent.setType("image/png");
+        startActivity(Intent.createChooser(sInent, "Partager avec "));
+    }
+
+    private Uri saveImgeToShare(Bitmap bitmap) {
+        File imageFolder = new File(getCacheDir(), "images");
+        Uri uri = null;
+        try {
+            imageFolder.mkdir();//create if not exist
+            File file = new File(imageFolder, "shared_image.png");
+            FileOutputStream stream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
+            stream.flush();
+            stream.close();
+            uri = FileProvider.getUriForFile(this, "com.bouchra.myapplicationechange.fileprovider", file);
+
+        } catch (Exception e) {
+            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        return uri;
+    }
+
 
     private void showImage() {
 
@@ -189,6 +243,7 @@ public class DetailAnnonce extends AppCompatActivity {
         retour = findViewById(R.id.article_retour);
         name_user = findViewById(R.id.nom_user);
         imgUser = findViewById(R.id.img_user);
+        shar_publication=findViewById(R.id.shar_publication);
 
     }
 

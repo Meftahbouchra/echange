@@ -91,15 +91,6 @@
             </intent-filter>
         </activity>
 
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.bouchra.myapplicationechange.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/fille_paths" />
-        </provider>
 
         <service
             android:name=".notification.GettingDeviceTokenService"
@@ -117,6 +108,21 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <!-- define file provider-->
+        <!-- set the androiod :exported attribute to false:
+        the Fileprovider does not need to be public-->
+        <!-- set the android: grantUriPermission attbute to true:
+        to allow you to grant temporarybaccess to files-->
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.bouchra.myapplicationechange.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fille_paths" />
+        </provider>
     </application>
 
 </manifest>

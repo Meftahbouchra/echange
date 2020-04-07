@@ -50,20 +50,14 @@
                 android:textColor="@color/Login_form_details" />
 
             <TextView
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="30dp"
-                android:paddingTop="5dp"
-                android:text="Nombre d'offre : "
-                android:textColor="@color/orange" />
-
-            <TextView
+                android:id="@+id/shar_publication"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingTop="20sp"
-                android:text="0"
-                android:textColor="@color/orange"
-                android:textSize="17sp" />
+                android:layout_marginLeft="10dp"
+                android:drawableStart="@drawable/ic_share"
+                android:drawableTint="#efefef"
+                android:paddingTop="10dp" />
+
 
         </LinearLayout>
 
