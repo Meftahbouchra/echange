@@ -55,16 +55,20 @@ public class ImagesStorage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_images_storage);
+
         //StorageReference Fire base
         mStorageRef = FirebaseStorage.getInstance().getReference("Images Annonce");
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
         imageview = findViewById(R.id.image_view);
+
+
         // bottom shet
         Button buttonOpenBottomSheet = findViewById(R.id.button_sheet);
         buttonOpenBottomSheet.setOnClickListener(v -> {
             BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
             bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");
         });
+
         findViewById(R.id.next).setOnClickListener(v -> {
             if (imguri != null) {
                 Fileuploader();

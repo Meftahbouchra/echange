@@ -2,14 +2,20 @@ package com.bouchra.myapplicationechange.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,9 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,6 +49,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,7 +58,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -63,7 +78,7 @@ public class MessageActivity extends AppCompatActivity {
     private ImageButton btn_send, btn_send_location, btn_send_image;
     private EditText txt_send;
     private RecyclerView recyclerView;
-    private int PERMISSION_ID = 44;//nous aide à identifier l'action de l'utilisateur avec quelle demande d'autorisation
+    private static final int PERMISSION_ID = 44;//nous aide à identifier l'action de l'utilisateur avec quelle demande d'autorisation
     private boolean notify = false;
     private PreferenceUtils preferenceUtils;
     private Intent intent;
@@ -72,6 +87,7 @@ public class MessageActivity extends AppCompatActivity {
     private ArrayList<Message> mchat;
     private APIService apiService;
     private MessageAdapter messageAdapter;
+
 
     ///////////////******************************* add a msg image
     //permission constants
@@ -221,12 +237,101 @@ public class MessageActivity extends AppCompatActivity {
            Si l'utilisateur n'a jamais activé la localisation avant d'utiliser votre application, cette fois, les informations de localisation précédentes seront également nulles.
             De plus, cette méthode vérifiera d'abord si notre autorisation est accordée ou non et si le paramètre de localisation est activé.*/
         });
-        //click button  to omport image
+        //click button  to import image
+        //get image from camera/ gallery on click
         btn_send_image.setOnClickListener(v1 -> {
 //show image pick dalog
-            Toast.makeText(this, "send image lessage!!!!!!!!! rah 3ndi lfog ta3 les permission", Toast.LENGTH_SHORT).show();
+
+            showImagePickDialog();
         });
     }
+
+    private void showImagePickDialog() {
+        //option (camera,gallery) to show in dialog
+        String[] options = {"Camera", "Gallery"};
+        //dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose Image from");
+        //set options to dialog
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //item click handle
+                if (which == 0) {
+                    //camera clicked
+                    if (!checkCameraPermission()) {
+                        resuestCameraPermission();
+                    } else {
+                        pickFromCamera();
+                    }
+
+                }
+                if (which == 1) {
+                    //gallery clicked
+                    if (!checkStoragePermission()) {
+                        resuestStoragePermission();
+                    } else {
+                        pickFromGallery();
+                    }
+
+                }
+            }
+        });
+        //crete and show dialog
+        builder.create().show();
+    }
+
+    private void pickFromGallery() {
+        //intent to pick image from gallery
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, IMAGE_PICK_GALLERY_CODE);
+
+
+    }
+
+    private void pickFromCamera() {
+        //intent to pick image from camera
+        ContentValues cv = new ContentValues();
+        cv.put(MediaStore.Images.Media.TITLE, "Temp Pick");
+        cv.put(MediaStore.Images.Media.DESCRIPTION, "Temp Descr");
+        image_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
+
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
+        startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
+
+
+    }
+
+    private boolean checkStoragePermission() {
+        //check if storage permission is enabel or not
+        boolean result = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        return result;
+    }
+
+    private void resuestStoragePermission() {
+        //request runtime storage permission
+        ActivityCompat.requestPermissions(this, storagePermission, STORAGE_REQUEST_CODE);
+    }
+
+
+    private boolean checkCameraPermission() {
+        //check if camera permission is enabel or not
+        boolean result = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
+        boolean resultl = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        return result && resultl;
+    }
+
+    private void resuestCameraPermission() {
+        //request runtime camera permission
+        ActivityCompat.requestPermissions(this, cameraPermission, CAMERA_REQUEST_CODE);
+    }
+
 
     private void senNotification(final String userid, final String name, final String message) {
         DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
@@ -350,13 +455,174 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_ID) {
+      /*  if (requestCode == PERMISSION_ID) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //  obtenir les informations de localisation
                 getLastLocation();
             }
+        }*/
+        switch (requestCode) {
+            case PERMISSION_ID: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //  obtenir les informations de localisation
+                    getLastLocation();
+                }
+
+            }
+            break;
+            case CAMERA_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean storageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (cameraAccepted && storageAccepted) {
+                        //both permission are garented
+                        pickFromCamera();
+
+                    } else {
+                        // camera or gallery or both permission ware denied
+                        Toast.makeText(this, "camera et storage permission sont necessaire !... ", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+
+
+                }
+            }
+            break;
+            case STORAGE_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    boolean storageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    if (storageAccepted) {
+                        //storage permission garented
+                        pickFromGallery();
+
+                    } else {
+                        // camera or gallery or both permission ware denied
+                        Toast.makeText(this, " storage permission  necessaire !... ", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+
+                }
+            }
+            break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        // this methode will be called  after picking image from camera or gallery
+        if (resultCode == RESULT_OK) {
+            if (requestCode == IMAGE_PICK_GALLERY_CODE) {
+                //image is piced from gallery , get uri of image
+                image_uri = data.getData();
+                //*********************t3bla nrml
+                // set to image view
+                //////imageview.setImageURI(image_uri);
 
+
+                //use this image uri to upload to firebase storage
+                try {
+                    sendImageMessage(image_uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } else if (requestCode == IMAGE_PICK_CAMERA_CODE) {
+                //*************************************ta3 nrml
+                //image is picked from camera , get uri of image
+                //////imageview.setImageURI(image_uri);
+                try {
+                    sendImageMessage(image_uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void sendImageMessage(Uri image_uri) throws IOException {
+        // hada khas ndirh ga3 win ykara3
+        //progress dialog
+        notify = true;
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("att rah yrsal ... ");
+        progressDialog.show();
+        String timaStamp = " " + System.currentTimeMillis();
+        String fileNameAndPath = "ChatImages/" + "image_" + timaStamp;
+        /*chats node will be created that will contain all images sent via chat*/
+        //get bitmap from image uri
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), image_uri);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();//convert image to baytes
+        StorageReference ref = FirebaseStorage.getInstance().getReference().child(fileNameAndPath);
+        ref.putBytes(data)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        ////img uploaded
+                        progressDialog.dismiss();
+                        // get url  of uploded image
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!uriTask.isSuccessful()) ;
+                        String downloadUri = uriTask.getResult().toString();
+                        if (uriTask.isSuccessful()) {
+                            intent = getIntent();
+                            String userid = intent.getStringExtra("user");
+                            // add imahe uri and other data to databse
+                            r = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((preferenceUtils.getMember().getIdMembre().hashCode()) + (userid.hashCode())));
+
+                            Message chat = new Message();
+                            chat.setTextMessage(downloadUri);
+                            chat.setIdreceiver(userid);
+                            chat.setIdsender(preferenceUtils.getMember().getIdMembre());
+                            chat.setNomsender(preferenceUtils.getMember().getNomMembre());
+                            chat.setDateMessage(new Date());
+                            chat.setIdMessage(String.valueOf(chat.getDateMessage().getTime()));
+                            r.child(String.valueOf(chat.getDateMessage().getTime())).setValue(chat).addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(MessageActivity.this, "Votre message a été soumise avec succès", Toast.LENGTH_SHORT).show();
+
+
+                                } else {
+                                    Toast.makeText(MessageActivity.this, "Erreur !! ", Toast.LENGTH_LONG).show();
+                                }
+
+                            });
+                            ////send notification
+                            DatabaseReference database = FirebaseDatabase.getInstance().getReference("Membre").child(preferenceUtils.getMember().getIdMembre());
+                            database.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    Membre user = dataSnapshot.getValue(Membre.class);
+                                    if (notify) {
+                                        senNotification(userid, user.getNomMembre(), "sent you a photo ...");
+                                    }
+                                    notify = false;
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+                        }
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //failed
+                        progressDialog.dismiss();
+
+                    }
+                });
+
+
+    }
 }

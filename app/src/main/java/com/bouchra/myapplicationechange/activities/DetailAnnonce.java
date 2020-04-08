@@ -120,12 +120,45 @@ public class DetailAnnonce extends AppCompatActivity {
         //first we will save the image  in cache, get the saved image uri
         Uri uri = saveImgeToShare(bitmap);
         //share intent
-        Intent sInent = new Intent(Intent.ACTION_SEND);
-        sInent.putExtra(Intent.EXTRA_STREAM, uri);
-        sInent.putExtra(Intent.EXTRA_TEXT, shareBody);
-        sInent.putExtra(Intent.EXTRA_SUBJECT, " ");
-        sInent.setType("image/png");
+        ////-------------send image
+       /* Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        shareIntent.setType("image/*");
+        startActivity(Intent.createChooser(shareIntent,"Partager avec "));*/
+
+
+//////////////----------------------send text
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT,shareBody);
+        sendIntent.setType("text/*");
+        startActivity(sendIntent);
+
+        //startActivity(Intent.createChooser(sInent, "Partager avec "));
+/*
+ private void share(String nom, String description, Bitmap bitmap) {
+        //concatenate title and desc to share
+        String shareBody = nom + "\n" + description;
+        //first we will save the image  in cache, get the saved image uri
+        Uri uri = saveImgeToShare(bitmap);
+        //share intent
+        Intent sInent = new Intent(Intent.ACTION_SEND);//ACTION_SEND -  Cette intention démarrera l'activité d'envoi.
+        sInent.putExtra(Intent.EXTRA_STREAM, uri);//Put extra mettra le flux supplémentaire avec le nom de chemin de l'image que nous partageons.
+       // sInent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        sInent.putExtra(Intent.EXTRA_SUBJECT, shareBody);
+
+        sInent.setType("image/*");// s appele un  MIME;Nous devons définir le type de données d'envoi,
+        sInent.setType("text/*");//Nous devons changer le type d'envoi car nous envoyons du texte.
+        //sInent.setType("image/png");
+        //  sInent.setType("txt/link");
+        sInent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        sInent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(Intent.createChooser(sInent, "Partager avec "));
+        //dans facebook, il ne peut partager l'image que parce que facebook ne permet pas de partager le texte via l'intention
+    }
+ */
+
     }
 
     private Uri saveImgeToShare(Bitmap bitmap) {
@@ -243,7 +276,7 @@ public class DetailAnnonce extends AppCompatActivity {
         retour = findViewById(R.id.article_retour);
         name_user = findViewById(R.id.nom_user);
         imgUser = findViewById(R.id.img_user);
-        shar_publication=findViewById(R.id.shar_publication);
+        shar_publication = findViewById(R.id.shar_publication);
 
     }
 
