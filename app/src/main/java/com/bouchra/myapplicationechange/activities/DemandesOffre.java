@@ -116,7 +116,6 @@ public class DemandesOffre extends AppCompatActivity {
                 String Idoffre="";
                     if (dataSnapshot.getValue() != null) {
                         Idoffre = dataSnapshot.child("idOffreSelected").getValue().toString();
-
                         annonce=Idoffre;
                         demandesoffre.setAnnonce(annonce);
                     } else {

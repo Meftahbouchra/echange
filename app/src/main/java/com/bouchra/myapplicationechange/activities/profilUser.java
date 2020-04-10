@@ -1,6 +1,8 @@
 package com.bouchra.myapplicationechange.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,7 +47,10 @@ public class profilUser extends AppCompatActivity {
     private TextView adressUser;
     private LinearLayout zoneEmail;
     private LinearLayout zonePhone;
-
+    private static final int CALL_REQUEST_CODE = 100;
+    private static final int SMS_REQUEST_CODE = 200;
+    String[] callPermission;
+    String[] smsPermission;
     Date date = new Date();
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -62,6 +68,9 @@ public class profilUser extends AppCompatActivity {
         adressUser = findViewById(R.id.adress_user);
         zoneEmail = findViewById(R.id.zone_email);
         zonePhone = findViewById(R.id.zone_phone);
+        //init permission arrys
+        callPermission = new String[]{Manifest.permission.CALL_PHONE};
+        smsPermission = new String[]{Manifest.permission.SEND_SMS};
         // recycle view with out base da donne
         recyclerView = findViewById(R.id.recyle_commentaire);
         commentaires = new ArrayList<>();
@@ -123,18 +132,62 @@ public class profilUser extends AppCompatActivity {
     //uri.parse: methode cree un nv object a partir dun format correct "String"->passee la chaine String
     public void sendSms() {
         //ACTION_VIEW :display thr data in the intent uRL
-        String message = ""; // body here
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + telUser.getText().toString()));
-        intent.putExtra("sms_body", message);
-        startActivity(intent);
+        if (checkSMSPermissions()) {
+            String message = ""; // body here
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + telUser.getText().toString()));
+            intent.putExtra("sms_body", message);
+            startActivity(intent);
+        } else {
+            requestSMSPermissions();
+        }
+
 
     }
 
     public void Call() {
         //ACTION_DIAL :start a phonr dialer and use preset numbers in the data to dial
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + telUser.getText().toString()));
-        startActivity(intent);
+
+        if (checkCallPermissions()) {
+
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:" + telUser.getText().toString()));
+            startActivity(intent);
+
+
+        } else {
+            requestCallPermissions();
+
+
+        }
+
+    }
+
+    private boolean checkCallPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
+    }
+
+
+    private void requestCallPermissions() {
+        ActivityCompat.requestPermissions(
+                this, callPermission, CALL_REQUEST_CODE);
+        Call();
+    }
+
+    private boolean checkSMSPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
+    }
+
+
+    private void requestSMSPermissions() {
+        ActivityCompat.requestPermissions(
+                this, smsPermission, SMS_REQUEST_CODE);
+        sendSms();
     }
 
 }

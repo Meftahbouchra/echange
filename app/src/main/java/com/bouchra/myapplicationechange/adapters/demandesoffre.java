@@ -81,7 +81,7 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
         Membre membre = membres.get(position);
         holder.nameUser.setText(membre.getNomMembre());
         Picasso.get().load(membre.getPhotoUser()).into(holder.imageUser);
-
+// hadi nrmlm sayi psq 3mrnha f lwl drnaha vide wla nkado ndiroha f win ytjibha m fire base
         if (annonce != null) {
 
         } else {

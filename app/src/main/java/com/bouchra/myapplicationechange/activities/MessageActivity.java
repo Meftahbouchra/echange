@@ -42,7 +42,6 @@ import com.bouchra.myapplicationechange.notification.Response;
 import com.bouchra.myapplicationechange.notification.Sender;
 import com.bouchra.myapplicationechange.notification.Token;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
-import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -61,6 +60,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -88,6 +88,7 @@ public class MessageActivity extends AppCompatActivity {
     private APIService apiService;
     private MessageAdapter messageAdapter;
 
+    StorageReference mStorageRef;
 
     ///////////////******************************* add a msg image
     //permission constants
@@ -99,6 +100,7 @@ public class MessageActivity extends AppCompatActivity {
     //permissions arry
     String[] cameraPermission;
     String[] storagePermission;
+    String[] locationpermission;
     //image picked will be samed in this uri
     Uri image_uri = null;
 
@@ -107,6 +109,7 @@ public class MessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+
 
         preferenceUtils = new PreferenceUtils(this);
         btn_send_location = findViewById(R.id.btn_send_location);
@@ -121,6 +124,7 @@ public class MessageActivity extends AppCompatActivity {
         //init permission arrys
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        locationpermission = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
 
         setSupportActionBar(toolbar);
@@ -148,7 +152,9 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Membre membre = dataSnapshot.getValue(Membre.class);
                 username.setText(membre.getNomMembre());
-                Glide.with(MessageActivity.this).load(membre.getPhotoUser()).into(profile_image);
+                //Glide.with(MessageActivity.this).load(membre.getPhotoUser()).into(profile_image);
+                Picasso.get().load(membre.getPhotoUser()).into(profile_image);
+
                 mchat = new ArrayList<>();
 
                 l = FirebaseDatabase.getInstance().getReference("Message").child(String.valueOf((preferenceUtils.getMember().getIdMembre().hashCode()) + (userid.hashCode())));
@@ -302,6 +308,9 @@ public class MessageActivity extends AppCompatActivity {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
         startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
 
+       /* Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);*/
 
     }
 
@@ -436,10 +445,7 @@ public class MessageActivity extends AppCompatActivity {
     //Cette méthode demandera nos autorisations nécessaires à l'utilisateur si elles ne sont pas déjà accordées.
     private void requestPermissions() {
         ActivityCompat.requestPermissions(
-                this,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                PERMISSION_ID
-        );
+                this, locationpermission, PERMISSION_ID);
     }
 
     //Cela vérifiera si l'utilisateur a activé l'emplacement à partir du paramètre,
@@ -625,4 +631,5 @@ public class MessageActivity extends AppCompatActivity {
 
 
     }
+
 }

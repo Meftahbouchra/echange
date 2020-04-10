@@ -72,6 +72,7 @@ public class AnnonceActivity extends AppCompatActivity {
                 annonce.setDescriptionAnnonce(desc_Annonce);
                 annonce.setDateAnnonce(new Date());
                 annonce.setStatu("created");
+                annonce.setIdOffreSelected("vide");
                 annonce.setUserId(preferenceUtils.getMember().getIdMembre());
                 annonce.setWilaya(selectedWilaya.split(" ")[1]);
                 annonce.setCommune(selectedVille);

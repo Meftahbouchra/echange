@@ -59,6 +59,7 @@ public class DetailAnnonce extends AppCompatActivity {
     private TextView sendMsg; //send_Msg
     private TextView shar_publication;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +132,7 @@ public class DetailAnnonce extends AppCompatActivity {
 //////////////----------------------send text
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT,shareBody);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
         sendIntent.setType("text/*");
         startActivity(sendIntent);
 
@@ -238,8 +239,10 @@ public class DetailAnnonce extends AppCompatActivity {
         finish();
         Toast.makeText(getApplicationContext(), " aller a nouv", Toast.LENGTH_LONG).show());*/
         selec.setOnClickListener(v -> {
+            // getSupportFragmentManager().beginTransaction().add(R.id.fragment, new Posts(), "Posts").commit();
 
             Toast.makeText(getApplicationContext(), "selection bottom navigation", Toast.LENGTH_LONG).show();
+
         });
 
         MyDialog.show();

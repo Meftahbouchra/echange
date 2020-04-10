@@ -1,6 +1,8 @@
 package com.bouchra.myapplicationechange.activities;
 
 import android.os.Bundle;
+import android.util.Patterns;
+import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,9 +27,8 @@ public class MessageList extends AppCompatActivity {
     private messagesAdapter userAdapter;
     private ArrayList<Membre> mUsers, onlyUsers;
     private PreferenceUtils preferenceUtils;
-    private DatabaseReference  l;
-    private String lastmsg="";
-
+    private DatabaseReference l;
+    private String lastmsg = "";
 
 
     @Override
@@ -61,19 +62,40 @@ public class MessageList extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
                 onlyUsers = new ArrayList<>();
                 for (Membre user : mUsers) {
-                    String  hash = String.valueOf(user.getIdMembre().hashCode() + preferenceUtils.getMember().getIdMembre().hashCode());
-                    if (dataSnapshot2.hasChild(hash))
-                    {
+                    String hash = String.valueOf(user.getIdMembre().hashCode() + preferenceUtils.getMember().getIdMembre().hashCode());
+                    if (dataSnapshot2.hasChild(hash)) {
                         //last msg
 
                         l = FirebaseDatabase.getInstance().getReference("Message").child(hash);//mp
-                        Query query=l.orderByKey().limitToLast(1);
+                        Query query = l.orderByKey().limitToLast(1);
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for(DataSnapshot child : dataSnapshot.getChildren()){
-                                    lastmsg=child.child("textMessage").getValue().toString();
-                                    userAdapter.setLastMsg(lastmsg);
+                                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                    lastmsg = child.child("textMessage").getValue().toString();
+                                    if (!isUrl(lastmsg)) {//return false
+                                        // affiche txt message
+                                        userAdapter.setLastMsg(lastmsg);
+                                    } else {
+                                        //affiche photo message
+                                        String idUser = child.child("idsender").getValue().toString();//lirsal
+                                        if (idUser.equals(preferenceUtils.getMember().getIdMembre())) {
+                                            // ana rsalt tof
+                                            lastmsg = "Vous avez envoye une photo";
+                                            userAdapter.setLastMsg(lastmsg);
+
+
+                                        } else {
+                                            String nomsender = child.child("nomsender").getValue().toString();
+                                            //homa rsloli tof
+                                            lastmsg = nomsender + "a envoye une photo";
+
+                                            userAdapter.setLastMsg(lastmsg);
+
+                                        }
+
+                                    }
+
                                 }
                             }
 
@@ -85,7 +107,7 @@ public class MessageList extends AppCompatActivity {
                         onlyUsers.add(user);
                     }
                 }
-                userAdapter = new messagesAdapter(MessageList.this, onlyUsers,lastmsg);
+                userAdapter = new messagesAdapter(MessageList.this, onlyUsers, lastmsg);
                 recyclerView.setAdapter(userAdapter);
 
             }
@@ -96,9 +118,16 @@ public class MessageList extends AppCompatActivity {
             }
         });
 
+    }
 
 
-
+    private boolean isUrl(String urlString) {
+        // URL url =new URL(urlString);
+        if (URLUtil.isValidUrl(urlString) && Patterns.WEB_URL.matcher(urlString).matches()) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 }

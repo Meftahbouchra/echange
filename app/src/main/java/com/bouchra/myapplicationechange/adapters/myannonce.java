@@ -63,6 +63,7 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
             context.startActivity(affiche);
         });
 
+
     }
 
     @Override

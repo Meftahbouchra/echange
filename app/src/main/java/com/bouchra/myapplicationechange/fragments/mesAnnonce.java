@@ -45,6 +45,7 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_mesannonces, container, false);
+
         recyclerView = view.findViewById(R.id.recyle_mesannonces);
         annonces = new ArrayList<>();
         myannonce = new myannonce(getContext(), annonces);

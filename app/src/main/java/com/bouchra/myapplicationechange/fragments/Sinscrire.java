@@ -43,9 +43,9 @@ public class Sinscrire extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.activity_sinscrire, container, false);
+        View view = inflater.inflate(R.layout.activity_sinscrire, container, false);
         txt_email = view.findViewById(R.id.emailll);
-        txt_username =view.findViewById(R.id.username);
+        txt_username = view.findViewById(R.id.username);
         txt_password = view.findViewById(R.id.pasward);
         btn_register = view.findViewById(R.id.btnresister);
         preferenceUtils = new PreferenceUtils(getActivity());
@@ -64,8 +64,8 @@ public class Sinscrire extends Fragment {
                 if (password.length() >= 6) {
                     registerUser();
                     //shared referecnces
-                  //  PreferenceUtils.saveEmail(email, getContext());
-                  //  PreferenceUtils.savePassword(password, getContext());
+                    //  PreferenceUtils.saveEmail(email, getContext());
+                    //  PreferenceUtils.savePassword(password, getContext());
 
                 } else {
                     Toast.makeText(getContext(), "Le mot de passe doit comporter au mois 6 caractéres ", Toast.LENGTH_LONG).show();
@@ -73,6 +73,7 @@ public class Sinscrire extends Fragment {
 
 
             } else {
+
                 Toast.makeText(getContext(), "Vous devez remplir les champs", Toast.LENGTH_LONG).show();
             }
 
@@ -82,17 +83,15 @@ public class Sinscrire extends Fragment {
     }
 
 
-
-
     private void registerUser() {
-        Context context=null;
+        Context context = null;
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
 
 
                         //hdo ta3 ysjl f firebase
-                        String imageUser="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSNe5yo7hl-b5UHwropa_-4hNehtgV4w6wkFM1gw-o59SW93FNt";
+                        String imageUser = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSNe5yo7hl-b5UHwropa_-4hNehtgV4w6wkFM1gw-o59SW93FNt";
                         ID = firebaseAuth.getCurrentUser().getUid();
                         databaseReference = FirebaseDatabase.getInstance().getReference("Membre").child(ID);
                         Membre usr = new Membre();
@@ -112,8 +111,6 @@ public class Sinscrire extends Fragment {
                                 Toast.makeText(getContext(), "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
                             }
                         });
-
-
 
 
                     } else {

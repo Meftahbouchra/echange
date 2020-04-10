@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-<item android:state_pressed="true">
-<shape  android:shape="rectangle">
-    <gradient android:startColor="@color/bleuk"
-        android:endColor="@color/purple" />
-   <stroke android:color="@color/Login_form_details_ligh"
-       android:width="5dp"/>
-</shape>
-</item>
-
-
-    <item >
+    <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <gradient android:startColor="@color/bleuk"
-                android:endColor="@color/purple" />
-            <stroke android:color="@color/Login_form_details"
-                android:width="2dp"/>
-            <corners android:radius="100dp"/>
+            <gradient android:endColor="@color/purple" android:startColor="@color/bleuk" />
+            <stroke android:width="5dp" android:color="@color/Login_form_details_ligh" />
+            <corners android:radius="100dp" />
+        </shape>
+    </item>
+
+
+    <item>
+        <shape android:shape="rectangle">
+            <gradient android:endColor="@color/purple" android:startColor="@color/bleuk" />
+            <stroke android:width="2dp" android:color="@color/Login_form_details" />
+            <corners android:radius="100dp" />
         </shape>
     </item>
 </selector>
