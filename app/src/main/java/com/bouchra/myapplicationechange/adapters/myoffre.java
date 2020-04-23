@@ -1,19 +1,26 @@
 package com.bouchra.myapplicationechange.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.activities.DetailAnnonce;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Offre;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,19 +29,25 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
     private Context context;
     private ArrayList<Offre> mesoffre;
-    private ArrayList<Annonce> annonces;
+    private Annonce  annonce;
+    private String idAnnonce;
 
-
-    public myoffre(Context context, ArrayList<Offre> mesoffre, ArrayList<Annonce> annonces) {
+    public myoffre(Context context, ArrayList<Offre> mesoffre, String idAnnonce) {
         this.context = context;
         this.mesoffre = mesoffre;
-        this.annonces = annonces;
+        this.idAnnonce = idAnnonce;
     }
 
-    public void setAnnonces(ArrayList<Annonce> annonces) {
-        this.annonces = annonces;
+    public void setIdAnnonce(String idAnnonce) {
+        this.idAnnonce = idAnnonce;
         notifyDataSetChanged();
     }
+
+
+  /*  public void setAnnonces(ArrayList<Annonce> annonces) {
+        this.annonces = annonces;
+        notifyDataSetChanged();
+    }*/
 
     @NonNull
     @Override
@@ -43,8 +56,9 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
         myoffre.ViewHolder h = new myoffre.ViewHolder(vi);
         return h;
     }
+
     @Override
-    public void onBindViewHolder(@NonNull myoffre.ViewHolder holder, int position){
+    public void onBindViewHolder(@NonNull myoffre.ViewHolder holder, int position) {
         Offre offre = mesoffre.get(position);
         holder.titte_offre.setText(offre.getNomOffre());
         holder.desc_offre.setText(offre.getDescriptionOffre());
@@ -64,12 +78,44 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
             Log.e("Data  of annonce here", String.valueOf(annonces.get(i)));
         }*/// hadi drtha bch ntest mkhdmtlich
 
-      // Annonce annonce = annonces.get(position); hhhhhhna drli
+
+        // hna njib annonce
+        Log.e("ID annonce here", idAnnonce);
+
+
+
         holder.itemView.setOnClickListener(v -> {
-           /*Intent affiche = new Intent(context, DetailAnnonce.class);
-            affiche.putExtra("annonce", annonce);
-            context.startActivity(affiche);*/
-           Toast.makeText(context, " hadi ydiha ll annonce li drlha", Toast.LENGTH_SHORT).show();
+            annonce=new Annonce();
+
+            final FirebaseDatabase databas = FirebaseDatabase.getInstance();
+            DatabaseReference df = databas.getReference("Annonce").child(idAnnonce);
+            df.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot3) {
+
+               /* Annonce ann = dataSnapshot3.getValue(Annonce.class);
+
+                annonces.add(ann);
+                setAnnonces(annonces);*/
+                    // annonce.add(dataSnapshot3.getValue(Annonce.class));
+
+                    // setAnnonces(annonces);
+                    annonce=dataSnapshot3.getValue(Annonce.class);
+                    Log.e("Data  of annonce here", annonce.getUserId());
+                    //intent
+                    Intent affiche = new Intent(context, DetailAnnonce.class);
+                    affiche.putExtra("annonce", annonce);
+                    context.startActivity(affiche);
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
         });
 
 
@@ -77,7 +123,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mesoffre.size() ;
+        return mesoffre.size();
 
 
     }

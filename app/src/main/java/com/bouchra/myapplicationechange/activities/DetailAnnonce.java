@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.fragments.Posts;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
@@ -239,7 +240,7 @@ public class DetailAnnonce extends AppCompatActivity {
         finish();
         Toast.makeText(getApplicationContext(), " aller a nouv", Toast.LENGTH_LONG).show());*/
         selec.setOnClickListener(v -> {
-            // getSupportFragmentManager().beginTransaction().add(R.id.fragment, new Posts(), "Posts").commit();
+             getSupportFragmentManager().beginTransaction().add(R.id.fragmentposts, new Posts(), "Posts").commit();
 
             Toast.makeText(getApplicationContext(), "selection bottom navigation", Toast.LENGTH_LONG).show();
 

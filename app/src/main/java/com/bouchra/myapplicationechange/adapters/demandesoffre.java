@@ -47,7 +47,7 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
 
 
     public void setAnnonce(String annonce){
-        this.annonce = annonce;//ry7i ma tkhrbi
+        this.annonce = annonce;
         notifyDataSetChanged();
     }
 
