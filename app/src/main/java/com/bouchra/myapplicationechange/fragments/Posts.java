@@ -1,6 +1,7 @@
 package com.bouchra.myapplicationechange.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,44 +14,72 @@ import com.bouchra.myapplicationechange.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Posts extends Fragment {
+    private String offreSelected;
+
     public Posts() {
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.activity_posts, container, false);
-        BottomNavigationView bottomNavigationView =view.findViewById(R.id.post_navigation);
+        try {
+            // get arguments
+            offreSelected = getArguments().getString("edttext");
+            Log.e("Text is :", offreSelected);
+        } catch (Exception e) {
+            offreSelected = null;
+        }
+
+        View view = inflater.inflate(R.layout.activity_posts, container, false);
+
+        BottomNavigationView bottomNavigationView = view.findViewById(R.id.post_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(nouvList);
+        //offreSelected = getArguments().getString("offre");
 
 
 //par defaut
+        if (offreSelected == null) {
+            getChildFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment, new mesAnnonce()).commit();
+        } else {
+            getChildFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment, new mesAnnonce(offreSelected)).commit();
+        }
 
-    getChildFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment, new mesAnnonce()).commit();
-     //  getFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment, new mesAnnonce()).commit();
-        return view;}
-    private  BottomNavigationView.OnNavigationItemSelectedListener nouvList =
+
+        //  getFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment, new mesAnnonce()).commit();
+        return view;
+    }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener nouvList =
             item -> {
                 Fragment selectedFragment = null;
 
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
 
 
+                    case R.id.nav_offre:
+                        if (offreSelected == null) {
+                            selectedFragment = new mesOffres();
+                        } else {
+                            selectedFragment = new mesOffres(offreSelected);
+                        }
 
-                    case R.id.nav_offre :
-                        selectedFragment = new mesOffres();
                         break;
 
-                    case R.id.nav_annonce :
-                        selectedFragment = new mesAnnonce();
+                    case R.id.nav_annonce:
+                        if (offreSelected == null) {
+                            selectedFragment = new mesAnnonce();
+                        } else {
+                            selectedFragment = new mesAnnonce(offreSelected);
+                        }
+
                         break;
 
 
                 }
 
-              getChildFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment,selectedFragment).commit();
-              //  getFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment,selectedFragment).commit();
-                return  true;
+                getChildFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment, selectedFragment).commit();
+                //  getFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment,selectedFragment).commit();
+                return true;
             };
 
 

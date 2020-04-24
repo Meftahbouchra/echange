@@ -28,11 +28,16 @@ public class mesOffres extends Fragment {
 
     private myoffre myoffre;
     private ArrayList<Offre> offres;//////////////hadi li rna njobi fiha m fire base
-    private String idannoncE;
+    private String idannoncE;// hadi mnshakhach psq jabtah direcht mlifogha  ArrayList<Offre> offres 
     private RecyclerView recyclerView;
     // SearchView editsearch;
+    private String offre;
 
     public mesOffres() {
+    }
+
+    public mesOffres(String offre) {
+        this.offre = offre;
     }
 
     @Nullable
@@ -42,8 +47,12 @@ public class mesOffres extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyle_mesoffres);
         offres = new ArrayList<>();
+        if (offre == null) {
+            myoffre = new myoffre(getContext(), offres, idannoncE);
+        } else {
+            myoffre = new myoffre(getContext(), offres, idannoncE, offre);
+        }
 
-        myoffre = new myoffre(getContext(), offres, idannoncE);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(myoffre);
 

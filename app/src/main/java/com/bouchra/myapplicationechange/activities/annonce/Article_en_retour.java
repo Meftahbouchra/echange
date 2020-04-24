@@ -18,13 +18,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class
 Article_en_retour extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecycleViewArticleRetour postAdapter;
 
-
+    private String selectedCateg;
     private EditText editText;
     private TextView textView;
     private Annonce annonce;
@@ -39,6 +41,7 @@ Article_en_retour extends AppCompatActivity {
         textView = findViewById(R.id.ajout_article);
         recyclerView = findViewById(R.id.rec_retour);
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
+        selectedCateg = getIntent().getStringExtra("Categ");
 
         //isEmpty ewt vide    isEmpty()
 
@@ -57,6 +60,13 @@ Article_en_retour extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
                 }
             });
+            // add catrgori
+            DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Categorie");
+            //Writing Hashmap
+            Map<String, Object> idANNONCE = new HashMap<>();
+            idANNONCE.put(selectedCateg + "/" + annonce.getIdAnnonce(), "id annonce");
+            mDbRef.updateChildren(idANNONCE);
+
 
         });
         findViewById(R.id.annuler).setOnClickListener(v -> {
@@ -67,7 +77,6 @@ Article_en_retour extends AppCompatActivity {
 
 
     }
-
 
 
     public void ajoutArticle() {

@@ -49,6 +49,7 @@ public class ImagesStorage extends AppCompatActivity {
     private int GALLERY = 1, CAMERA = 2;
     private ImageView imageview;
     private Annonce annonce;
+    private String selectedCateg;
 
 
     @Override
@@ -59,6 +60,7 @@ public class ImagesStorage extends AppCompatActivity {
         //StorageReference Fire base
         mStorageRef = FirebaseStorage.getInstance().getReference("Images Annonce");
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
+        selectedCateg = getIntent().getStringExtra("categorie");
         imageview = findViewById(R.id.image_view);
 
 
@@ -208,6 +210,7 @@ public class ImagesStorage extends AppCompatActivity {
                                     Log.e("Image link", String.valueOf(task));
                                     Intent ajou = new Intent(ImagesStorage.this, Article_en_retour.class);
                                     ajou.putExtra("annonce", annonce); //key* value
+                                    ajou.putExtra("Categ", selectedCateg);
                                     startActivity(ajou);
                                     finish();
                                 }

@@ -35,10 +35,14 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
     SearchView editsearch;
 
     Date date = new Date();
+    private String offre;
 
     public mesAnnonce() {
     }
 
+    public mesAnnonce(String offre) {
+        this.offre = offre;
+    }
 
     ///////////////////////////// kiykliki ykad ymodifier lannonce ta3ah
     @Nullable
@@ -48,7 +52,12 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
 
         recyclerView = view.findViewById(R.id.recyle_mesannonces);
         annonces = new ArrayList<>();
-        myannonce = new myannonce(getContext(), annonces);
+        if (offre == null) {
+            myannonce = new myannonce(getContext(), annonces);
+        } else {
+            myannonce = new myannonce(getContext(), annonces, offre);
+        }
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(myannonce);
         ////

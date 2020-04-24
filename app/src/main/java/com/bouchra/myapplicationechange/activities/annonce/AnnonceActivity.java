@@ -32,7 +32,7 @@ public class AnnonceActivity extends AppCompatActivity {
     private Button next,annuler;
     private EditText titreAnnonce , descAnnonce;
     private String titre_Annonce = "";
-    private String selectedWilaya , selectedVille;
+    private String selectedWilaya , selectedVille,selectedCateg;
     private String desc_Annonce = "";
     private Boolean isSelected = false;
     private Spinner wilayaSpinner , villeSpinner;
@@ -79,6 +79,7 @@ public class AnnonceActivity extends AppCompatActivity {
                 annonce.setIdAnnonce(String.valueOf(annonce.getDateAnnonce().hashCode()) + annonce.getUserId().hashCode());
                 Intent ajou = new Intent(AnnonceActivity.this, ImagesStorage.class);
                 ajou.putExtra("annonce",annonce); //key* value
+                ajou.putExtra("categorie",selectedCateg);
                 startActivity(ajou);
                 finish();
             }else{
@@ -88,6 +89,7 @@ public class AnnonceActivity extends AppCompatActivity {
         });
 
         //Spinner
+
         Spinner spinner = findViewById(R.id.spinner_cat);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.choix_categorie, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -95,8 +97,7 @@ public class AnnonceActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
-                String text = parent.getItemAtPosition(position).toString();
-                Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
+                 selectedCateg = parent.getItemAtPosition(position).toString();
                 isSelected = true;
             }
 

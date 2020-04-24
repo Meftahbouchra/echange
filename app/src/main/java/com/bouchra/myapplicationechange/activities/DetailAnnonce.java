@@ -19,6 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.fragments.Posts;
@@ -60,13 +62,13 @@ public class DetailAnnonce extends AppCompatActivity {
     private TextView sendMsg; //send_Msg
     private TextView shar_publication;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_annonce);
         relativeLayout = findViewById(R.id.relative_profie);
         imgUser = findViewById(R.id.img_user);
+
         offre = findViewById(R.id.offre);
         offre.setOnClickListener(v -> {
             MyDialog();
@@ -240,9 +242,19 @@ public class DetailAnnonce extends AppCompatActivity {
         finish();
         Toast.makeText(getApplicationContext(), " aller a nouv", Toast.LENGTH_LONG).show());*/
         selec.setOnClickListener(v -> {
-             getSupportFragmentManager().beginTransaction().add(R.id.fragmentposts, new Posts(), "Posts").commit();
 
-            Toast.makeText(getApplicationContext(), "selection bottom navigation", Toast.LENGTH_LONG).show();
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction t = manager.beginTransaction();
+            final Posts m4 = new Posts();
+            Bundle b2 = new Bundle();
+            b2.putString("edttext", annonce.getIdAnnonce());
+            m4.setArguments(b2);
+            t.add(R.id.fragmentposts, m4);
+            t.commit();
+
+             /*getSupportFragmentManager().beginTransaction().add(R.id.fragmentposts, new Posts(), "Posts").commit();
+
+            Toast.makeText(getApplicationContext(), "selection bottom navigation", Toast.LENGTH_LONG).show();*/
 
         });
 
