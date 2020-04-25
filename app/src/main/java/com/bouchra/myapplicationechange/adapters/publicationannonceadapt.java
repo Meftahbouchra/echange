@@ -55,11 +55,15 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
     public publicationannonceadapt.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View vi = LayoutInflater.from(context).inflate(R.layout.annoncepublication, parent, false);
         publicationannonceadapt.ViewHolder h = new publicationannonceadapt.ViewHolder(vi);
+
+
         return h;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        Log.e("nbr des annonce ", (String.valueOf(annonce_publ.size())));
         Annonce a = annonce_publ.get(position);
         holder.textView.setText(a.getTitreAnnonce());
         //  holder.imageView.setImageBitmap(a.getImages());

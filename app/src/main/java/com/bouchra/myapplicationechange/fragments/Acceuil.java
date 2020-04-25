@@ -47,7 +47,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     private Button google;
     private RelativeLayout addAnnonce;
     private publicationannonceadapt publicAdapter;
-    private ArrayList<Annonce> annonces;
+    private ArrayList<Annonce> annonces = new ArrayList<>();
     private RecyclerView recyclerView;
     private SearchView editsearch;
     private String categorie;
@@ -114,7 +114,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         });
 
         //recycle view publication annonces
-        annonces = new ArrayList<>();
+
         publicAdapter = new publicationannonceadapt(getContext(), new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(publicAdapter);
@@ -135,95 +135,75 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         maison_et_fournitures.setText(Choix[11]);
         loisirs_et_devertissements.setText(Choix[12]);
         matiriaux_et_equipements.setText(Choix[13]);
+        affichageParDefaut();
         //click
         tout.setOnClickListener(v -> {
             affichageParDefaut();
         });
         vehicules.setOnClickListener(v -> {
             categorie = vehicules.getText().toString();
-            final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-            DatabaseReference databaseReference = firebaseDatabase.getReference("Categorie").child(categorie);
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        String IDannonce = postSnapshot.getKey();// hna psq nskak ghir key li howa id annonce
-                        Log.e("Data here", IDannonce);
-                        //annonce
-            PreferenceUtils preferenceUtils = new PreferenceUtils(getContext());
-            final FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference ref = database.getReference("Annonce").child(IDannonce);
-
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    Log.e("Count ", "" + snapshot.getChildrenCount());// yhsab ch3al kayan man fils
-                        Log.e("Data here", snapshot.toString());
-                        Log.e("USER", snapshot.child("userId").getValue().toString());
-                        String user = snapshot.child("userId").getValue().toString();
-
-                        if (!user.equals(preferenceUtils.getMember().getIdMembre())) {
-                            annonces.add(snapshot.getValue(Annonce.class));
-                        }
-
-
-
-                    publicAdapter.setMesannonce(annonces);
-                    publicAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-
-            });
-
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
+            affichageParCategorie(categorie);
 
 
         });
         telephones.setOnClickListener(v -> {
+            categorie = telephones.getText().toString();
+            affichageParCategorie(categorie);
 
         });
         Automobiles.setOnClickListener(v -> {
+            categorie = Automobiles.getText().toString();
+            affichageParCategorie(categorie);
 
         });
         pieces_detachees.setOnClickListener(v -> {
+            categorie = pieces_detachees.getText().toString();
+            affichageParCategorie(categorie);
 
         });
         immobilier.setOnClickListener(v -> {
+            categorie = immobilier.getText().toString();
+            affichageParCategorie(categorie);
 
         });
         vetements.setOnClickListener(v -> {
+            categorie = vetements.getText().toString();
+            affichageParCategorie(categorie);
 
         });
         livres.setOnClickListener(v -> {
+            categorie = livres.getText().toString();
+            affichageParCategorie(categorie);
 
         });
         eletronique_et_electromenager.setOnClickListener(v -> {
+            categorie = eletronique_et_electromenager.getText().toString();
+            affichageParCategorie(categorie);
 
         });
         accessoires_de_mode.setOnClickListener(v -> {
+            categorie = accessoires_de_mode.getText().toString();
+            affichageParCategorie(categorie);
 
         });
         cosmetiques_et_beaute.setOnClickListener(v -> {
+            categorie = cosmetiques_et_beaute.getText().toString();
+            affichageParCategorie(categorie);
 
         });
         maison_et_fournitures.setOnClickListener(v -> {
+            categorie = maison_et_fournitures.getText().toString();
+            affichageParCategorie(categorie);
 
         });
         loisirs_et_devertissements.setOnClickListener(v -> {
+            categorie = loisirs_et_devertissements.getText().toString();
+            affichageParCategorie(categorie);
 
         });
         matiriaux_et_equipements.setOnClickListener(v -> {
+            categorie = matiriaux_et_equipements.getText().toString();
+            affichageParCategorie(categorie);
 
         });
 
@@ -286,6 +266,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     }
 
     public void affichageParDefaut() {
+        annonces.clear();
         PreferenceUtils preferenceUtils = new PreferenceUtils(getContext());
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Annonce");
@@ -317,4 +298,67 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
     }
 
+    public void affichageParCategorie(String categ) {
+        annonces.clear();
+        Log.e("nom categorie ", categ);
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Categorie").child(categ);
+
+        Log.e("root", databaseReference.getRoot().toString());
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        String IDannonce = postSnapshot.getKey();// hna psq nskak ghir key li howa id annonce
+                        Log.e("Data here", IDannonce);
+                        //annonce
+                        PreferenceUtils preferenceUtils = new PreferenceUtils(getContext());
+                        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference ref = database.getReference("Annonce").child(IDannonce);
+
+                        ref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                Log.e("Count ", "" + snapshot.getChildrenCount());// yhsab ch3al kayan man fils
+                                Log.e("Data here", snapshot.toString());
+                                Log.e("USER", snapshot.child("userId").getValue().toString());
+                                String user = snapshot.child("userId").getValue().toString();
+
+                                if (!user.equals(preferenceUtils.getMember().getIdMembre())) {
+                                    annonces.add(snapshot.getValue(Annonce.class));
+                                }
+                                publicAdapter.setMesannonce(annonces);
+                                publicAdapter.notifyDataSetChanged();
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+
+                        });
+
+
+                    }
+                } else {
+                    publicAdapter.setMesannonce(annonces);
+                    publicAdapter.notifyDataSetChanged();
+                    Log.e("nbrdeannoncepourlesvide", (String.valueOf(annonces.size())));
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
 }
