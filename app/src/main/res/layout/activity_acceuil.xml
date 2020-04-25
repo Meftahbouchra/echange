@@ -30,6 +30,7 @@
                     android:padding="8dp">
 
                     <TextView
+                        android:id="@+id/tout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -37,12 +38,12 @@
                         android:backgroundTint="#FF3400"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Tout"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/vehicules"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -50,12 +51,12 @@
                         android:backgroundTint="#511C74"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Vèhicules"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/telephones"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -63,12 +64,12 @@
                         android:backgroundTint="#FFB900"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Tèlèphones"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/Automobiles"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -76,13 +77,13 @@
                         android:backgroundTint="#00A4EF"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Automobiles"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
 
                     <TextView
+                        android:id="@+id/pieces_detachees"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -90,12 +91,12 @@
                         android:backgroundTint="#7FBA00"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Pièces dètachèes"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/immobilier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -103,12 +104,12 @@
                         android:backgroundTint="#F25022"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Immobilier"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/vetements"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -116,12 +117,12 @@
                         android:backgroundTint="#D4DBF5"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Vetements"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/livres"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -129,25 +130,24 @@
                         android:backgroundTint="#FFFF05"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Livres"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/eletronique_et_electromenager"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/btn_category"
                         android:backgroundTint="#0A1747"
                         android:paddingHorizontal="16dp"
-                        android:paddingVertical="8dp"
-                        android:text="Eletronique  et electromènager"
-                        android:textAllCaps="false"
+                        android:paddingVertical="8dp"                        android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/accessoires_de_mode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -155,12 +155,12 @@
                         android:backgroundTint="#612960"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Accessoires de mode"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/cosmetiques_et_beaute"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -168,12 +168,12 @@
                         android:backgroundTint="#FA8AF8"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Cosmetiques et  Beautè"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/maison_et_fournitures"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -181,12 +181,12 @@
                         android:backgroundTint="#8D07F6"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Maison et fournitures"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/loisirs_et_devertissements"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -194,12 +194,12 @@
                         android:backgroundTint="#0029FA"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Loisirs et Dèvertissements"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/matiriaux_et_equipements"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -207,7 +207,6 @@
                         android:backgroundTint="#FF7D00"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:text="Matiriaux et  Equipements"
                         android:textAllCaps="false"
                         android:textColor="#ffffff"
                         android:textSize="15sp" />
@@ -348,8 +347,6 @@
             android:layout_marginEnd="37dp"
             android:layout_marginBottom="224dp"
             android:text="Button" />
-
-
 
 
     </RelativeLayout>

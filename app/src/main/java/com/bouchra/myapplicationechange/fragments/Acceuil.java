@@ -50,7 +50,10 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     private ArrayList<Annonce> annonces;
     private RecyclerView recyclerView;
     private SearchView editsearch;
+    private String categorie;
     private String wilaya = "", searchText = "";
+    private TextView tout, vehicules, telephones, Automobiles, pieces_detachees, immobilier, vetements, livres, eletronique_et_electromenager, accessoires_de_mode,
+            cosmetiques_et_beaute, maison_et_fournitures, loisirs_et_devertissements, matiriaux_et_equipements;
 
     public Acceuil() {
 
@@ -66,6 +69,23 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         // textView2 = view.findViewById(R.id.txt22);
         recyclerView = view.findViewById(R.id.recyle_public);
         google = view.findViewById(R.id.button5);
+
+        tout = view.findViewById(R.id.tout);
+        vehicules = view.findViewById(R.id.vehicules);
+        telephones = view.findViewById(R.id.telephones);
+        Automobiles = view.findViewById(R.id.Automobiles);
+        pieces_detachees = view.findViewById(R.id.pieces_detachees);
+        immobilier = view.findViewById(R.id.immobilier);
+        vetements = view.findViewById(R.id.vetements);
+        livres = view.findViewById(R.id.livres);
+        eletronique_et_electromenager = view.findViewById(R.id.eletronique_et_electromenager);
+        accessoires_de_mode = view.findViewById(R.id.accessoires_de_mode);
+        cosmetiques_et_beaute = view.findViewById(R.id.cosmetiques_et_beaute);
+        maison_et_fournitures = view.findViewById(R.id.maison_et_fournitures);
+        loisirs_et_devertissements = view.findViewById(R.id.loisirs_et_devertissements);
+        matiriaux_et_equipements = view.findViewById(R.id.matiriaux_et_equipements);
+
+
         Button button44 = view.findViewById(R.id.button3);
 
         button44.setOnClickListener(v -> {
@@ -98,33 +118,116 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         publicAdapter = new publicationannonceadapt(getContext(), new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(publicAdapter);
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Annonce");
-        PreferenceUtils preferenceUtils = new PreferenceUtils(getContext());
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {// //onDataChange()méthode pour lire un instantané statique du contenu d'un chemin donné!!au moment de l'événement
-                Log.e("Count ", "" + snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    Log.e("Data here", postSnapshot.toString());
-                    Log.e("USER", postSnapshot.child("userId").getValue().toString());
-                    String user = postSnapshot.child("userId").getValue().toString();
+        //affichageParDefaut();
+        //hna njibha par defaolt
+        String[] Choix = getResources().getStringArray(R.array.choix_categorie);
+        tout.setText(Choix[0]);
+        vehicules.setText(Choix[1]);
+        telephones.setText(Choix[2]);
+        Automobiles.setText(Choix[3]);
+        pieces_detachees.setText(Choix[4]);
+        immobilier.setText(Choix[5]);
+        vetements.setText(Choix[6]);
+        livres.setText(Choix[7]);
+        eletronique_et_electromenager.setText(Choix[8]);
+        accessoires_de_mode.setText(Choix[9]);
+        cosmetiques_et_beaute.setText(Choix[10]);
+        maison_et_fournitures.setText(Choix[11]);
+        loisirs_et_devertissements.setText(Choix[12]);
+        matiriaux_et_equipements.setText(Choix[13]);
+        //click
+        tout.setOnClickListener(v -> {
+            affichageParDefaut();
+        });
+        vehicules.setOnClickListener(v -> {
+            categorie = vehicules.getText().toString();
+            final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference("Categorie").child(categorie);
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        String IDannonce = postSnapshot.getKey();// hna psq nskak ghir key li howa id annonce
+                        Log.e("Data here", IDannonce);
+                        //annonce
+            PreferenceUtils preferenceUtils = new PreferenceUtils(getContext());
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference ref = database.getReference("Annonce").child(IDannonce);
 
-                    if (!user.equals(preferenceUtils.getMember().getIdMembre())) {
-                        annonces.add(postSnapshot.getValue(Annonce.class));
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    Log.e("Count ", "" + snapshot.getChildrenCount());// yhsab ch3al kayan man fils
+                        Log.e("Data here", snapshot.toString());
+                        Log.e("USER", snapshot.child("userId").getValue().toString());
+                        String user = snapshot.child("userId").getValue().toString();
+
+                        if (!user.equals(preferenceUtils.getMember().getIdMembre())) {
+                            annonces.add(snapshot.getValue(Annonce.class));
+                        }
+
+
+
+                    publicAdapter.setMesannonce(annonces);
+                    publicAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+
+            });
+
+
                     }
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-                publicAdapter.setMesannonce(annonces);
-                publicAdapter.notifyDataSetChanged();
-            }
+            });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
 
         });
+        telephones.setOnClickListener(v -> {
+
+        });
+        Automobiles.setOnClickListener(v -> {
+
+        });
+        pieces_detachees.setOnClickListener(v -> {
+
+        });
+        immobilier.setOnClickListener(v -> {
+
+        });
+        vetements.setOnClickListener(v -> {
+
+        });
+        livres.setOnClickListener(v -> {
+
+        });
+        eletronique_et_electromenager.setOnClickListener(v -> {
+
+        });
+        accessoires_de_mode.setOnClickListener(v -> {
+
+        });
+        cosmetiques_et_beaute.setOnClickListener(v -> {
+
+        });
+        maison_et_fournitures.setOnClickListener(v -> {
+
+        });
+        loisirs_et_devertissements.setOnClickListener(v -> {
+
+        });
+        matiriaux_et_equipements.setOnClickListener(v -> {
+
+        });
+
+        // hadi jcp fach khrabt **********************************************************************
       /*editsearch = view.findViewById(R.id.search);////////////////////////////////////////////////////
         editsearch.setOnQueryTextListener(this);*/
         return view;
@@ -180,6 +283,38 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         }
         publicAdapter.setMesannonce(output);
         publicAdapter.notifyDataSetChanged();
+    }
+
+    public void affichageParDefaut() {
+        PreferenceUtils preferenceUtils = new PreferenceUtils(getContext());
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Annonce");
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {// //onDataChange()méthode pour lire un instantané statique du contenu d'un chemin donné!!au moment de l'événement
+                Log.e("Count ", "" + snapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Log.e("Data here", postSnapshot.toString());
+                    Log.e("USER", postSnapshot.child("userId").getValue().toString());
+                    String user = postSnapshot.child("userId").getValue().toString();
+
+                    if (!user.equals(preferenceUtils.getMember().getIdMembre())) {
+                        annonces.add(postSnapshot.getValue(Annonce.class));
+                    }
+
+
+                }
+                publicAdapter.setMesannonce(annonces);
+                publicAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+
+        });
+
     }
 
 }
