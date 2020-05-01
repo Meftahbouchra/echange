@@ -19,6 +19,9 @@ import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +39,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
     private Annonce annonce;
     private String idAnnonce;
     private String Offre;
+    private Task<Void> databasereference;
 
     public myoffre(Context context, ArrayList<Offre> mesoffre, String idAnnonce) {
         this.context = context;
@@ -140,13 +144,14 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                 offree.setWilaya(offre.getWilaya());
                 offree.setCommune(offre.getCommune());
                 offree.setIdUser(preferenceUtils.getMember().getIdMembre());
+                offre.setStatu("Created");
                 // offre.setImages();
                 // khasni id user li dar l offre
 
                 databaseReference.child(String.valueOf(offree.getDateOffre().hashCode()) + offree.getAnnonceId().hashCode()).setValue(offree).addOnCompleteListener(task2 -> {
 
                     if (task2.isSuccessful()) {
-
+                        setStatuAnnonce();
                         Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
                         Intent an = new Intent(context, debut.class);
                         context.startActivity(an);
@@ -161,6 +166,29 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
         });
 
 
+    }
+
+    private void setStatuAnnonce() {
+        databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(Offre).child("statu")
+                .setValue("attend de confirmation d'offre")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            //// Toast.makeText(context, "Un email a ètè envoyè, veuillez consulter votre boite email", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Toast.makeText(context, "Échec de l'envoi", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+// get and show proper error message
+                        Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
     }
 
     @Override

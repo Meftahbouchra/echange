@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Commune;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bouchra.myapplicationechange.models.Wilaya;
@@ -38,13 +39,14 @@ public class AjoutOffre extends AppCompatActivity {
     private Button suiv;
     private String titre = "";
     private String desc = "";
-    private String idAnnc = "";
+    private String idAnnonce = "";
     private Spinner wilayaSpinner, villeSpinner;
     private ArrayList<Wilaya> wilaya = new ArrayList<Wilaya>();
     private ArrayList<Commune> communes = new ArrayList<Commune>();
     private String[] wilayaname;
-    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference, databasereference;
     private String selectedWilaya, selectedVille;
+    private Annonce annonce;
     private Button annuler;
 
     @Override
@@ -78,8 +80,9 @@ public class AjoutOffre extends AppCompatActivity {
         Intent ajou = getIntent();
         if (ajou != null) {
 
-            if (ajou.hasExtra("anonceId")) {
-                idAnnc = ajou.getStringExtra("anonceId");
+            if (ajou.hasExtra("Annonce")) {
+                annonce = (Annonce) getIntent().getSerializableExtra("Annonce");
+                idAnnonce = annonce.getIdAnnonce();
             }
         }
 
@@ -88,9 +91,9 @@ public class AjoutOffre extends AppCompatActivity {
             desc = descObjet.getText().toString();
             PreferenceUtils preferenceUtils = new PreferenceUtils(this);
             if (!titre.isEmpty() && !desc.isEmpty()) {
-                databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(idAnnc);
+                databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(idAnnonce);
                 Offre offre = new Offre();
-                offre.setAnnonceId(idAnnc);
+                offre.setAnnonceId(idAnnonce);
                 offre.setDateOffre(new Date());
                 offre.setDescriptionOffre(desc);
                 offre.setIdOffre(String.valueOf(offre.getDateOffre().hashCode()) + offre.getAnnonceId().hashCode());
@@ -98,7 +101,7 @@ public class AjoutOffre extends AppCompatActivity {
                 offre.setWilaya(selectedWilaya.split(" ")[1]);
                 offre.setCommune(selectedVille);
                 offre.setIdUser(preferenceUtils.getMember().getIdMembre());
-                // offre.setImages();
+                offre.setStatu("Created");                // offre.setImages();
                 // khasni id user li dar l offre
 
                 databaseReference.child(String.valueOf(offre.getDateOffre().hashCode()) + offre.getAnnonceId().hashCode()).setValue(offre).addOnCompleteListener(task2 -> {/*
@@ -108,6 +111,7 @@ public class AjoutOffre extends AppCompatActivity {
 
                 */
                     if (task2.isSuccessful()) {
+                        setStatuAnnonce();
 
                         Toast.makeText(this, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
                         Intent an = new Intent(AjoutOffre.this, debut.class);
@@ -190,6 +194,25 @@ public class AjoutOffre extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setStatuAnnonce() {
+//statu majuc avec _ w gsira
+        // ndiro kima hka wla kim ta3 yselectionne
+        databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(idAnnonce);//child(statu).setvaleu.set aaces lisnter ta3 mchat w kayan whdkhra ta3 mamchtch
+        Annonce annonce1 = new Annonce();
+        annonce1.setArticleEnRetour(annonce.getArticleEnRetour());
+        annonce1.setCommune(annonce.getCommune());
+        annonce1.setDateAnnonce(annonce.getDateAnnonce());
+        annonce1.setDescriptionAnnonce(annonce.getDescriptionAnnonce());
+        annonce1.setIdAnnonce(annonce.getIdAnnonce());
+        annonce1.setImages(annonce.getImages());
+        annonce1.setStatu("attend de confirmation d'offre");
+        annonce1.setTitreAnnonce(annonce.getTitreAnnonce());
+        annonce1.setUserId(annonce.getUserId());
+        annonce1.setIdOffreSelected(annonce.getIdOffreSelected());
+        annonce1.setWilaya(annonce.getWilaya());
+        databasereference.setValue(annonce1);
     }
 
     private String readFileFromRawDirectory(int resourceId) {

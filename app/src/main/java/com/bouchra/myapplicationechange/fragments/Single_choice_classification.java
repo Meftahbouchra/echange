@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 public class Single_choice_classification extends DialogFragment {
     int position = 0; // default selected posotion
+    String name;
 
     public Single_choice_classification() {
     }
@@ -35,6 +36,7 @@ public class Single_choice_classification extends DialogFragment {
 
     public interface SingleChoiceListener {
         void onPositiveButtononCliked(String wilayaname);
+
         void onNegativeButtononCliked();
     }
 
@@ -46,7 +48,7 @@ public class Single_choice_classification extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.create();
-        String[] wilayaname ;
+        String[] wilayaname;
         JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(readFileFromRawDirectory(R.raw.wilayas));
@@ -64,7 +66,7 @@ public class Single_choice_classification extends DialogFragment {
                     .setPositiveButton("Ok", (dialog, which) -> {////////////////////////////////////////////////////////////
                         mListener.onPositiveButtononCliked(wilaya.get(position).getName());
                         dismiss();
-                    }).setNegativeButton("annuler",(dialog, which) ->dismiss());
+                    }).setNegativeButton("annuler", (dialog, which) -> dismiss());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -75,7 +77,7 @@ public class Single_choice_classification extends DialogFragment {
 
     private String readFileFromRawDirectory(int resourceId) {
         InputStream iStream = getActivity().getResources().openRawResource(resourceId);
-        ByteArrayOutputStream byteStream = new ByteArrayOutputStream() ;
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         try {
             byte[] buffer = new byte[iStream.available()];
             iStream.read(buffer);

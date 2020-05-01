@@ -1,6 +1,7 @@
 package com.bouchra.myapplicationechange.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.adapters.RecycleViewArticleRetour;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 
 public class Modifier extends Fragment {
@@ -26,6 +32,9 @@ public class Modifier extends Fragment {
     private TextView enregister;
     private TextView textView;
     private Annonce annonce;
+    private RecyclerView recyclerView;
+    private RecycleViewArticleRetour postAdapter;
+    ArrayList<String> posts = new ArrayList<>();
 
 
     public Modifier() {
@@ -41,10 +50,9 @@ public class Modifier extends Fragment {
         editText = view.findViewById(R.id.edittxt_article);
         textView = view.findViewById(R.id.ajout_article);
         enregister = view.findViewById(R.id.enregister);
-
+        recyclerView = view.findViewById(R.id.rec_retour);
         textView.setOnClickListener(v -> {
-            // ( (Article_en_retour)getActivity()).ajoutArticle();
-            Toast.makeText(getContext(), "heloooooooooooo", Toast.LENGTH_SHORT).show();
+            ajoutArticle();
         });
 
         //UNPACK OUR DATA FROM OUR BUNDLE
@@ -55,6 +63,18 @@ public class Modifier extends Fragment {
         annonce = (Annonce) getArguments().getSerializable("annonce");
         nomAnnonce.setText(annonce.getTitreAnnonce());
         desciAnnonce.setText(annonce.getDescriptionAnnonce());
+
+        int j;
+        for (j = 0; j < annonce.getArticleEnRetour().size(); j++) {
+            String article = annonce.getArticleEnRetour().get(j);
+            Log.e("annoce une is", article);
+            posts.add(article);
+            editText.setText("");
+            postAdapter = new RecycleViewArticleRetour(getContext(), posts);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setAdapter(postAdapter);
+        }
+
         Glide.with(this)
                 .asBitmap()
                 .load(annonce.getImages().get(0))
@@ -84,8 +104,7 @@ public class Modifier extends Fragment {
             ann.setImages(annonce.getImages());
             ann.setCommune(annonce.getCommune());////////methode static
             ann.setWilaya(annonce.getWilaya());////////
-            ann.setArticleEnRetour(annonce.getArticleEnRetour());//////
-
+            ann.setArticleEnRetour(posts);
             refannonce.setValue(ann);
         } else {
             Toast.makeText(getContext(), "Vous devez remplir les champs", Toast.LENGTH_SHORT).show();
@@ -94,6 +113,29 @@ public class Modifier extends Fragment {
 
     }
 
+    public void ajoutArticle() {
+        String x = editText.getText().toString();
+        if (posts.size() < 10) {
+            if (!x.isEmpty()) {
+                posts.add(x);
+                editText.setText("");
+                postAdapter = new RecycleViewArticleRetour(getContext(), posts);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setAdapter(postAdapter);
+
+
+            } else {
+                Toast.makeText(getContext(), "remplir le champs", Toast.LENGTH_SHORT).show();
+            }
+
+
+        } else {
+            editText.setEnabled(false);
+            editText.setText("");
+            Toast.makeText(getContext(), "Dèsolè, il n'ya pas pour ajouter plus d'article", Toast.LENGTH_SHORT).show();
+        }// vous avez atteint la limite des postes possible
+
+    }
 
 }
 

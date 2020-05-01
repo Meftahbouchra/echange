@@ -64,7 +64,7 @@ Article_en_retour extends AppCompatActivity {
             DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Categorie");
             //Writing Hashmap
             Map<String, Object> idANNONCE = new HashMap<>();
-            idANNONCE.put(selectedCateg + "/" + annonce.getIdAnnonce(),"");
+            idANNONCE.put(selectedCateg + "/" + annonce.getIdAnnonce(), "");
 
 
             mDbRef.updateChildren(idANNONCE);

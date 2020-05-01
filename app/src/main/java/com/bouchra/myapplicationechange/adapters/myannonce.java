@@ -21,6 +21,9 @@ import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -34,6 +37,7 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
     private ArrayList<Annonce> mesannonce;
     private ArrayList<Annonce> annonces = new ArrayList<>();
     private String offre;
+    Task<Void> databasereference;
     private DatabaseReference databaseReference;
 
 
@@ -89,12 +93,14 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                 offrre.setWilaya(annonce.getWilaya());
                 offrre.setCommune(annonce.getCommune());
                 offrre.setIdUser(preferenceUtils.getMember().getIdMembre());
+                offrre.setStatu("Created");
                 // offre.setImages();
                 // khasni id user li dar l offre
 
                 databaseReference.child(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode()).setValue(offrre).addOnCompleteListener(task2 -> {
 
                     if (task2.isSuccessful()) {
+                        setStatuAnnonce();
 
                         Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
                         Intent an = new Intent(context, debut.class);
@@ -110,7 +116,30 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
 
 
     }
+    private void setStatuAnnonce() {
+      databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(offre).child("statu")
+                .setValue("attend de confirmation d'offre")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            //// Toast.makeText(context, "Un email a ètè envoyè, veuillez consulter votre boite email", Toast.LENGTH_SHORT).show();
 
+
+                        } else {
+                            // Toast.makeText(context, "Échec de l'envoi", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+// get and show proper error message
+                        Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+    }
     @Override
     public int getItemCount() {
         return mesannonce.size();

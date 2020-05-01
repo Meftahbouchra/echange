@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_marginTop="15dp"
    android:background="@color/Login_form_details"
-    android:layout_height="wrap_content"
+    android:layout_height="90dp"
     android:padding="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -34,5 +34,14 @@
         android:layout_toEndOf="@id/profileomage"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hello word"
+        android:textColor="@color/black"
+        android:id="@+id/dat_heur"
+       android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         />
 </RelativeLayout>

@@ -248,7 +248,7 @@
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/txt11"
+                    android:id="@+id/nom_wilaya"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Choisissiez\n une Wilaya"

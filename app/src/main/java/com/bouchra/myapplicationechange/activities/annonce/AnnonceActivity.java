@@ -71,7 +71,7 @@ public class AnnonceActivity extends AppCompatActivity {
                 annonce.setTitreAnnonce(titre_Annonce);
                 annonce.setDescriptionAnnonce(desc_Annonce);
                 annonce.setDateAnnonce(new Date());
-                annonce.setStatu("created");
+                annonce.setStatu("Created");
                 annonce.setIdOffreSelected("vide");
                 annonce.setUserId(preferenceUtils.getMember().getIdMembre());
                 annonce.setWilaya(selectedWilaya.split(" ")[1]);

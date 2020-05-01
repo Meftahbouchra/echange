@@ -1,6 +1,7 @@
 package com.bouchra.myapplicationechange.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
@@ -20,7 +21,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MessageList extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -66,23 +69,36 @@ public class MessageList extends AppCompatActivity {
                     if (dataSnapshot2.hasChild(hash)) {
                         //last msg
 
-                        l = FirebaseDatabase.getInstance().getReference("Message").child(hash);//mp
+                        l = FirebaseDatabase.getInstance().getReference("Message").child(hash);
                         Query query = l.orderByKey().limitToLast(1);
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                                     lastmsg = child.child("textMessage").getValue().toString();
+                                    String idUser = child.child("idsender").getValue().toString();//lirsal
+                                    String datee = child.child("idMessage").getValue().toString();
+// drna id machi date psq rana dyrinha f fire base in id w psq kon drna date njiboha khlt njobo arbre ta3 les d, wla kon jbnha attribut par attribut
+                                    Date date = new Date(Long.parseLong(datee));
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
+                                    String str = simpleDateFormat.format(date);
+                                    Log.e("date here", str);
+
+
                                     if (!isUrl(lastmsg)) {//return false
                                         // affiche txt message
-                                        userAdapter.setLastMsg(lastmsg);
+                                        if (idUser.equals(preferenceUtils.getMember().getIdMembre())) {
+                                            userAdapter.setLastMsg("Vous : " + lastmsg, str);
+                                        } else {
+                                            userAdapter.setLastMsg(lastmsg, str);
+                                        }
+
                                     } else {
                                         //affiche photo message
-                                        String idUser = child.child("idsender").getValue().toString();//lirsal
                                         if (idUser.equals(preferenceUtils.getMember().getIdMembre())) {
                                             // ana rsalt tof
                                             lastmsg = "Vous avez envoye une photo";
-                                            userAdapter.setLastMsg(lastmsg);
+                                            userAdapter.setLastMsg(lastmsg, str);
 
 
                                         } else {
@@ -90,7 +106,7 @@ public class MessageList extends AppCompatActivity {
                                             //homa rsloli tof
                                             lastmsg = nomsender + "a envoye une photo";
 
-                                            userAdapter.setLastMsg(lastmsg);
+                                            userAdapter.setLastMsg(lastmsg, str);
 
                                         }
 

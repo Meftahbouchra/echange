@@ -3,6 +3,7 @@ package com.bouchra.myapplicationechange.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,9 @@ import com.bouchra.myapplicationechange.adapters.demandesoffre;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.models.Offre;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -162,7 +166,7 @@ public class DemandesOffre extends AppCompatActivity {
        annonce.setCommune(commune);
        annonce.setIdAnnonce(idAnnonce);
        annonce.setUserId(userid);
-       annonce.setStatu(statu);
+       annonce.setStatu("assined");
        annonce.setTitreAnnonce(nomAnnon);
        annonce.setDescriptionAnnonce(descp);
 
@@ -172,14 +176,44 @@ public class DemandesOffre extends AppCompatActivity {
         annonce.setDateAnnonce(new Date());////////////////////////////////////////////////////***************************************
 // hda  li zdnah
         annonce.setIdOffreSelected(idOffre);
+
         databaseReference.setValue(annonce).addOnCompleteListener(task2 -> {
             if (task2.isSuccessful()) {
-
+        etatConfirmOffre(idOffre,idAnnonce);
 
             }
         });
 
 
     }
+
+    private void etatConfirmOffre(String idOffre, String idAnnonce) {
+
+            Task<Void> databasereference;
+            databasereference = FirebaseDatabase.getInstance().getReference("Offre").child(idAnnonce).child(idOffre).child("statu")
+                    .setValue("NEED_To_Be_CONFIRM")
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                //// Toast.makeText(context, "Un email a ètè envoyè, veuillez consulter votre boite email", Toast.LENGTH_SHORT).show();
+
+
+                            } else {
+                                // Toast.makeText(context, "Échec de l'envoi", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+// get and show proper error message
+                            Toast.makeText(DemandesOffre.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
+    }
+
 
 }

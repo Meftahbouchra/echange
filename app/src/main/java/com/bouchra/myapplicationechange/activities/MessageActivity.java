@@ -298,6 +298,7 @@ public class MessageActivity extends AppCompatActivity {
 
     private void pickFromCamera() {
         //intent to pick image from camera
+        //rani dayra whd prgrm sahal fi tp
         ContentValues cv = new ContentValues();
         cv.put(MediaStore.Images.Media.TITLE, "Temp Pick");
         cv.put(MediaStore.Images.Media.DESCRIPTION, "Temp Descr");

@@ -7,10 +7,34 @@ public class Offre {
     private String idOffre;
     private Date dateOffre;
     private String nomOffre;
+
+    public Offre(String idOffre, Date dateOffre, String nomOffre, String annonceId, String wilaya, String idUser, String statu, String commune, ArrayList<String> images, String descriptionOffre) {
+        this.idOffre = idOffre;
+        this.dateOffre = dateOffre;
+        this.nomOffre = nomOffre;
+        this.annonceId = annonceId;
+        this.wilaya = wilaya;
+        this.idUser = idUser;
+        this.statu = statu;
+        this.commune = commune;
+        this.images = images;
+        this.descriptionOffre = descriptionOffre;
+    }
+
     // en +
     private String annonceId;
     private String wilaya;
+
+    public String getStatu() {
+        return statu;
+    }
+
+    public void setStatu(String statu) {
+        this.statu = statu;
+    }
+
     private String idUser;
+    private String statu;
 
     public String getIdUser() {
         return idUser;
@@ -59,18 +83,6 @@ public class Offre {
     public Offre() {
     }
 
-
-    public Offre(String idOffre, Date dateOffre, String nomOffre, String annonceId, String wilaya, String idUser, String commune, ArrayList<String> images, String descriptionOffre) {
-        this.idOffre = idOffre;
-        this.dateOffre = dateOffre;
-        this.nomOffre = nomOffre;
-        this.annonceId = annonceId;
-        this.wilaya = wilaya;
-        this.idUser = idUser;
-        this.commune = commune;
-        this.images = images;
-        this.descriptionOffre = descriptionOffre;
-    }
 
     public String getIdOffre() {
         return idOffre;

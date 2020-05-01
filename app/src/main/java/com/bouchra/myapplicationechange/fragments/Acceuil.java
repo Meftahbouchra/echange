@@ -44,6 +44,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     private FirebaseAuth firebaseAuth;
     private LinearLayout linearLayout2;
     private TextView textView1, textView2;
+    private TextView nom_wilaya;
     private Button google;
     private RelativeLayout addAnnonce;
     private publicationannonceadapt publicAdapter;
@@ -51,6 +52,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     private RecyclerView recyclerView;
     private SearchView editsearch;
     private String categorie;
+    private String WilayaName;
     private String wilaya = "", searchText = "";
     private TextView tout, vehicules, telephones, Automobiles, pieces_detachees, immobilier, vetements, livres, eletronique_et_electromenager, accessoires_de_mode,
             cosmetiques_et_beaute, maison_et_fournitures, loisirs_et_devertissements, matiriaux_et_equipements;
@@ -65,7 +67,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         View view = inflater.inflate(R.layout.activity_acceuil, container, false);
 
         linearLayout2 = view.findViewById(R.id.layout1);
-        textView1 = view.findViewById(R.id.txt11);
+        nom_wilaya = view.findViewById(R.id.nom_wilaya);
         // textView2 = view.findViewById(R.id.txt22);
         recyclerView = view.findViewById(R.id.recyle_public);
         google = view.findViewById(R.id.button5);
@@ -233,6 +235,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     @Override
     public void onPositiveButtononCliked(String name) {
         Toast.makeText(getContext(), "Selected item = " + name, Toast.LENGTH_SHORT).show();
+        nom_wilaya.setText(name);
         wilaya = name;
         Recherche(searchText, wilaya);
     }
@@ -349,8 +352,6 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                     Log.e("nbrdeannoncepourlesvide", (String.valueOf(annonces.size())));
 
                 }
-
-
             }
 
             @Override

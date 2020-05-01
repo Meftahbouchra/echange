@@ -56,21 +56,15 @@ public class DetailMesannonce extends AppCompatActivity {
             ajou.putExtra("nomAnnonce", annonce.getTitreAnnonce()); //key* value
             ajou.putExtra("idAnnonce", annonce.getIdAnnonce());
             ajou.putExtra("descp", annonce.getDescriptionAnnonce());
-
             ajou.putExtra("statu", annonce.getStatu());
             ajou.putExtra("userid", annonce.getUserId());
-
             ajou.putExtra("commune", annonce.getCommune());
             ajou.putExtra("wilaya", annonce.getWilaya());
-
             ajou.putStringArrayListExtra("articleret", annonce.getArticleEnRetour());
             ajou.putStringArrayListExtra("images", annonce.getImages());
-
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
             String str = simpleDateFormat.format(annonce.getDateAnnonce());
             ajou.putExtra("date", str);
-
-
             startActivity(ajou);
             finish();
 

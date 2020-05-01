@@ -24,6 +24,7 @@ public class messagesAdapter extends RecyclerView.Adapter<messagesAdapter.ViewHo
     private Context mcontext;
     private ArrayList<Membre> mUsers;
     private String lastMsg;
+    private String dateH;
 
 
     public messagesAdapter(Context mcontext, ArrayList<Membre> mUsers, String lastMsg) {
@@ -33,8 +34,9 @@ public class messagesAdapter extends RecyclerView.Adapter<messagesAdapter.ViewHo
     }
 
 
-    public void setLastMsg(String lastMsg) {
+    public void setLastMsg(String lastMsg, String dateH) {
         this.lastMsg = lastMsg;
+        this.dateH = dateH;
         notifyDataSetChanged();
 
 
@@ -60,6 +62,8 @@ public class messagesAdapter extends RecyclerView.Adapter<messagesAdapter.ViewHo
             intent.putExtra("user", membre.getIdMembre());//// hda howa id ta3 user
             mcontext.startActivity(intent);
         });
+
+        holder.dat_heur.setText(dateH);
         holder.msg.setText(lastMsg);
     }
 
@@ -73,6 +77,7 @@ public class messagesAdapter extends RecyclerView.Adapter<messagesAdapter.ViewHo
         public ImageView userimage;
         public TextView username;
         private TextView msg;
+        private TextView dat_heur;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -80,6 +85,7 @@ public class messagesAdapter extends RecyclerView.Adapter<messagesAdapter.ViewHo
             userimage = itemView.findViewById(R.id.profileomage);
             username = itemView.findViewById(R.id.username);
             msg = itemView.findViewById(R.id.msg);
+            dat_heur = itemView.findViewById(R.id.dat_heur);
 
 
         }

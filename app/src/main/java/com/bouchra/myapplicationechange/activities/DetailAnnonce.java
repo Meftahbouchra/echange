@@ -227,10 +227,11 @@ public class DetailAnnonce extends AppCompatActivity {
             MyDialog.cancel();
         });
         ajout.setOnClickListener(v -> {
-            String anonceId = annonce.getIdAnnonce().toString();
+           // String anonceId = annonce.getIdAnnonce().toString();
             //   Toast.makeText(this, ""+a, Toast.LENGTH_SHORT).show();
             Intent ajou = new Intent(DetailAnnonce.this, AjoutOffre.class);
-            ajou.putExtra("anonceId", anonceId); //key* value
+            //ajou.putExtra("anonceId", anonceId); //key* value
+            ajou.putExtra("Annonce",annonce);
             startActivity(ajou);
             finish();
 
