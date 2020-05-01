@@ -11,9 +11,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.activities.ConfirmEchange;
 import com.bouchra.myapplicationechange.activities.DetailAnnonce;
 import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.models.Annonce;
@@ -39,19 +41,27 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
     private Annonce annonce;
     private String idAnnonce;
     private String Offre;
+    private String statuOffre;
     private Task<Void> databasereference;
 
-    public myoffre(Context context, ArrayList<Offre> mesoffre, String idAnnonce) {
+    public myoffre(Context context, ArrayList<Offre> mesoffre, String idAnnonce, String statuOffre) {
         this.context = context;
         this.mesoffre = mesoffre;
         this.idAnnonce = idAnnonce;
+        this.statuOffre = statuOffre;
     }
 
-    public myoffre(Context context, ArrayList<Offre> mesoffre, String idAnnonce, String offre) {
+    public void setStatuOffre(String statuOffre) {
+        this.statuOffre = statuOffre;
+        notifyDataSetChanged();
+    }
+
+    public myoffre(Context context, ArrayList<Offre> mesoffre, String idAnnonce, String offre, String statuOffre) {
         this.context = context;
         this.mesoffre = mesoffre;
         this.idAnnonce = idAnnonce;
         this.Offre = offre;
+        this.statuOffre = statuOffre;
     }
 
     public void setIdAnnonce(String idAnnonce) {
@@ -70,6 +80,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View vi = LayoutInflater.from(context).inflate(R.layout.myoffre_layout, parent, false);
         myoffre.ViewHolder h = new myoffre.ViewHolder(vi);
+
         return h;
     }
 
@@ -94,45 +105,77 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
             Log.e("Data  of annonce here", String.valueOf(annonces.get(i)));
         }*/// hadi drtha bch ntest mkhdmtlich
 
-
+        // Log.e("statu oofre ", statuOffre);
         // hna njib annonce
-        Log.e("ID annonce here", offre.getAnnonceId());
+        //Log.e("ID annonce here", offre.getAnnonceId());
+       // Log.e("statu oofre ", statuOffre);
+     /*   switch (statuOffre) {
+            case "CREATED":
+                holder.statu.setText("Nouvaux");
+                holder.statu.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
+                break;
+            case "NEED_To_Be_CONFIRM":
+                holder.statu.setText("attend de confirmation d 'change");
+                holder.statu.setTextColor(ContextCompat.getColor(context, R.color.rouge));
+                break;
+            default:
 
+        }*/
+        Log.e("statu oofre ", statuOffre);
+        if(statuOffre.equals("CREATED")){
+            holder.statu.setText("Nouvaux");
+            holder.statu.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
+        }else {
+            holder.statu.setText("attend de confirmation d 'change");
+            holder.statu.setTextColor(ContextCompat.getColor(context, R.color.rouge));
+        }
 
         holder.itemView.setOnClickListener(v -> {
             if (Offre == null) {
-                annonce = new Annonce();
 
-                final FirebaseDatabase databas = FirebaseDatabase.getInstance();
-                DatabaseReference df = databas.getReference("Annonce").child(offre.getAnnonceId());
-                df.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot3) {
+                switch (statuOffre) {
+                    case "CREATED":
+                        annonce = new Annonce();
+                        final FirebaseDatabase databas = FirebaseDatabase.getInstance();
+                        DatabaseReference df = databas.getReference("Annonce").child(offre.getAnnonceId());
+                        df.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot3) {
+                                annonce = dataSnapshot3.getValue(Annonce.class);
+                                Log.e("Data  of annonce here", annonce.getUserId());
+                                //intent
+                                Intent affiche = new Intent(context, DetailAnnonce.class);
+                                affiche.putExtra("annonce", annonce);
+                                context.startActivity(affiche);
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
 
                /* Annonce ann = dataSnapshot3.getValue(Annonce.class);
-
                 annonces.add(ann);
-                setAnnonces(annonces);*/
-                        // annonce.add(dataSnapshot3.getValue(Annonce.class));
+                setAnnonces(annonces);
+                annonce.add(dataSnapshot3.getValue(Annonce.class));
 
-                        // setAnnonces(annonces);
-                        annonce = dataSnapshot3.getValue(Annonce.class);
-                        Log.e("Data  of annonce here", annonce.getUserId());
-                        //intent
-                        Intent affiche = new Intent(context, DetailAnnonce.class);
-                        affiche.putExtra("annonce", annonce);
+                setAnnonces(annonces);*/
+                        break;
+                    case "NEED_To_Be_CONFIRM":
+                        Intent affiche = new Intent(context, ConfirmEchange.class);
+                        affiche.putExtra("offre", "b");
                         context.startActivity(affiche);
 
+                        break;
 
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
 
-                    }
-                });
 
             } else {
+
                 PreferenceUtils preferenceUtils = new PreferenceUtils(context);
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(Offre);// khasni nadi id ta3 aanonce machi ta3 id ta3 offre
                 Offre offree = new Offre();
@@ -144,7 +187,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                 offree.setWilaya(offre.getWilaya());
                 offree.setCommune(offre.getCommune());
                 offree.setIdUser(preferenceUtils.getMember().getIdMembre());
-                offre.setStatu("Created");
+                offree.setStatu("CREATED");
                 // offre.setImages();
                 // khasni id user li dar l offre
 
@@ -206,6 +249,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
         private TextView dateh;
         private TextView ville;
         private TextView commune;
+        private TextView statu;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -217,6 +261,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
             desc_offre = itemView.findViewById(R.id.desc_offre);
             ville = itemView.findViewById(R.id.ville);
             commune = itemView.findViewById(R.id.commune);
+            statu = itemView.findViewById(R.id.statu);
 
 
         }

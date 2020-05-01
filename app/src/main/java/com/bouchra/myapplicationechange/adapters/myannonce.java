@@ -93,7 +93,7 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                 offrre.setWilaya(annonce.getWilaya());
                 offrre.setCommune(annonce.getCommune());
                 offrre.setIdUser(preferenceUtils.getMember().getIdMembre());
-                offrre.setStatu("Created");
+                offrre.setStatu("CREATED");
                 // offre.setImages();
                 // khasni id user li dar l offre
 

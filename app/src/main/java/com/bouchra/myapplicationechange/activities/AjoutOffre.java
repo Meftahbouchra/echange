@@ -101,7 +101,7 @@ public class AjoutOffre extends AppCompatActivity {
                 offre.setWilaya(selectedWilaya.split(" ")[1]);
                 offre.setCommune(selectedVille);
                 offre.setIdUser(preferenceUtils.getMember().getIdMembre());
-                offre.setStatu("Created");                // offre.setImages();
+                offre.setStatu("CREATED");                // offre.setImages();
                 // khasni id user li dar l offre
 
                 databaseReference.child(String.valueOf(offre.getDateOffre().hashCode()) + offre.getAnnonceId().hashCode()).setValue(offre).addOnCompleteListener(task2 -> {/*
