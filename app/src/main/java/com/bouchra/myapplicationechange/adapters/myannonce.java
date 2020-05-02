@@ -12,9 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.activities.ConfirmEchange;
 import com.bouchra.myapplicationechange.activities.DetailMesannonce;
 import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.models.Annonce;
@@ -71,16 +73,49 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                 .load(annonce.getImages().get(0))
                 .centerCrop()
                 .into(holder.imgAnnonce);
-        holder.statu.setText(annonce.getStatu());
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
         String str = simpleDateFormat.format(annonce.getDateAnnonce());
         holder.dateh.setText(str);
+        switch (annonce.getStatu()) {
+            case "CREATED":
+                holder.statu.setText("Nouvaux");
+                holder.statu.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
+                break;
+            case "ATTEND_DE_CONFIRMATION_D_OFFRE":
+                holder.statu.setText("attend de confirmation d'offre");
+                holder.statu.setTextColor(ContextCompat.getColor(context, R.color.orange));
+                break;
+            case "ASSINED":
+                holder.statu.setText("attribué a un offre");
+                holder.statu.setTextColor(ContextCompat.getColor(context, R.color.bleu));//jaune
+                break;
+            case "NEED_To_Be_CONFIRM":
+                holder.statu.setText("attend de confirmation d 'change");
+                holder.statu.setTextColor(ContextCompat.getColor(context, R.color.rouge));
+                //hadi hata mola offre ydir confirm  ndirlah had statu  w hta les 2 ydiro confirm ndirlhom ykado ydiro commentaire
+                //ila dar haka w madarch comeniare ndirlha need review
+                //+w ila darah ndirlah direct completed
+                break;
+            default:
+                break;
+        }
+
 
         holder.itemView.setOnClickListener(v -> {
             if (offre == null) {
-                Intent affiche = new Intent(context, DetailMesannonce.class);
-                affiche.putExtra("annonce", annonce);
-                context.startActivity(affiche);
+                if (annonce.getStatu().equals("NEED_To_Be_CONFIRM")) {
+                    Intent affichee = new Intent(context, ConfirmEchange.class);
+                    affichee.putExtra("annonce", annonce);//offre
+                    context.startActivity(affichee);
+                } else {
+                    Intent affiche = new Intent(context, DetailMesannonce.class);
+                    affiche.putExtra("annonce", annonce);
+                    context.startActivity(affiche);
+
+                }
+
+
             } else {
                 PreferenceUtils preferenceUtils = new PreferenceUtils(context);
                 databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(offre);
@@ -116,9 +151,10 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
 
 
     }
+
     private void setStatuAnnonce() {
-      databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(offre).child("statu")
-                .setValue("attend de confirmation d'offre")
+        databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(offre).child("statu")
+                .setValue("NEED_To_Be_CONFIRM")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -140,6 +176,7 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                     }
                 });
     }
+
     @Override
     public int getItemCount() {
         return mesannonce.size();

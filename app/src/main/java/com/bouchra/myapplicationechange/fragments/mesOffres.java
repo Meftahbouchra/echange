@@ -32,7 +32,7 @@ public class mesOffres extends Fragment {
     private RecyclerView recyclerView;
     // SearchView editsearch;
     private String offre;
-    private String statuOffre;
+
 
     public mesOffres() {
     }
@@ -49,9 +49,9 @@ public class mesOffres extends Fragment {
         recyclerView = view.findViewById(R.id.recyle_mesoffres);
         offres = new ArrayList<>();
         if (offre == null) {
-            myoffre = new myoffre(getContext(), offres, idannoncE,statuOffre);
+            myoffre = new myoffre(getContext(), offres, idannoncE);
         } else {
-            myoffre = new myoffre(getContext(), offres, idannoncE, offre,statuOffre);
+            myoffre = new myoffre(getContext(), offres, idannoncE, offre);
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -70,17 +70,14 @@ public class mesOffres extends Fragment {
                     for (DataSnapshot off : postSnapshot.getChildren()) {
                         String user = off.child("idUser").getValue().toString();
                         String idnonce = off.child("annonceId").getValue().toString();
-                        String statu=off.child("statu").getValue().toString();
                         Log.e("userli dar lofre howa: ", user);
                         Log.e("userli dar annon howa: ", idnonce);
                         if (user.equals(preferenceUtils.getMember().getIdMembre())) {
                             offres.add(off.getValue(Offre.class));
                             myoffre.notifyDataSetChanged();
                             idannoncE = idnonce;
-                            statuOffre=statu;
-                            myoffre.setStatuOffre(statuOffre);
                             myoffre.setIdAnnonce(idannoncE);
-                          //  Log.e("statu oofre ", statuOffre);
+
                         }
 // hna f dakhal had l requete kont n3ayat l annonce njbd annonce bch yrohlgha kiytovhi 3la l offre aya wlat dirli f array ta3 annonce wlat dirli bali
                         //rahi khawya pssq processeur mrhch y execute sequentielle w rah ydir vue kbal myjib l annonce 3labiha drth f adapter

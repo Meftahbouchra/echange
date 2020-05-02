@@ -41,27 +41,22 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
     private Annonce annonce;
     private String idAnnonce;
     private String Offre;
-    private String statuOffre;
     private Task<Void> databasereference;
 
-    public myoffre(Context context, ArrayList<Offre> mesoffre, String idAnnonce, String statuOffre) {
+    public myoffre(Context context, ArrayList<Offre> mesoffre, String idAnnonce) {
         this.context = context;
         this.mesoffre = mesoffre;
         this.idAnnonce = idAnnonce;
-        this.statuOffre = statuOffre;
+
     }
 
-    public void setStatuOffre(String statuOffre) {
-        this.statuOffre = statuOffre;
-        notifyDataSetChanged();
-    }
 
-    public myoffre(Context context, ArrayList<Offre> mesoffre, String idAnnonce, String offre, String statuOffre) {
+    public myoffre(Context context, ArrayList<Offre> mesoffre, String idAnnonce, String offre) {
         this.context = context;
         this.mesoffre = mesoffre;
         this.idAnnonce = idAnnonce;
         this.Offre = offre;
-        this.statuOffre = statuOffre;
+
     }
 
     public void setIdAnnonce(String idAnnonce) {
@@ -108,7 +103,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
         // Log.e("statu oofre ", statuOffre);
         // hna njib annonce
         //Log.e("ID annonce here", offre.getAnnonceId());
-       // Log.e("statu oofre ", statuOffre);
+        // Log.e("statu oofre ", statuOffre);
      /*   switch (statuOffre) {
             case "CREATED":
                 holder.statu.setText("Nouvaux");
@@ -121,11 +116,11 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
             default:
 
         }*/
-        Log.e("statu oofre ", statuOffre);
-        if(statuOffre.equals("CREATED")){
+
+        if (offre.getStatu().equals("CREATED")) {
             holder.statu.setText("Nouvaux");
             holder.statu.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
-        }else {
+        } else {
             holder.statu.setText("attend de confirmation d 'change");
             holder.statu.setTextColor(ContextCompat.getColor(context, R.color.rouge));
         }
@@ -133,7 +128,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
         holder.itemView.setOnClickListener(v -> {
             if (Offre == null) {
 
-                switch (statuOffre) {
+                switch (offre.getStatu()) {
                     case "CREATED":
                         annonce = new Annonce();
                         final FirebaseDatabase databas = FirebaseDatabase.getInstance();
@@ -165,7 +160,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                         break;
                     case "NEED_To_Be_CONFIRM":
                         Intent affiche = new Intent(context, ConfirmEchange.class);
-                        affiche.putExtra("offre", "b");
+                        affiche.putExtra("offre", offre);//offre
                         context.startActivity(affiche);
 
                         break;
@@ -213,7 +208,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
     private void setStatuAnnonce() {
         databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(Offre).child("statu")
-                .setValue("attend de confirmation d'offre")
+                .setValue("ATTEND_DE_CONFIRMATION_D_OFFRE")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

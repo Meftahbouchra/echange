@@ -207,7 +207,7 @@ public class AjoutOffre extends AppCompatActivity {
         annonce1.setDescriptionAnnonce(annonce.getDescriptionAnnonce());
         annonce1.setIdAnnonce(annonce.getIdAnnonce());
         annonce1.setImages(annonce.getImages());
-        annonce1.setStatu("attend de confirmation d'offre");
+        annonce1.setStatu("ATTEND_DE_CONFIRMATION_D_OFFRE");
         annonce1.setTitreAnnonce(annonce.getTitreAnnonce());
         annonce1.setUserId(annonce.getUserId());
         annonce1.setIdOffreSelected(annonce.getIdOffreSelected());

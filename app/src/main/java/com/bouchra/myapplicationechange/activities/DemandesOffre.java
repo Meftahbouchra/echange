@@ -166,7 +166,7 @@ public class DemandesOffre extends AppCompatActivity {
        annonce.setCommune(commune);
        annonce.setIdAnnonce(idAnnonce);
        annonce.setUserId(userid);
-       annonce.setStatu("assined");
+       annonce.setStatu("ASSINED");
        annonce.setTitreAnnonce(nomAnnon);
        annonce.setDescriptionAnnonce(descp);
 

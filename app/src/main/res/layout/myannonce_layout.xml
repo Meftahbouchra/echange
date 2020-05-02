@@ -11,10 +11,10 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_marginTop="10dp"
         android:id="@+id/img_article"
         android:layout_width="match_parent"
         android:layout_height="150dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/card_items"
         android:src="#ffffff" />
 
@@ -38,24 +38,24 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/statu"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:id="@+id/statu"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
             android:text="statu" />
 
         <TextView
-            android:layout_marginTop="10dp"
             android:id="@+id/datH"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textSize="12sp"
             android:layout_marginLeft="200dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:text="date heure" />
+            android:text="date heure"
+            android:textSize="12sp" />
 
     </LinearLayout>
 </RelativeLayout>
