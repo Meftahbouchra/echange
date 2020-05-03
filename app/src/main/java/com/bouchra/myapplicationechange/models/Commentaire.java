@@ -18,7 +18,6 @@ public class Commentaire {
     }
 
 
-
     public Commentaire() {
     }
 
@@ -62,9 +61,9 @@ public class Commentaire {
         this.repos = repos;
     }
 
-    public int Calcul_Score(){// score des commentaie
-        float score=0;
-      return (int) score;
+    public int Calcul_Score() {// score des commentaie
+        float score = 0;
+        return (int) score;
     }
 }
 

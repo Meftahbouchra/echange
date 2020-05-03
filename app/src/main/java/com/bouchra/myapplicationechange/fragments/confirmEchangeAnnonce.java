@@ -79,6 +79,34 @@ public class confirmEchangeAnnonce extends Fragment {
         String fromREview = getArguments().getString("fromREview");
         if (!fromREview.isEmpty()) {
             layoyt_button.setVisibility(View.GONE);
+        }else {
+            layout_annonce.setOnClickListener(v -> {
+                Intent affiche = new Intent(getContext(), DetailMesannonce.class);
+                affiche.putExtra("annonce", annonce);
+                getActivity().startActivity(affiche);
+                getActivity().finish();
+            });
+            layout_offre.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // hadi ta3 aghbiyaa khasni nrsal ga3 l object ta3 annonce
+                    Intent ajou = new Intent(getContext(), DemandesOffre.class);
+                    ajou.putExtra("nomAnnonce", annonce.getTitreAnnonce()); //key* value
+                    ajou.putExtra("idAnnonce", annonce.getIdAnnonce());
+                    ajou.putExtra("descp", annonce.getDescriptionAnnonce());
+                    ajou.putExtra("statu", annonce.getStatu());
+                    ajou.putExtra("userid", annonce.getUserId());
+                    ajou.putExtra("commune", annonce.getCommune());
+                    ajou.putExtra("wilaya", annonce.getWilaya());
+                    ajou.putStringArrayListExtra("articleret", annonce.getArticleEnRetour());
+                    ajou.putStringArrayListExtra("images", annonce.getImages());
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
+                    String str = simpleDateFormat.format(annonce.getDateAnnonce());
+                    ajou.putExtra("date", str);
+                    startActivity(ajou);
+                    getActivity().finish();
+                }
+            });
         }
         annonce = (Annonce) getArguments().getSerializable("annonce");
         Log.e("annonce is ", annonce.getTitreAnnonce());
@@ -87,33 +115,7 @@ public class confirmEchangeAnnonce extends Fragment {
                 .asBitmap()
                 .load(annonce.getImages().get(0))
                 .into(img_annonc);
-        layout_annonce.setOnClickListener(v -> {
-            Intent affiche = new Intent(getContext(), DetailMesannonce.class);
-            affiche.putExtra("annonce", annonce);
-            getActivity().startActivity(affiche);
-            getActivity().finish();
-        });
-        layout_offre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // hadi ta3 aghbiyaa khasni nrsal ga3 l object ta3 annonce
-                Intent ajou = new Intent(getContext(), DemandesOffre.class);
-                ajou.putExtra("nomAnnonce", annonce.getTitreAnnonce()); //key* value
-                ajou.putExtra("idAnnonce", annonce.getIdAnnonce());
-                ajou.putExtra("descp", annonce.getDescriptionAnnonce());
-                ajou.putExtra("statu", annonce.getStatu());
-                ajou.putExtra("userid", annonce.getUserId());
-                ajou.putExtra("commune", annonce.getCommune());
-                ajou.putExtra("wilaya", annonce.getWilaya());
-                ajou.putStringArrayListExtra("articleret", annonce.getArticleEnRetour());
-                ajou.putStringArrayListExtra("images", annonce.getImages());
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
-                String str = simpleDateFormat.format(annonce.getDateAnnonce());
-                ajou.putExtra("date", str);
-                startActivity(ajou);
-                getActivity().finish();
-            }
-        });
+
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Offre").child(annonce.getIdAnnonce()).child(annonce.getIdOffreSelected());

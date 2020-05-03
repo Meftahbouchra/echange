@@ -4,27 +4,111 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#efefef"
     tools:context=".activities.ReviewUser">
 
-    <Button
-        android:id="@+id/chkla"
+    <TextView
+        android:id="@+id/retour"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:text="mazal mol aanonce raha andah need to be confirm" />
-
+        android:layout_marginStart="5dp"
+        android:drawableStart="@drawable/ic_keyboard_backspace_"
+        android:drawableTint="@color/orange" />
     <TextView
-        android:id="@+id/chklazwja"
-        android:layout_marginTop="100dp"
-        android:layout_below="@+id/chkla"
+        android:id="@+id/information"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/retour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="mazal mol annonce madarch confirme echange mtkdrch dir commentaire 3lih"
+        />
+    <RelativeLayout
+        android:id="@+id/view_review"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="25sp"
-        android:text="nkado ndiro review f ay hala kanat" />
+        android:layout_margin="16dp"
+        android:layout_below="@id/retour"
+        android:layout_above="@id/showEchange"
+        >
+        <TextView
+            android:id="@+id/txt1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Comment s'est passè l'echange ?"
+            android:textColor="@color/black"
+            android:textSize="30sp" />
+        <TextView
+            android:layout_below="@id/txt1"
+            android:id="@+id/txt2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="Vous pouvez donner votre avis sur votre partenaire d'echange "
+            android:textSize="19sp" />
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:layout_below="@id/txt2"
+            android:stepSize="1.0"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:progressTint="@color/gold"
+            android:rating="0.0" />
+        <EditText
+            android:id="@+id/review"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_below="@+id/ratingBar"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/card_items"
+            android:hint="Votre commentaire ... "
+            android:inputType="text"
+            android:paddingLeft="10dp"
+            android:paddingBottom="100dp"
+            android:textColorHint="@color/gris" />
+
+        <Button
+            android:id="@+id/sumbit"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="32dp"
+            android:background="@drawable/publier_review"
+            android:gravity="center"
+            android:text="publier "
+            android:textAllCaps="false"
+            android:textColor="@color/Login_form_details"
+            android:textSize="25sp" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/showEchange"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_floating"
+        android:gravity="center"
+        android:text="voire l'echange"
+        android:textAllCaps="false"
+        android:textColor="@color/Login_form_details"
+        android:textSize="25sp" />
+
+
     <FrameLayout
-        android:elevation="10dp"
+        android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragment"/>
+        android:elevation="10dp" />
 
 </RelativeLayout>

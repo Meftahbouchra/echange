@@ -76,6 +76,16 @@ public class confirmEchangeOffre extends Fragment {
         String fromREview = getArguments().getString("fromREview");
         if (!fromREview.isEmpty()) {
             layoyt_button.setVisibility(View.GONE);
+        } else {
+            layout_annonce.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent ajou = new Intent(getContext(), DetailAnnonce.class);
+                    ajou.putExtra("annonce", annonce);
+                    startActivity(ajou);
+                    getActivity().finish();
+                }
+            });
         }
         offre = (Offre) getArguments().getSerializable("offre");
         // nomAnnonce.setText(annonce.getTitreAnnonce());
@@ -104,15 +114,7 @@ public class confirmEchangeOffre extends Fragment {
                             .asBitmap()
                             .load(ImageAnnoce)
                             .into(img_annonc);
-                    layout_annonce.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent ajou = new Intent(getContext(), DetailAnnonce.class);
-                            ajou.putExtra("annonce", annonce);
-                            startActivity(ajou);
-                            getActivity().finish();
-                        }
-                    });
+
                     recupererUser(UserAnnonce);
                     Log.e("user li dar aanonce is", UserAnnonce);
 
