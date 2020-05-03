@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.DetailAnnonce;
+import com.bouchra.myapplicationechange.activities.ReviewUser;
 import com.bouchra.myapplicationechange.activities.profilUser;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Offre;
@@ -46,7 +47,7 @@ public class confirmEchangeOffre extends Fragment {
     private Button Confirmer;
     private CircleImageView img_user;
     private TextView nom_user;
-    private String AnnonceId;
+    private LinearLayout layoyt_button;
 
     public confirmEchangeOffre() {
     }
@@ -70,8 +71,12 @@ public class confirmEchangeOffre extends Fragment {
 
         Annuler = view.findViewById(R.id.Annuler);
         Confirmer = view.findViewById(R.id.Confirmer);
+        layoyt_button = view.findViewById(R.id.layoyt_button);
 
-
+        String fromREview = getArguments().getString("fromREview");
+        if (!fromREview.isEmpty()) {
+            layoyt_button.setVisibility(View.GONE);
+        }
         offre = (Offre) getArguments().getSerializable("offre");
         // nomAnnonce.setText(annonce.getTitreAnnonce());
         titte_offre.setText(offre.getNomOffre());
@@ -83,80 +88,7 @@ public class confirmEchangeOffre extends Fragment {
 
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Offre");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    for (DataSnapshot off : postSnapshot.getChildren()) {
-                        if (off.getKey().equals(offre.getIdOffre())) {
-                            AnnonceId = off.child("annonceId").getValue().toString();
-                            recupererAnnonce(AnnonceId);
-
-                            Log.e("annonce id howa", AnnonceId);
-                        }
-                    }
-
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        Confirmer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(AnnonceId).child("statu")
-                        .setValue("NEED_To_Be_CONFIRM")
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Offre").child(AnnonceId).child(offre.getIdOffre()).child("statu")
-                                            .setValue("NEED_REVIEW")
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-
-
-                                                    }
-                                                }
-
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-
-                                                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                                                }
-                                            });
-
-                                }
-                            }
-
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-
-                                Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-            }
-        });
-
-
-        return view;
-
-    }
-
-    private void recupererAnnonce(String annonceId) {
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Annonce").child(annonceId);
+        DatabaseReference ref = database.getReference("Annonce").child(offre.getAnnonceId());
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -197,7 +129,57 @@ public class confirmEchangeOffre extends Fragment {
             }
         });
 
+
+        Confirmer.setOnClickListener(v -> {
+            //ila kanat assined
+            Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(offre.getAnnonceId()).child("statu")
+                    .setValue("NEED_To_Be_CONFIRM")
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre()).child("statu")
+                                        .setValue("NEED_REVIEW")
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Intent review = new Intent(getActivity(), ReviewUser.class);
+                                                    review.putExtra("Statu", "wait");
+                                                    review.putExtra("offre", offre);//offre
+                                                    getActivity().startActivity(review);
+// hna mn3tihch win ydir review psq  moul annonce mzal mdrtch confirme , ndirha mlfog
+
+                                                }
+                                            }
+
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                                Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });
+
+                            }
+                        }
+
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+        });
+
+
+        return view;
+
     }
+
 
     private void recupererUser(String userAnnonce) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -212,7 +194,7 @@ public class confirmEchangeOffre extends Fragment {
 
 
                     nom_user.setText(NameUser);
-                    Glide.with(getContext())
+                    Glide.with(getActivity())
                             .asBitmap()
                             .load(PicUSer)
                             .into(img_user);

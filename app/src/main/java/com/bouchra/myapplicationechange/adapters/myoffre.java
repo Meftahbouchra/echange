@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.ConfirmEchange;
 import com.bouchra.myapplicationechange.activities.DetailAnnonce;
+import com.bouchra.myapplicationechange.activities.ReviewUser;
 import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Offre;
@@ -104,7 +105,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
         // hna njib annonce
         //Log.e("ID annonce here", offre.getAnnonceId());
         // Log.e("statu oofre ", statuOffre);
-     /*   switch (statuOffre) {
+        switch (offre.getStatu()) {
             case "CREATED":
                 holder.statu.setText("Nouvaux");
                 holder.statu.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
@@ -113,17 +114,21 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                 holder.statu.setText("attend de confirmation d 'change");
                 holder.statu.setTextColor(ContextCompat.getColor(context, R.color.rouge));
                 break;
+            case "NEED_REVIEW":
+                holder.statu.setText("attend de commentaire");
+                holder.statu.setTextColor(ContextCompat.getColor(context, R.color.rouge));
+                break;
             default:
 
-        }*/
-
-        if (offre.getStatu().equals("CREATED")) {
+        }
+//NEED_REVIEW
+     /*   if (offre.getStatu().equals("CREATED")) {
             holder.statu.setText("Nouvaux");
             holder.statu.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
         } else {
             holder.statu.setText("attend de confirmation d 'change");
             holder.statu.setTextColor(ContextCompat.getColor(context, R.color.rouge));
-        }
+        }*/
 
         holder.itemView.setOnClickListener(v -> {
             if (Offre == null) {
@@ -162,6 +167,40 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                         Intent affiche = new Intent(context, ConfirmEchange.class);
                         affiche.putExtra("offre", offre);//offre
                         context.startActivity(affiche);
+
+                        break;
+                    case "NEED_REVIEW":
+                        final FirebaseDatabase databasee = FirebaseDatabase.getInstance();
+                        DatabaseReference dff = databasee.getReference("Annonce").child(offre.getAnnonceId());
+                        dff.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+
+                                if (snapshot.getValue() != null) {
+                                    String StatuAnnoncE = snapshot.child("statu").getValue().toString();
+                                    if (StatuAnnoncE.equals("NEED_To_Be_CONFIRM")){
+                                        Intent review = new Intent(context, ReviewUser.class);
+                                        review.putExtra("Statu","wait");
+                                        review.putExtra("offre", offre);//offre
+                                        context.startActivity(review);
+                                    }else {
+                                        Intent review = new Intent(context, ReviewUser.class);
+                                        review.putExtra("offre", offre);//offre
+                                        context.startActivity(review);
+                                    }
+
+                                } else {
+                                    Log.e("TAG", " it's null.");
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
 
                         break;
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ReviewUser">
+
+    <Button
+        android:id="@+id/chkla"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:text="mazal mol aanonce raha andah need to be confirm" />
+
+    <TextView
+        android:id="@+id/chklazwja"
+        android:layout_marginTop="100dp"
+        android:layout_below="@+id/chkla"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="25sp"
+        android:text="nkado ndiro review f ay hala kanat" />
+    <FrameLayout
+        android:elevation="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment"/>
+
+</RelativeLayout>

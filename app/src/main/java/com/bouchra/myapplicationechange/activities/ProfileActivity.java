@@ -31,7 +31,6 @@ public class ProfileActivity extends AppCompatActivity {
     String mUID;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
         //hdo ta3 ysjl f firebase
         myRef = FirebaseDatabase.getInstance().getReference("Membre").child(pId);
 
-     //   name.setText(user.getDisplayName());
+        //   name.setText(user.getDisplayName());
         for (UserInfo profile : user.getProviderData()) {
             if (FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())) {
                 facebookUserTd = profile.getUid();
@@ -71,12 +70,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         logOut.setOnClickListener(v -> {
             firebaseAuth.signOut();
-            updateUI();
-             //preferenceUtils.Clear();
+            updateUI();//hadi kanat dyrtlna prblm
+            //preferenceUtils.Clear();
         });
 
 //////////////////////////////////////////////update  token
-       // updateToken(FirebaseInstanceId.getInstance().getToken());
+        // updateToken(FirebaseInstanceId.getInstance().getToken());
 
     }
 
@@ -90,11 +89,11 @@ public class ProfileActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
 //get current user
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-      if (currentUser != null) {
-          //  if (preferenceUtils != null) {
+        if (currentUser != null) {
+            //  if (preferenceUtils != null) {
             // updateUI();
             //user is signed in saty here
-          // mUID = currentUser.getUid();
+            // mUID = currentUser.getUid();
             //save uid of currently signed in user in shared preferences
             /*SharedPreferences sp = getSharedPreferences("SP_USER", MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();

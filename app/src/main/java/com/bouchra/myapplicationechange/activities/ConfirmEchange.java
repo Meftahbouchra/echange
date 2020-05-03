@@ -26,7 +26,7 @@ public class ConfirmEchange extends AppCompatActivity {
         if (ajou != null) {
 
             if (ajou.hasExtra("annonce")) {
-                annonce = (Annonce) getIntent().getSerializableExtra("Annonce");
+                annonce = (Annonce) getIntent().getSerializableExtra("annonce");
                 FragmentManager manager = getSupportFragmentManager();
                 FragmentTransaction t = manager.beginTransaction();
                 final confirmEchangeAnnonce m4 = new confirmEchangeAnnonce();
@@ -51,15 +51,6 @@ public class ConfirmEchange extends AppCompatActivity {
             }
         }
 
-    /* hadi ndiroha f offre
-        Intent affiche = new Intent(context, ConfirmEchange.class);
-        affiche.putExtra("offre", "b");
-        context.startActivity(affiche);*/
-    /*hadi ndiroha f anonce
-      Intent affiche = new Intent(context, ConfirmEchange.class);
-                affiche.putExtra("annonce", "a");
-                context.startActivity(affiche);
-     */
 
 
     }

@@ -49,16 +49,24 @@ public class plus extends Fragment {
         preferenceUtils = new PreferenceUtils(getActivity());
         //loug out
         lougout.setOnClickListener(v -> {
+
+            firebaseAuth = FirebaseAuth.getInstance();
+
             firebaseAuth.signOut();
-            updateUI();
+            // firebaseAuth.signOut();
             preferenceUtils.Clear();
+            Intent intent=new Intent(getContext(),MainActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+
+            //updateUI();/hadi kanat dyrtlna prblm f photo troh
 
 
         });
         //goto message
         message.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), MessageList.class);
-           startActivity(intent);
+            startActivity(intent);
         });
         //partager un message
         parteger.setOnClickListener(v -> {

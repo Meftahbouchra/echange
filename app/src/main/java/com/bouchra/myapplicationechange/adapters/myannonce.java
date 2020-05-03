@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.ConfirmEchange;
 import com.bouchra.myapplicationechange.activities.DetailMesannonce;
+import com.bouchra.myapplicationechange.activities.ReviewUser;
 import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Offre;
@@ -97,6 +98,12 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                 //ila dar haka w madarch comeniare ndirlha need review
                 //+w ila darah ndirlah direct completed
                 break;
+            case "NEED_REVIEW":
+                holder.statu.setText("attend de commentaire");
+                holder.statu.setTextColor(ContextCompat.getColor(context, R.color.rouge));
+
+                break;
+
             default:
                 break;
         }
@@ -104,14 +111,22 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
 
         holder.itemView.setOnClickListener(v -> {
             if (offre == null) {
-                if (annonce.getStatu().equals("NEED_To_Be_CONFIRM")) {
-                    Intent affichee = new Intent(context, ConfirmEchange.class);
-                    affichee.putExtra("annonce", annonce);//offre
-                    context.startActivity(affichee);
-                } else {
-                    Intent affiche = new Intent(context, DetailMesannonce.class);
-                    affiche.putExtra("annonce", annonce);
-                    context.startActivity(affiche);
+                switch (annonce.getStatu()) {
+                    case "NEED_To_Be_CONFIRM":
+                        Intent affichee = new Intent(context, ConfirmEchange.class);
+                        affichee.putExtra("annonce", annonce);//offre
+                        context.startActivity(affichee);
+                        break;
+                    case "NEED_REVIEW":
+                        Intent review = new Intent(context, ReviewUser.class);
+                        review.putExtra("annonce", annonce);//offre
+                        context.startActivity(review);
+                        break;
+                    default:
+                        Intent affiche = new Intent(context, DetailMesannonce.class);
+                        affiche.putExtra("annonce", annonce);
+                        context.startActivity(affiche);
+                        break;
 
                 }
 

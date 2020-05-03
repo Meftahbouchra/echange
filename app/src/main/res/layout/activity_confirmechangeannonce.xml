@@ -1,11 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="confieme aanonce"
-        android:textSize="30sp"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efefef"
+    android:clickable="true">
 
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_annonce"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/card_echange"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/titte_annonce"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:elevation="3dp"
+            android:gravity="center"
+            android:text="Hello world"
+            android:textColor="@color/orange"
+            android:textSize="22dp" />
+
+
+        <ImageView
+            android:id="@+id/img_annonc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/titte_offre"
+            android:layout_margin="16dp"
+            android:layout_marginHorizontal="32dp"
+            android:background="@drawable/card_items"
+            android:src="#ffffff" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/echnge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_annonce"
+        android:src="@drawable/ic_swap_calls_black_24dp" />
+
+    <LinearLayout
+        android:id="@+id/lauout_offre"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:layout_below="@id/echnge"
+        android:layout_margin="16dp"
+        android:background="@drawable/card_echange"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relative_profie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_user"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/user"></de.hdodenhof.circleimageview.CircleImageView>
+
+            <TextView
+                android:id="@+id/nom_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="20sp"
+                android:text="Meftah Bouchra"
+                android:textColor="@color/black" />
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_offre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titte_offre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Hello world"
+                android:textColor="@color/orange"
+                android:textSize="22sp" />
+
+
+            <ImageView
+                android:id="@+id/img_offre"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_below="@+id/titte_offre"
+                android:layout_margin="16dp"
+                android:layout_marginHorizontal="32dp"
+                android:background="@drawable/card_items"
+                android:src="#ffffff" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoyt_button"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/lauout_offre"
+        android:layout_margin="8dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/Confirmer"
+            android:layout_width="170dp"
+            android:layout_height="58dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/confirm_echange"
+            android:text="Confirmer"
+            android:textAllCaps="false"
+            android:textColor="@color/Login_form_details"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/Annuler"
+            android:layout_width="170dp"
+            android:layout_height="58dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="30dp"
+            android:background="@drawable/annuler_echange"
+            android:text="Annuler"
+            android:textAllCaps="false"
+            android:textColor="@color/Login_form_details"
+            android:textSize="20dp" />
+    </LinearLayout>
+</RelativeLayout>
