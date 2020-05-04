@@ -39,7 +39,7 @@ public class profilUser extends AppCompatActivity {
 
     private CommentaireAdapter commentaireAdapter;
     private ArrayList<Commentaire> commentaires;
-
+    private String idUSer;
     private RecyclerView recyclerView;
     private Intent intent;
     private DatabaseReference reference;
@@ -56,6 +56,10 @@ public class profilUser extends AppCompatActivity {
     String[] smsPermission;
     Date date = new Date();
     private PreferenceUtils preferenceUtils;
+    private DatabaseReference l;
+    private float totalRepos = 0;
+    private int nbrComm = 0;
+    private TextView avis;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -72,6 +76,7 @@ public class profilUser extends AppCompatActivity {
         adressUser = findViewById(R.id.adress_user);
         zoneEmail = findViewById(R.id.zone_email);
         zonePhone = findViewById(R.id.zone_phone);
+        avis = findViewById(R.id.avis);
         //init permission arrys
         callPermission = new String[]{Manifest.permission.CALL_PHONE};
         smsPermission = new String[]{Manifest.permission.SEND_SMS};
@@ -79,7 +84,7 @@ public class profilUser extends AppCompatActivity {
         // recycle view with out base da donne
         recyclerView = findViewById(R.id.recyle_commentaire);
         commentaires = new ArrayList<>();
-        commentaireAdapter = new CommentaireAdapter(this, commentaires);
+        commentaireAdapter = new CommentaireAdapter(this, commentaires, idUSer);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(commentaireAdapter);
@@ -91,14 +96,28 @@ public class profilUser extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+
                     Log.e("data here", postSnapshot.getValue().toString());
-                    String idUserSender = postSnapshot.child("idSender").toString();
-                            commentaires.add(postSnapshot.getValue(Commentaire.class));
-                            commentaireAdapter.notifyDataSetChanged();
-
-
+                    String idUserSender = postSnapshot.child("idSender").getValue().toString();
+                    String etoile = postSnapshot.child("repos").getValue().toString();
+                    //user
+                    Log.e("nbr etoile", etoile);
+                    idUSer = idUserSender;
+                    commentaireAdapter.setIdUSer(idUSer);
+                    commentaires.add(postSnapshot.getValue(Commentaire.class));
+                    commentaireAdapter.notifyDataSetChanged();
+                    nbrComm++;
+                    totalRepos = totalRepos + Float.valueOf(etoile);
 
                 }
+                if (nbrComm == 0) {
+                    avis.setText(nbrComm);
+                } else {
+                    float resultat = totalRepos / nbrComm;
+                    avis.setText(String.valueOf(resultat));
+                }
+
+
             }
 
             @Override

@@ -61,6 +61,9 @@ public class DetailAnnonce extends AppCompatActivity {
     private Dialog MyDialog;
     private TextView sendMsg; //send_Msg
     private TextView shar_publication;
+    private TextView etoiles_user;
+    private int nbrComm=0;
+    private float totalRepos = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +71,37 @@ public class DetailAnnonce extends AppCompatActivity {
         setContentView(R.layout.activity_detail_annonce);
         relativeLayout = findViewById(R.id.relative_profie);
         imgUser = findViewById(R.id.img_user);
+        etoiles_user = findViewById(R.id.etoiles_user);
+        annonce = (Annonce) getIntent().getSerializableExtra("annonce");
+        String id = annonce.getUserId();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Commentaire").child(id);
 
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    String etoile = postSnapshot.child("repos").getValue().toString();
+
+                    nbrComm++;
+                    totalRepos = totalRepos + Float.valueOf(etoile);
+
+                }
+                if (nbrComm == 0) {
+                    etoiles_user.setText(nbrComm);
+                } else {
+                    float resultat = totalRepos / nbrComm;
+                    etoiles_user.setText(String.valueOf(resultat));
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Getting model failed, log a message
+            }
+        });
         offre = findViewById(R.id.offre);
         offre.setOnClickListener(v -> {
             MyDialog();
@@ -227,11 +260,11 @@ public class DetailAnnonce extends AppCompatActivity {
             MyDialog.cancel();
         });
         ajout.setOnClickListener(v -> {
-           // String anonceId = annonce.getIdAnnonce().toString();
+            // String anonceId = annonce.getIdAnnonce().toString();
             //   Toast.makeText(this, ""+a, Toast.LENGTH_SHORT).show();
             Intent ajou = new Intent(DetailAnnonce.this, AjoutOffre.class);
             //ajou.putExtra("anonceId", anonceId); //key* value
-            ajou.putExtra("Annonce",annonce);
+            ajou.putExtra("Annonce", annonce);
             startActivity(ajou);
             finish();
 

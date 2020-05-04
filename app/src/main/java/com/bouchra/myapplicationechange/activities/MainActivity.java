@@ -182,7 +182,8 @@ public class MainActivity extends AppCompatActivity {
                             usr.setEmail(user.getEmail());
                             usr.setNomMembre(user.getDisplayName());
                             usr.setIdMembre(ID);
-                            usr.setPhotoUser(photoUrl);
+                            // usr.setPhotoUser(photoUrl);
+                            usr.setPhotoUser(String.valueOf(user.getPhotoUrl()));
                             //usr.setNumTel(Integer.parseInt(user.getPhoneNumber()));
                             usr.setDateInscription(new Date());
                             databaseReference.setValue(usr).addOnCompleteListener(task2 -> {
@@ -225,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        String photoesy="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSNe5yo7hl-b5UHwropa_-4hNehtgV4w6wkFM1gw-o59SW93FNt";
+                        String photoesy = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSNe5yo7hl-b5UHwropa_-4hNehtgV4w6wkFM1gw-o59SW93FNt";
                         // Sign in success, update UI with the signed-in user's informatio
                         FirebaseUser user = mAuth.getCurrentUser();
                         String ID = firebaseAuth.getCurrentUser().getUid();

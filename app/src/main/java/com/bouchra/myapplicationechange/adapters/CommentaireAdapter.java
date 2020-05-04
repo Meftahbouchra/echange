@@ -1,6 +1,7 @@
 package com.bouchra.myapplicationechange.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Commentaire;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,13 +28,19 @@ public class CommentaireAdapter extends RecyclerView.Adapter<CommentaireAdapter.
 
     private Context context;
     private ArrayList<Commentaire> commentaires;
+    private String idUSer;
+    private DatabaseReference reference;
 
+    public void setIdUSer(String idUSer) {
+        this.idUSer = idUSer;
+        notifyDataSetChanged();
 
+    }
 
-    public CommentaireAdapter(Context context, ArrayList<Commentaire> commentaires) {
+    public CommentaireAdapter(Context context, ArrayList<Commentaire> commentaires, String idUSer) {
         this.context = context;
         this.commentaires = commentaires;
-
+        this.idUSer = idUSer;
     }
 
     @NonNull
@@ -49,7 +61,26 @@ public class CommentaireAdapter extends RecyclerView.Adapter<CommentaireAdapter.
         holder.commentaire.setText(commentaire.getContenuCommentaire());
         holder.etoiles.setRating(commentaire.getRepos());// hna mazal nchof f net
         // mazali njbad user
+        Log.e("id user is", idUSer);
 
+        reference = FirebaseDatabase.getInstance().getReference("Membre").child(idUSer);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                String NAMEUSER = dataSnapshot.child("nomMembre").getValue().toString();
+              /*  String IMAGUSER = dataSnapshot.child("photoUser").getValue().toString();
+                Picasso.get().load(IMAGUSER).into(holder.img_user);*/
+                holder.nomUser.setText(NAMEUSER);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
