@@ -16,16 +16,20 @@ import com.bouchra.myapplicationechange.models.Commentaire;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class CommentaireAdapter extends RecyclerView.Adapter<CommentaireAdapter.ViewHolder> {
 
     private Context context;
     private ArrayList<Commentaire> commentaires;
 
+
+
     public CommentaireAdapter(Context context, ArrayList<Commentaire> commentaires) {
         this.context = context;
         this.commentaires = commentaires;
-    }
 
+    }
 
     @NonNull
     @Override
@@ -38,13 +42,15 @@ public class CommentaireAdapter extends RecyclerView.Adapter<CommentaireAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Commentaire p = commentaires.get(position);
-        holder.nomUser.setText(p.getNameUser());
+        Commentaire commentaire = commentaires.get(position);
         String pattern = "yyyy-MM-dd HH:mm";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        holder.date.setText(simpleDateFormat.format(p.getDateCommentaire()));
-        holder.commentaire.setText(p.getContenuCommentaire());
-        holder.etoiles.setRating(p.getRepos());
+        holder.date.setText(simpleDateFormat.format(commentaire.getDateCommentaire()));
+        holder.commentaire.setText(commentaire.getContenuCommentaire());
+        holder.etoiles.setRating(commentaire.getRepos());// hna mazal nchof f net
+        // mazali njbad user
+
+
     }
 
     @Override
@@ -55,6 +61,7 @@ public class CommentaireAdapter extends RecyclerView.Adapter<CommentaireAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView nomUser, date, commentaire;
         private RatingBar etoiles;
+        private CircleImageView img_user;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,6 +69,7 @@ public class CommentaireAdapter extends RecyclerView.Adapter<CommentaireAdapter.
             date = itemView.findViewById(R.id.date_h);
             commentaire = itemView.findViewById(R.id.commentaire);
             etoiles = itemView.findViewById(R.id.etoiles_user);
+            img_user = itemView.findViewById(R.id.img_user);
         }
     }
 }

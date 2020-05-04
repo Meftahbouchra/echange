@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import com.bouchra.myapplicationechange.adapters.BottomSheetPhoneNumber;
 import com.bouchra.myapplicationechange.adapters.CommentaireAdapter;
 import com.bouchra.myapplicationechange.models.Commentaire;
 import com.bouchra.myapplicationechange.models.Membre;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,6 +39,7 @@ public class profilUser extends AppCompatActivity {
 
     private CommentaireAdapter commentaireAdapter;
     private ArrayList<Commentaire> commentaires;
+
     private RecyclerView recyclerView;
     private Intent intent;
     private DatabaseReference reference;
@@ -52,6 +55,7 @@ public class profilUser extends AppCompatActivity {
     String[] callPermission;
     String[] smsPermission;
     Date date = new Date();
+    private PreferenceUtils preferenceUtils;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -71,15 +75,38 @@ public class profilUser extends AppCompatActivity {
         //init permission arrys
         callPermission = new String[]{Manifest.permission.CALL_PHONE};
         smsPermission = new String[]{Manifest.permission.SEND_SMS};
+        preferenceUtils = new PreferenceUtils(this);
         // recycle view with out base da donne
         recyclerView = findViewById(R.id.recyle_commentaire);
         commentaires = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            commentaires.add(new Commentaire("nomUser" + i, date, " etoiles" + i, "date" + i, 3));
-        }
         commentaireAdapter = new CommentaireAdapter(this, commentaires);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(commentaireAdapter);
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Commentaire").child(userid);
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Log.e("data here", postSnapshot.getValue().toString());
+                    String idUserSender = postSnapshot.child("idSender").toString();
+                            commentaires.add(postSnapshot.getValue(Commentaire.class));
+                            commentaireAdapter.notifyDataSetChanged();
+
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Getting model failed, log a message
+            }
+        });
+
 
         reference = FirebaseDatabase.getInstance().getReference("Membre").child(userid);
         reference.addValueEventListener(new ValueEventListener() {
@@ -189,5 +216,6 @@ public class profilUser extends AppCompatActivity {
                 this, smsPermission, SMS_REQUEST_CODE);
         sendSms();
     }
+
 
 }

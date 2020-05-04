@@ -6,28 +6,38 @@ public class Commentaire {
     private String idCommentaire;
     private Date dateCommentaire;
     private String contenuCommentaire;
-    private String nameUser;
-    private float repos;// nbr *
+    private float repos;// nbr * yad y3amar b nos ykad ykon 3.4
+    private String IdSender;
+    private String IDResiver;
 
-    public String getNameUser() {
-        return nameUser;
+    public Commentaire(String idCommentaire, Date dateCommentaire, String contenuCommentaire, float repos, String idSender, String IDResiver) {
+        this.idCommentaire = idCommentaire;
+        this.dateCommentaire = dateCommentaire;
+        this.contenuCommentaire = contenuCommentaire;
+        this.repos = repos;
+        this.IdSender = idSender;
+        this.IDResiver = IDResiver;
     }
 
-    public void setNameUser(String nameUser) {
-        this.nameUser = nameUser;
+    public String getIdSender() {
+        return IdSender;
     }
 
+    public void setIdSender(String idSender) {
+        IdSender = idSender;
+    }
+
+    public String getIDResiver() {
+        return IDResiver;
+    }
+
+    public void setIDResiver(String IDResiver) {
+        this.IDResiver = IDResiver;
+    }
 
     public Commentaire() {
     }
 
-    public Commentaire(String idCommentaire, Date dateCommentaire, String contenuCommentaire, String nameUser, float repos) {
-        this.idCommentaire = idCommentaire;
-        this.dateCommentaire = dateCommentaire;
-        this.contenuCommentaire = contenuCommentaire;
-        this.nameUser = nameUser;
-        this.repos = repos;
-    }
 
     public String getIdCommentaire() {
         return idCommentaire;
