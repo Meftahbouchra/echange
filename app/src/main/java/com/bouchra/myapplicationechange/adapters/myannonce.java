@@ -132,34 +132,49 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
 
 
             } else {
-                PreferenceUtils preferenceUtils = new PreferenceUtils(context);
-                databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(offre);
-                Offre offrre = new Offre();
-                offrre.setAnnonceId(offre);
-                offrre.setDateOffre(new Date());// jc ila ndirah f date ta3 annonce wl    ndir   h bali jdidi
-                offrre.setDescriptionOffre(annonce.getDescriptionAnnonce());
-                offrre.setIdOffre(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode());
-                offrre.setNomOffre(annonce.getTitreAnnonce());
-                offrre.setWilaya(annonce.getWilaya());
-                offrre.setCommune(annonce.getCommune());
-                offrre.setIdUser(preferenceUtils.getMember().getIdMembre());
-                offrre.setStatu("CREATED");
-                // offre.setImages();
-                // khasni id user li dar l offre
+                if (annonce.getStatu().equals("NEED_To_Be_CONFIRM")) {
+                    Toast.makeText(context, "Vous ne peux pas attribuée cette annonce,elle attend d'etre confirme !", Toast.LENGTH_SHORT).show();
 
-                databaseReference.child(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode()).setValue(offrre).addOnCompleteListener(task2 -> {
 
-                    if (task2.isSuccessful()) {
-                        setStatuAnnonce();
+                } else {
+                    if (annonce.getStatu().equals("NEED_REVIEW")) {
+                        Toast.makeText(context, "Vous ne peux pas attribuée cette annonce ,elle a été déja échngé !", Toast.LENGTH_SHORT).show();
 
-                        Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
-                        Intent an = new Intent(context, debut.class);
-                        context.startActivity(an);
 
                     } else {
-                        Toast.makeText(context, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
+                        PreferenceUtils preferenceUtils = new PreferenceUtils(context);
+                        databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(offre);
+                        Offre offrre = new Offre();
+                        offrre.setAnnonceId(offre);
+                        offrre.setDateOffre(new Date());// jc ila ndirah f date ta3 annonce wl    ndir   h bali jdidi
+                        offrre.setDescriptionOffre(annonce.getDescriptionAnnonce());
+                        offrre.setIdOffre(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode());
+                        offrre.setNomOffre(annonce.getTitreAnnonce());
+                        offrre.setWilaya(annonce.getWilaya());
+                        offrre.setCommune(annonce.getCommune());
+                        offrre.setIdUser(preferenceUtils.getMember().getIdMembre());
+                        offrre.setStatu("CREATED");
+                        // offre.setImages();
+                        // khasni id user li dar l offre
+
+                        databaseReference.child(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode()).setValue(offrre).addOnCompleteListener(task2 -> {
+
+                            if (task2.isSuccessful()) {
+                                setStatuAnnonce();
+
+                                Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
+                                Intent an = new Intent(context, debut.class);
+                                context.startActivity(an);
+
+                            } else {
+                                Toast.makeText(context, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
-                });
+
+                }
+
+
             }
 
         });

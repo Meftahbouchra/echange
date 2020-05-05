@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,8 +70,8 @@ public class CommentaireAdapter extends RecyclerView.Adapter<CommentaireAdapter.
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 String NAMEUSER = dataSnapshot.child("nomMembre").getValue().toString();
-              /*  String IMAGUSER = dataSnapshot.child("photoUser").getValue().toString();
-                Picasso.get().load(IMAGUSER).into(holder.img_user);*/
+                String IMAGUSER = dataSnapshot.child("photoUser").getValue().toString();
+                Picasso.get().load(IMAGUSER).into(holder.img_user);
                 holder.nomUser.setText(NAMEUSER);
 
 

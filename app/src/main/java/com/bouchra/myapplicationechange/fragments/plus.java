@@ -55,11 +55,8 @@ public class plus extends Fragment {
             firebaseAuth.signOut();
             // firebaseAuth.signOut();
             preferenceUtils.Clear();
-            Intent intent=new Intent(getContext(),MainActivity.class);
-            startActivity(intent);
-            getActivity().finish();
+            updateUI();
 
-            //updateUI();/hadi kanat dyrtlna prblm f photo troh
 
 
         });
@@ -92,5 +89,9 @@ public class plus extends Fragment {
     private void updateUI() {
         startActivity(new Intent(getActivity(), MainActivity.class));
         getActivity().finish();
+       /* Intent intent=new Intent(getContext(),MainActivity.class);
+        startActivity(intent);
+        getActivity().finish();*/
+
     }
 }

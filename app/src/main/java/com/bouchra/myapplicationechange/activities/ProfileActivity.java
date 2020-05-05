@@ -9,26 +9,20 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.models.Membre;
-import com.google.firebase.auth.FacebookAuthProvider;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
-    private FirebaseAuth firebaseAuth;
+
     private TextView name;
     private CircleImageView profile_img;
     private Button logOut;
-    private String pId;
-    private DatabaseReference myRef;
-    private String facebookUserTd = " ";
-    String mUID;
+    private FirebaseAuth firebaseAuth;
+    private PreferenceUtils preferenceUtils;
 
 
     @Override
@@ -39,41 +33,17 @@ public class ProfileActivity extends AppCompatActivity {
         profile_img = findViewById(R.id.profilimG);
         name = findViewById(R.id.name);
         logOut = findViewById(R.id.logout);
-
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();//preferenceUtils==user
-        //hdo ta3 ysjl f firebase
-        pId = firebaseAuth.getUid();
-
-        //hdo ta3 ysjl f firebase
-        myRef = FirebaseDatabase.getInstance().getReference("Membre").child(pId);
-
-        //   name.setText(user.getDisplayName());
-        for (UserInfo profile : user.getProviderData()) {
-            if (FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())) {
-                facebookUserTd = profile.getUid();
-            }
-        }
-
-        String photoUrl = "https://graph.facebook.com/" + facebookUserTd + "/picture?height=500";
-        Picasso.get().load(photoUrl).into(profile_img);
-        //hdo ta3 ysjl f firebase
-        Membre model = new Membre();
-        model.setIdMembre(pId);
-        model.setNomMembre(user.getDisplayName());
-        //model.setImgMembre(photoUrl);
-        myRef.setValue(model);
-        //htalhna bch ykml ta3 li ywsl ll firebase
-        String nom = name.getText().toString();
+        preferenceUtils = new PreferenceUtils(this);
 
 
         logOut.setOnClickListener(v -> {
+            firebaseAuth = FirebaseAuth.getInstance();
             firebaseAuth.signOut();
-            updateUI();//hadi kanat dyrtlna prblm
-            //preferenceUtils.Clear();
+            updateUI();
+            preferenceUtils.Clear();
         });
-
+        name.setText(preferenceUtils.getMember().getNomMembre());
+        Picasso.get().load(preferenceUtils.getMember().getPhotoUser()).into(profile_img);
 //////////////////////////////////////////////update  token
         // updateToken(FirebaseInstanceId.getInstance().getToken());
 
