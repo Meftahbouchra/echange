@@ -13,9 +13,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.adapters.BottomsheetManipAnnonce;
-import com.bouchra.myapplicationechange.fragments.Modifier;
+import com.bouchra.myapplicationechange.adapters.BottomsheetManipAnnonceOffre;
+import com.bouchra.myapplicationechange.fragments.ModifierAnnonce;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.models.Offre;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,6 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DetailMesannonce extends AppCompatActivity {
     private Button voirOffres;
@@ -45,10 +48,18 @@ public class DetailMesannonce extends AppCompatActivity {
         retour = findViewById(R.id.article_retour);
         menu = findViewById(R.id.menu);
         menu.setOnClickListener(v -> {
-            BottomsheetManipAnnonce bottomsheet = new BottomsheetManipAnnonce();
+            BottomsheetManipAnnonceOffre bottomsheet = new BottomsheetManipAnnonceOffre();
+            Bundle b2 = new Bundle();
+            b2.putString("fromAnnonce", annonce.getTitreAnnonce());
+            bottomsheet.setArguments(b2);
             bottomsheet.show(getSupportFragmentManager(), "manipAnnonce");
 
 
+
+
+
+           /* BottomsheetManipAnnonceOffre bottomsheet = new BottomsheetManipAnnonceOffre();
+            bottomsheet.show(getSupportFragmentManager(), "manipAnnonce");*/
         });
         voirOffres = findViewById(R.id.voir);
         voirOffres.setOnClickListener(v -> {
@@ -159,20 +170,79 @@ public class DetailMesannonce extends AppCompatActivity {
     }
 
     public void deleteAnnonce() {
+        DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(annonce.getUserId()).child(annonce.getIdAnnonce());
+        Map<String, Object> ANNONCE = new HashMap<>();
+        ANNONCE.put("IdAnnonce", annonce.getIdAnnonce());
+        ANNONCE.put("TitreAnnonce", annonce.getTitreAnnonce());
+        ANNONCE.put("CommuneAnnonce", annonce.getCommune());
+        ANNONCE.put("WilayaAnnonce", annonce.getWilaya());
+        ANNONCE.put("ImagesAnnonce", annonce.getImages());
+        ANNONCE.put("DescriptionAnnonce", annonce.getDescriptionAnnonce());
+        ANNONCE.put("ArticleEnRetourAnnonce", annonce.getArticleEnRetour());
+        ANNONCE.put("DateAnnonce", annonce.getDateAnnonce());
+        ANNONCE.put("IdOffreSelectedAnnonce", annonce.getIdOffreSelected());
+        ANNONCE.put("statuAnnonce", "DELETED");
+        mDbRef.updateChildren(ANNONCE);
+        getOffres(annonce.getIdAnnonce());
         DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
+        dAnnonce.removeValue();
 
+
+
+        /*
         DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(annonce.getIdAnnonce());
-        dAnnonce.removeValue();//removeValue ()  : utilisé pour supprimer les données.
-        dOffre.removeValue();
+       //removeValue ()  : utilisé pour supprimer les données.
+        dOffre.removeValue();*/
 
     }
 
+    private void getOffres(String idAnnonce) {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Offre").child(idAnnonce);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    // njib l object w ndirah fi methode w hadik l methode nsuprimi fiha
+                    Offre offre = postSnapshot.getValue(Offre.class);
+                    deletOffre(offre);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+
+            }
+
+        });
+    }
+
+    private void deletOffre(Offre offre) {
+        DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(offre.getIdUser()).child(offre.getIdOffre());
+        Map<String, Object> OFFRE = new HashMap<>();
+        OFFRE.put("NomOffre", offre.getNomOffre());
+        OFFRE.put("IdOffre", offre.getIdOffre());
+        OFFRE.put("IdAnnonceOffre", offre.getAnnonceId());
+        OFFRE.put("CommuneOffre", offre.getCommune());
+        OFFRE.put("DateOffre", offre.getDateOffre());
+        OFFRE.put("DesciptionOffre", offre.getDescriptionOffre());
+        OFFRE.put("IdUserOffre", offre.getIdUser());
+        OFFRE.put("ImageOffre", offre.getImages());
+        OFFRE.put("WilayaOffre", offre.getWilaya());
+        OFFRE.put("statuOffre", "REJECTED");
+        mDbRef.updateChildren(OFFRE);
+        DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre());
+        dOffre.removeValue();
+    }
+
     public void goToFragmentModifier() {
-        // getSupportFragmentManager().beginTransaction().add(R.id.fragment,new Modifier(),"Modifier").commit();
+        // getSupportFragmentManager().beginTransaction().add(R.id.fragment,new ModifierAnnonce(),"ModifierAnnonce").commit();
         //PACK DATA IN A BUNDLE
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction t = manager.beginTransaction();
-        final Modifier m4 = new Modifier();
+        final ModifierAnnonce m4 = new ModifierAnnonce();
         Bundle b2 = new Bundle();
         b2.putSerializable("annonce", annonce);
         m4.setArguments(b2);

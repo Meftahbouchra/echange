@@ -22,6 +22,7 @@ import com.bouchra.myapplicationechange.fragments.confirmEchangeOffre;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Commentaire;
 import com.bouchra.myapplicationechange.models.Offre;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -32,6 +33,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReviewUser extends AppCompatActivity {
 
@@ -47,6 +50,7 @@ public class ReviewUser extends AppCompatActivity {
     private String IdSender;
     private String IDResiver;
     private DatabaseReference databaseReference;
+    PreferenceUtils preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,7 @@ public class ReviewUser extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         review = findViewById(R.id.review);
         sumbit = findViewById(R.id.sumbit);
+        preferences = new PreferenceUtils(ReviewUser.this);
 
 
         ajou = getIntent();
@@ -169,6 +174,7 @@ public class ReviewUser extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()) {
 
+
                                                     }
                                                 }
 
@@ -190,7 +196,22 @@ public class ReviewUser extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()) {
-
+                                                        DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(preferences.getMember().getIdMembre()).child(offre.getIdOffre());
+                                                        Map<String, Object> OFFRE = new HashMap<>();
+                                                        OFFRE.put("NomOffre", offre.getNomOffre());
+                                                        OFFRE.put("IdOffre", offre.getIdOffre());
+                                                        OFFRE.put("IdAnnonceOffre", offre.getAnnonceId());
+                                                        OFFRE.put("CommuneOffre", offre.getCommune());
+                                                        OFFRE.put("DateOffre", offre.getDateOffre());
+                                                        OFFRE.put("DesciptionOffre", offre.getDescriptionOffre());
+                                                        OFFRE.put("IdUserOffre", offre.getIdUser());
+                                                        OFFRE.put("ImageOffre", offre.getImages());
+                                                        OFFRE.put("WilayaOffre", offre.getWilaya());
+                                                        OFFRE.put("statuOffre", "terminer");
+                                                        mDbRef.updateChildren(OFFRE);
+                                                        DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre());
+                                                        dOffre.removeValue();
+                                                        deplaceAnnoncewithOffre(offre.getAnnonceId());
                                                     }
                                                 }
 
@@ -216,6 +237,7 @@ public class ReviewUser extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (ajou != null) {
+                    String msg = "nonButton";
                     if (ajou.hasExtra("annonce")) {
                         Annonce annonce = (Annonce) getIntent().getSerializableExtra("annonce");
                         FragmentManager manager = getSupportFragmentManager();
@@ -223,7 +245,7 @@ public class ReviewUser extends AppCompatActivity {
                         final confirmEchangeAnnonce m4 = new confirmEchangeAnnonce();
                         Bundle b2 = new Bundle();
                         b2.putSerializable("annonce", annonce);
-                        b2.putString("fromREview", "nonButton");
+                        b2.putString("fromReview", msg);
                         m4.setArguments(b2);
                         t.add(R.id.fragment, m4);
                         t.commit();
@@ -232,16 +254,75 @@ public class ReviewUser extends AppCompatActivity {
                         Offre offre = (Offre) getIntent().getSerializableExtra("offre");
                         FragmentManager manager = getSupportFragmentManager();
                         FragmentTransaction t = manager.beginTransaction();
-                        final confirmEchangeOffre m4 = new confirmEchangeOffre();
-                        Bundle b2 = new Bundle();
-                        b2.putSerializable("offre", offre);
-                        b2.putString("fromREview", "nonButton");
-                        m4.setArguments(b2);
-                        t.add(R.id.fragment, m4);
+                        final confirmEchangeOffre confirmEchangeOffre = new confirmEchangeOffre();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("offre", offre);
+                        bundle.putString("fromReview", msg);
+                        confirmEchangeOffre.setArguments(bundle);
+                        t.add(R.id.fragment, confirmEchangeOffre);
                         t.commit();
                     }
                 }
             }
         });
+    }
+
+    private void deplaceAnnoncewithOffre(String annonceId) {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Annonce").child(annonceId);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // Membre membre = snapshot.getValue(Membre.class);
+                Annonce annonce = snapshot.getValue(Annonce.class);
+                deplaceAnnonce(annonce);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Getting model failed, log a message
+            }
+        });
+
+    }
+
+    private void deplaceAnnonce(Annonce annonce) {
+
+        DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(annonce.getUserId()).child(annonce.getIdAnnonce());
+        Map<String, Object> ANNONCE = new HashMap<>();
+        ANNONCE.put("IdAnnonce", annonce.getIdAnnonce());
+        ANNONCE.put("TitreAnnonce", annonce.getTitreAnnonce());
+        ANNONCE.put("CommuneAnnonce", annonce.getCommune());
+        ANNONCE.put("WilayaAnnonce", annonce.getWilaya());
+        ANNONCE.put("ImagesAnnonce", annonce.getImages());
+        ANNONCE.put("DescriptionAnnonce", annonce.getDescriptionAnnonce());
+        ANNONCE.put("ArticleEnRetourAnnonce", annonce.getArticleEnRetour());
+        ANNONCE.put("DateAnnonce", annonce.getDateAnnonce());
+        ANNONCE.put("IdOffreSelectedAnnonce", annonce.getIdOffreSelected());
+        ANNONCE.put("statuAnnonce", "ternminer");
+        mDbRef.updateChildren(ANNONCE);
+        DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
+        dAnnonce.removeValue();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        if (intent.hasExtra("send")) {
+            String fromREview = intent.getStringExtra("send");
+            Annonce annonce = (Annonce) intent.getSerializableExtra("annonce");
+            String msg = "nonButton";
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction t = manager.beginTransaction();
+            final confirmEchangeAnnonce m4 = new confirmEchangeAnnonce();
+            Bundle b2 = new Bundle();
+            b2.putString("fromReview", msg);
+            b2.putSerializable("annonce", annonce);
+            m4.setArguments(b2);
+            t.add(R.id.fragment, m4);
+            t.commit();
+        }
+
     }
 }

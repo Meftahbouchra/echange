@@ -58,7 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void check() {
         // Check if user is signed in (non-null) and update UI accordingly.
 //get current user
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        FirebaseUser currentUser = firebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             //  if (preferenceUtils != null) {
             // updateUI();

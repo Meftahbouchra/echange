@@ -22,6 +22,7 @@ import com.bouchra.myapplicationechange.activities.DetailMesannonce;
 import com.bouchra.myapplicationechange.activities.ReviewUser;
 import com.bouchra.myapplicationechange.activities.profilUser;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.models.Offre;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,8 +32,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -50,6 +54,7 @@ public class confirmEchangeAnnonce extends Fragment {
     private Button Annuler;
     private Button Confirmer;
     private LinearLayout layoyt_button;
+    String fromREview;
 
 
     public confirmEchangeAnnonce() {
@@ -76,10 +81,10 @@ public class confirmEchangeAnnonce extends Fragment {
         layoyt_button = view.findViewById(R.id.layoyt_button);
 
         img_offre = view.findViewById(R.id.img_offre);
-        String fromREview = getArguments().getString("fromREview");
-        if (!fromREview.isEmpty()) {
+        fromREview = this.getArguments().getString("fromReview", "");
+        if (!fromREview.equals("")) {
             layoyt_button.setVisibility(View.GONE);
-        }else {
+        } else {
             layout_annonce.setOnClickListener(v -> {
                 Intent affiche = new Intent(getContext(), DetailMesannonce.class);
                 affiche.putExtra("annonce", annonce);
@@ -149,6 +154,8 @@ public class confirmEchangeAnnonce extends Fragment {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
+                                // yanuler ga3 les offre lokhrin
+                                rejectedOffres(annonce.getIdAnnonce(),annonce.getIdOffreSelected());
 // hna wi ndir win ydir review psq deja lakhor dar confirm w rah ykara3
                                 Intent review = new Intent(getActivity(), ReviewUser.class);
                                 review.putExtra("annonce", annonce);//offre
@@ -182,10 +189,11 @@ public class confirmEchangeAnnonce extends Fragment {
 
 
                     nom_user.setText(NameUser);
-                    Glide.with(getContext())
+                   /* Glide.with(getContext())
                             .asBitmap()
                             .load(PicUSer)
-                            .into(img_user);
+                            .into(img_user);*/
+                    Picasso.get().load(PicUSer).into(img_user);
                     relative_profie.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -209,5 +217,48 @@ public class confirmEchangeAnnonce extends Fragment {
         });
     }
 
+    private void rejectedOffres(String idAnnonce, String idOFfreSelected) {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Offre").child(idAnnonce);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    // njib l object w ndirah fi methode w hadik l methode nsuprimi fiha
+                    String idOffre = postSnapshot.child("idOffre").getValue().toString();
+                    if (!idOffre.equals(idOFfreSelected)) {
+                        Offre offre = postSnapshot.getValue(Offre.class);
+                        deletOffre(offre);
+                    }
 
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+
+            }
+
+        });
+    }
+
+    private void deletOffre(Offre offre) {
+        DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(offre.getIdUser()).child(offre.getIdOffre());
+        Map<String, Object> OFFRE = new HashMap<>();
+        OFFRE.put("NomOffre", offre.getNomOffre());
+        OFFRE.put("IdOffre", offre.getIdOffre());
+        OFFRE.put("IdAnnonceOffre", offre.getAnnonceId());
+        OFFRE.put("CommuneOffre", offre.getCommune());
+        OFFRE.put("DateOffre", offre.getDateOffre());
+        OFFRE.put("DesciptionOffre", offre.getDescriptionOffre());
+        OFFRE.put("IdUserOffre", offre.getIdUser());
+        OFFRE.put("ImageOffre", offre.getImages());
+        OFFRE.put("WilayaOffre", offre.getWilaya());
+        OFFRE.put("statuOffre", "REJECTED");
+        mDbRef.updateChildren(OFFRE);
+        DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre());
+        dOffre.removeValue();
+    }
 }

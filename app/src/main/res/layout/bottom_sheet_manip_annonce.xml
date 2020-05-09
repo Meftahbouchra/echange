@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:drawableStart="@drawable/ic_edit_"
-        android:textAllCaps="false"
-        android:text="Modifier"></Button>
+        android:text="Modifier"
+        android:textAllCaps="false"></Button>
 
     <Button
         android:id="@+id/btn_supprimer"
@@ -22,10 +22,10 @@
         android:layout_marginTop="20dp"
         android:background="@android:color/transparent"
         android:drawableStart="@drawable/ic_delete"
-        android:textAllCaps="false"
-        android:text="Supprimer"></Button>
-
-
-
-
+        android:text="Supprimer"
+        android:textAllCaps="false"></Button>
 </LinearLayout>
+
+
+
+

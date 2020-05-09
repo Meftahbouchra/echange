@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -48,6 +49,8 @@ public class confirmEchangeOffre extends Fragment {
     private CircleImageView img_user;
     private TextView nom_user;
     private LinearLayout layoyt_button;
+    String fromREview ;
+
 
     public confirmEchangeOffre() {
     }
@@ -73,18 +76,15 @@ public class confirmEchangeOffre extends Fragment {
         Confirmer = view.findViewById(R.id.Confirmer);
         layoyt_button = view.findViewById(R.id.layoyt_button);
 
-        String fromREview = getArguments().getString("fromREview");
-        if (!fromREview.isEmpty()) {
+        fromREview = this.getArguments().getString("fromReview","");
+        if (!fromREview.equals("")) {
             layoyt_button.setVisibility(View.GONE);
         } else {
-            layout_annonce.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent ajou = new Intent(getContext(), DetailAnnonce.class);
-                    ajou.putExtra("annonce", annonce);
-                    startActivity(ajou);
-                    getActivity().finish();
-                }
+            layout_annonce.setOnClickListener(v -> {
+                Intent ajou = new Intent(getContext(), DetailAnnonce.class);
+                ajou.putExtra("annonce", annonce);
+                startActivity(ajou);
+                getActivity().finish();
             });
         }
         offre = (Offre) getArguments().getSerializable("offre");
@@ -110,7 +110,7 @@ public class confirmEchangeOffre extends Fragment {
                     annonce = snapshot.getValue(Annonce.class);
 
                     titte_annonce.setText(TitreAnnonce);
-                    Glide.with(getContext())
+                    Glide.with(getActivity())
                             .asBitmap()
                             .load(ImageAnnoce)
                             .into(img_annonc);
@@ -120,6 +120,7 @@ public class confirmEchangeOffre extends Fragment {
 
                 } else {
                     Log.e("TAG", " it's null.");
+
 
                 }
 
@@ -196,10 +197,11 @@ public class confirmEchangeOffre extends Fragment {
 
 
                     nom_user.setText(NameUser);
-                    Glide.with(getActivity())
+                   /* Glide.with(getActivity())
                             .asBitmap()
                             .load(PicUSer)
-                            .into(img_user);
+                            .into(img_user);*/
+                    Picasso.get().load(PicUSer).into(img_user);
                     relative_profie.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

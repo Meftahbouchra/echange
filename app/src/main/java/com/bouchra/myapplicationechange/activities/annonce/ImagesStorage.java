@@ -69,6 +69,21 @@ public class ImagesStorage extends AppCompatActivity {
         buttonOpenBottomSheet.setOnClickListener(v -> {
             BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
             bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");
+            //1
+            //kindir ch3al mn activity troh l had fragment ta3 la tof aya ndi m3ah intent 3la hsab min rah jay
+            //In your Activity
+            /*
+            ImageViewDialogFragment dialogFragment = new ImageViewDialogFragment ();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("link",moviesList.get(position).getImage());
+                        dialogFragment.setArguments(bundle);
+                        dialogFragment.show((GalleryReviewActivity.this).getSupportFragmentManager(),"Image Dialog");
+             */
+            //in your DialogFragment
+            /* Bundle bundle = getArguments();
+ String imageLink = bundle.getString("link","");
+
+             */
         });
 
         findViewById(R.id.next).setOnClickListener(v -> {

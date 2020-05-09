@@ -78,9 +78,10 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginHorizontal="32dp"
+        android:textColor="@color/black"
+        android:paddingBottom="13dp"
+        android:background="@drawable/bg_spinner"
         android:layout_marginTop="32dp"
-        android:outlineSpotShadowColor="@color/black"
-        android:background="@drawable/card_items"
         />
 
     <LinearLayout
@@ -98,7 +99,8 @@
             android:layout_below="@+id/spinner_cat"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@drawable/card_items" />
+            android:background="@drawable/bg_spinner"
+             />
 
         <Spinner
             android:id="@+id/spinner_ville"
@@ -106,7 +108,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:background="@drawable/card_items" />
+            android:background="@drawable/bg_spinner" />
     </LinearLayout>
 
 

@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
+    // hna jcp 3lah rahaa khtrat ttblokali
 
     private Context context;
     private ArrayList<Annonce> mesannonce;
@@ -103,6 +104,10 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                 holder.statu.setTextColor(ContextCompat.getColor(context, R.color.rouge));
 
                 break;
+            case "COMPLETED":
+                holder.statu.setText("termine, attend de review de partenaire");
+                holder.statu.setTextColor(ContextCompat.getColor(context, R.color.green));
+                break;
 
             default:
                 break;
@@ -122,7 +127,19 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                         review.putExtra("annonce", annonce);//offre
                         context.startActivity(review);
                         break;
+                    // bghit ndir kiykon mnmad  ydih l detial mais mykdrch ymodifier annonce
+
+                    case "COMPLETED":// ndir khod3a nrslha l review w mntamak f onresume nrslahl voir echange psq mnkdrvh n3ayatalh l frgm direct psq hada adapter
+                        Intent intent = new Intent(context, ReviewUser.class);
+                        intent.putExtra("annonce", annonce);//offre
+                        // intent.putSerializable("annonce", annonce);
+                        intent.putExtra("annonce", annonce);
+                        intent.putExtra("send", "khod3a");
+                        context.startActivity(intent);
+
+                        break;
                     default:
+                        //NEED_To_Be_CONFIRM ,NEED_REVIEW , COMPLETED non
                         Intent affiche = new Intent(context, DetailMesannonce.class);
                         affiche.putExtra("annonce", annonce);
                         context.startActivity(affiche);

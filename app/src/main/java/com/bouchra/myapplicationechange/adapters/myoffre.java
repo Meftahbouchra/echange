@@ -2,6 +2,7 @@ package com.bouchra.myapplicationechange.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
@@ -109,6 +111,19 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
             case "CREATED":
                 holder.statu.setText("Nouvaux");
                 holder.statu.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
+                holder.select_manipulation.setVisibility(View.VISIBLE);
+                holder.select_manipulation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        BottomsheetManipAnnonceOffre bottomsheet = new BottomsheetManipAnnonceOffre();
+                        Bundle b2 = new Bundle();
+                        b2.putString("fromOffre", offre.getNomOffre());
+                        b2.putSerializable("objectOffre",offre);
+                        bottomsheet.setArguments(b2);
+                        bottomsheet.show(((FragmentActivity) context).getSupportFragmentManager(), bottomsheet.getTag());
+
+                    }
+                });
                 break;
             case "NEED_To_Be_CONFIRM":
                 holder.statu.setText("attend de confirmation d 'change");
@@ -135,6 +150,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
                 switch (offre.getStatu()) {
                     case "CREATED":
+
                         annonce = new Annonce();
                         final FirebaseDatabase databas = FirebaseDatabase.getInstance();
                         DatabaseReference df = databas.getReference("Annonce").child(offre.getAnnonceId());
@@ -165,8 +181,9 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                         break;
                     case "NEED_To_Be_CONFIRM":
                         Intent affiche = new Intent(context, ConfirmEchange.class);
-                        affiche.putExtra("offre", offre);//offre
+                        affiche.putExtra("offre", offre);
                         context.startActivity(affiche);
+
 
                         break;
                     case "NEED_REVIEW":
@@ -178,12 +195,12 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
                                 if (snapshot.getValue() != null) {
                                     String StatuAnnoncE = snapshot.child("statu").getValue().toString();
-                                    if (StatuAnnoncE.equals("NEED_To_Be_CONFIRM")){
+                                    if (StatuAnnoncE.equals("NEED_To_Be_CONFIRM")) {
                                         Intent review = new Intent(context, ReviewUser.class);
-                                        review.putExtra("Statu","wait");
+                                        review.putExtra("Statu", "wait");
                                         review.putExtra("offre", offre);//offre
                                         context.startActivity(review);
-                                    }else {
+                                    } else {
                                         Intent review = new Intent(context, ReviewUser.class);
                                         review.putExtra("offre", offre);//offre
                                         context.startActivity(review);
@@ -208,52 +225,53 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                 }
 
 
-            } else {
-                if(offre.getStatu().equals("NEED_To_Be_CONFIRM") ){
+            }else {
+                if (offre.getStatu().equals("NEED_To_Be_CONFIRM")) {
                     Toast.makeText(context, "Vous ne peux pas attribuée ce offre,il attend d'etre confirme !", Toast.LENGTH_SHORT).show();
 
 
-                }else {if( offre.getStatu().equals("NEED_REVIEW")){
-                    Toast.makeText(context, "Vous ne peux pas attribuée ce offre,il a été déja échngé !", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (offre.getStatu().equals("NEED_REVIEW")) {
+                        Toast.makeText(context, "Vous ne peux pas attribuée ce offre,il a été déja échngé !", Toast.LENGTH_SHORT).show();
 
 
-                }else {
-                    PreferenceUtils preferenceUtils = new PreferenceUtils(context);
-                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(Offre);// khasni nadi id ta3 aanonce machi ta3 id ta3 offre
-                    Offre offree = new Offre();
-                    offree.setAnnonceId(Offre);
-                    offree.setDateOffre(new Date());// jc ila ndirah f date ta3 annonce wl    ndir   h bali jdidi
-                    offree.setDescriptionOffre(offre.getDescriptionOffre());
-                    offree.setIdOffre(String.valueOf(offree.getDateOffre().hashCode()) + offree.getAnnonceId().hashCode());
-                    offree.setNomOffre(offre.getNomOffre());
-                    offree.setWilaya(offre.getWilaya());
-                    offree.setCommune(offre.getCommune());
-                    offree.setIdUser(preferenceUtils.getMember().getIdMembre());
-                    offree.setStatu("CREATED");
-                    // offre.setImages();
-                    // khasni id user li dar l offre
+                    } else {
+                        PreferenceUtils preferenceUtils = new PreferenceUtils(context);
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(Offre);// khasni nadi id ta3 aanonce machi ta3 id ta3 offre
+                        Offre offree = new Offre();
+                        offree.setAnnonceId(Offre);
+                        offree.setDateOffre(new Date());// jc ila ndirah f date ta3 annonce wl    ndir   h bali jdidi
+                        offree.setDescriptionOffre(offre.getDescriptionOffre());
+                        offree.setIdOffre(String.valueOf(offree.getDateOffre().hashCode()) + offree.getAnnonceId().hashCode());
+                        offree.setNomOffre(offre.getNomOffre());
+                        offree.setWilaya(offre.getWilaya());
+                        offree.setCommune(offre.getCommune());
+                        offree.setIdUser(preferenceUtils.getMember().getIdMembre());
+                        offree.setStatu("CREATED");
+                        // offre.setImages();
+                        // khasni id user li dar l offre
 
-                    databaseReference.child(String.valueOf(offree.getDateOffre().hashCode()) + offree.getAnnonceId().hashCode()).setValue(offree).addOnCompleteListener(task2 -> {
+                        databaseReference.child(String.valueOf(offree.getDateOffre().hashCode()) + offree.getAnnonceId().hashCode()).setValue(offree).addOnCompleteListener(task2 -> {
 
-                        if (task2.isSuccessful()) {
-                            setStatuAnnonce();
-                            Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
-                            Intent an = new Intent(context, debut.class);
-                            context.startActivity(an);
+                            if (task2.isSuccessful()) {
+                                setStatuAnnonce();
+                                Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
+                                Intent an = new Intent(context, debut.class);
+                                context.startActivity(an);
 
-                        } else {
-                            Toast.makeText(context, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                            } else {
+                                Toast.makeText(context, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
                 }
-
-                }
-
 
             }
 
 
         });
+
 
 
     }
@@ -281,6 +299,8 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                 });
     }
 
+
+
     @Override
     public int getItemCount() {
         return mesoffre.size();
@@ -297,6 +317,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
         private TextView ville;
         private TextView commune;
         private TextView statu;
+        private TextView select_manipulation;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -309,6 +330,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
             ville = itemView.findViewById(R.id.ville);
             commune = itemView.findViewById(R.id.commune);
             statu = itemView.findViewById(R.id.statu);
+            select_manipulation = itemView.findViewById(R.id.select_manipulation);
 
 
         }

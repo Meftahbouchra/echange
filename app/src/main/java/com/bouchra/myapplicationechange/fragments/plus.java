@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bouchra.myapplicationechange.activities.Historique;
 import com.bouchra.myapplicationechange.activities.MessageList;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.MainActivity;
@@ -59,6 +60,13 @@ public class plus extends Fragment {
 
 
 
+        });
+        historique.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), Historique.class);
+                startActivity(intent);
+            }
         });
         //goto message
         message.setOnClickListener(v -> {

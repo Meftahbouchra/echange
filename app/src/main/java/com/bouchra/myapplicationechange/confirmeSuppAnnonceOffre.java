@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.bouchra.myapplicationechange.activities.DetailMesannonce;
 
-public class confirmeSuppAnnonce extends AppCompatDialogFragment {
+public class confirmeSuppAnnonceOffre extends AppCompatDialogFragment {
     String name = null;
     String Offre = null;
     String Annonce = null;

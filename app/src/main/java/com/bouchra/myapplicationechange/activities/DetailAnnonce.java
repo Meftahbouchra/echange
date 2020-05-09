@@ -88,7 +88,7 @@ public class DetailAnnonce extends AppCompatActivity {
 
                 }
                 if (nbrComm == 0) {
-                    etoiles_user.setText(nbrComm);
+                    etoiles_user.setText("0");
                 } else {
                     float resultat = totalRepos / nbrComm;
                     etoiles_user.setText(String.valueOf(resultat));

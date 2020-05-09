@@ -282,9 +282,13 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                     Log.e("Data here", postSnapshot.toString());
                     Log.e("USER", postSnapshot.child("userId").getValue().toString());
                     String user = postSnapshot.child("userId").getValue().toString();
+                    String statu = postSnapshot.child("statu").getValue().toString();
 
                     if (!user.equals(preferenceUtils.getMember().getIdMembre())) {
-                        annonces.add(postSnapshot.getValue(Annonce.class));
+                        if (!statu.equals("NEED_REVIEW") || !statu.equals("COMPLETED")) {
+                            annonces.add(postSnapshot.getValue(Annonce.class));
+                        }
+
                     }
 
 

@@ -97,4 +97,5 @@ public class mesOffres extends Fragment {
 
         return view;
     }
+
 }
