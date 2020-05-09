@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,24 +16,36 @@ import com.bouchra.myapplicationechange.confirmeSuppAnnonce;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BottomsheetManipAnnonce extends BottomSheetDialogFragment {
+
+    String Offre = null;
+    String annonce = null;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bottom_sheet_manip_annonce, container, false);
+        Offre = this.getArguments().getString("fromOffre");
+        annonce = this.getArguments().getString("fromAnnonce");
         Button btnModifier = v.findViewById(R.id.btn_modifier);
         Button btnSupprimer = v.findViewById(R.id.btn_supprimer);
-        btnModifier.setOnClickListener(v1 -> {
 
-        });
         btnSupprimer.setOnClickListener(v12 -> {
-            openDialog();
-//Toast.makeText(getContext(), "supp cette annonce", Toast.LENGTH_SHORT).show();
+            openDialog(Offre, annonce);
+
+            // Toast.makeText(getContext(), "is" + Offre + " and " + annonce+".", Toast.LENGTH_SHORT).show();
         });
         btnModifier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              // intint fo fragment
-   ((DetailMesannonce) getActivity()).goToFragmentModifier();
+                if (Offre != null) {
+// ndaigh l wi ymodifier
+                    Toast.makeText(getContext(), "need view of modication !!!", Toast.LENGTH_SHORT).show();
+                }
+                if (annonce != null) {
+                    // intint fo fragment
+                    ((DetailMesannonce) getActivity()).goToFragmentModifier();
+                }
+
 
             }
 
@@ -42,10 +55,13 @@ public class BottomsheetManipAnnonce extends BottomSheetDialogFragment {
     }
 
 
+    private void openDialog(String offre, String annone) {
 
-
-    private void openDialog() {
         confirmeSuppAnnonce confirmeSuppAnnonce = new confirmeSuppAnnonce();
+        Bundle b2 = new Bundle();
+        b2.putString("Offre", offre);
+        b2.putString("Annonce", annone);
+        confirmeSuppAnnonce.setArguments(b2);
         confirmeSuppAnnonce.show(getFragmentManager(), "confirmeSuppAnnonce");
 
 
