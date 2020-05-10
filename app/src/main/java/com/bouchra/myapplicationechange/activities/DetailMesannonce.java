@@ -181,11 +181,18 @@ public class DetailMesannonce extends AppCompatActivity {
         ANNONCE.put("ArticleEnRetourAnnonce", annonce.getArticleEnRetour());
         ANNONCE.put("DateAnnonce", annonce.getDateAnnonce());
         ANNONCE.put("IdOffreSelectedAnnonce", annonce.getIdOffreSelected());
-        ANNONCE.put("statuAnnonce", "DELETED");
+        ANNONCE.put("statuAnnonce", "DELETEDANNONCE");
         mDbRef.updateChildren(ANNONCE);
-        getOffres(annonce.getIdAnnonce());
-        DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
-        dAnnonce.removeValue();
+        if (annonce.getStatu().equals("CREATED")) {
+
+            DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
+            dAnnonce.removeValue();
+        } else {
+            getOffres(annonce.getIdAnnonce());
+            DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
+            dAnnonce.removeValue();
+        }
+
 
 
 

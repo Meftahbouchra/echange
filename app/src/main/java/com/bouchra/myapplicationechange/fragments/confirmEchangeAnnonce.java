@@ -155,7 +155,7 @@ public class confirmEchangeAnnonce extends Fragment {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 // yanuler ga3 les offre lokhrin
-                                rejectedOffres(annonce.getIdAnnonce(),annonce.getIdOffreSelected());
+                                rejectedOffres(annonce.getIdAnnonce(), annonce.getIdOffreSelected());
 // hna wi ndir win ydir review psq deja lakhor dar confirm w rah ykara3
                                 Intent review = new Intent(getActivity(), ReviewUser.class);
                                 review.putExtra("annonce", annonce);//offre
@@ -226,6 +226,8 @@ public class confirmEchangeAnnonce extends Fragment {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     // njib l object w ndirah fi methode w hadik l methode nsuprimi fiha
                     String idOffre = postSnapshot.child("idOffre").getValue().toString();
+                    Log.e("id offre", idOffre);
+                    Log.e("id Selected", idOFfreSelected);
                     if (!idOffre.equals(idOFfreSelected)) {
                         Offre offre = postSnapshot.getValue(Offre.class);
                         deletOffre(offre);

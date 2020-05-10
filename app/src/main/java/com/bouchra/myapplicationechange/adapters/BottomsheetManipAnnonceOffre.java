@@ -20,7 +20,7 @@ public class BottomsheetManipAnnonceOffre extends BottomSheetDialogFragment {
 
     String Offre = null;
     String annonce = null;
-    com.bouchra.myapplicationechange.models.Offre offre;
+    com.bouchra.myapplicationechange.models.Offre offreObject;
 
     @Nullable
     @Override
@@ -28,12 +28,12 @@ public class BottomsheetManipAnnonceOffre extends BottomSheetDialogFragment {
         View v = inflater.inflate(R.layout.bottom_sheet_manip_annonce, container, false);
         Offre = this.getArguments().getString("fromOffre");
         annonce = this.getArguments().getString("fromAnnonce");
-        offre = (com.bouchra.myapplicationechange.models.Offre) this.getArguments().getSerializable("objectOffre");
+        offreObject = (com.bouchra.myapplicationechange.models.Offre) this.getArguments().getSerializable("objectOffre");
         Button btnModifier = v.findViewById(R.id.btn_modifier);
         Button btnSupprimer = v.findViewById(R.id.btn_supprimer);
 
         btnSupprimer.setOnClickListener(v12 -> {
-            openDialog(Offre, annonce);
+            openDialog(Offre, annonce, offreObject);
         });
         btnModifier.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,12 +58,12 @@ public class BottomsheetManipAnnonceOffre extends BottomSheetDialogFragment {
     }
 
 
-    private void openDialog(String offre, String annone) {
+    private void openDialog(String offre, String annone, com.bouchra.myapplicationechange.models.Offre offreObject) {
 
         confirmeSuppAnnonceOffre confirmeSuppAnnonce = new confirmeSuppAnnonceOffre();
         Bundle b2 = new Bundle();
-        b2.putString("Offre", offre);
         b2.putString("Annonce", annone);
+        b2.putSerializable("offreObject", offreObject);
         confirmeSuppAnnonce.setArguments(b2);
         confirmeSuppAnnonce.show(getFragmentManager(), "confirmeSuppAnnonceOffre");
 
@@ -74,7 +74,7 @@ public class BottomsheetManipAnnonceOffre extends BottomSheetDialogFragment {
 
 
         Intent an = new Intent(getContext(), ModiferOffre.class);
-        an.putExtra("offre", offre);
+        an.putExtra("offre", offreObject);
         startActivity(an);
         getActivity().finish();
 

@@ -16,3 +16,8 @@ public class Historique extends AppCompatActivity {
 
     }
 }
+//DELETEOFFRE offre suprimer
+// DELETEDANNONCE annonce suprimer
+// REJECTED annonce suprimer, REJECTED annonce non select cette offre
+// COMPLETEDOFFRE achange terminer offre
+//COMPLETEDANNONCE echange terminer anonce

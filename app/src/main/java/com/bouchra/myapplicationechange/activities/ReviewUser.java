@@ -207,7 +207,7 @@ public class ReviewUser extends AppCompatActivity {
                                                         OFFRE.put("IdUserOffre", offre.getIdUser());
                                                         OFFRE.put("ImageOffre", offre.getImages());
                                                         OFFRE.put("WilayaOffre", offre.getWilaya());
-                                                        OFFRE.put("statuOffre", "terminer");
+                                                        OFFRE.put("statuOffre", "COMPLETEDOFFRE");
                                                         mDbRef.updateChildren(OFFRE);
                                                         DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre());
                                                         dOffre.removeValue();
@@ -299,7 +299,7 @@ public class ReviewUser extends AppCompatActivity {
         ANNONCE.put("ArticleEnRetourAnnonce", annonce.getArticleEnRetour());
         ANNONCE.put("DateAnnonce", annonce.getDateAnnonce());
         ANNONCE.put("IdOffreSelectedAnnonce", annonce.getIdOffreSelected());
-        ANNONCE.put("statuAnnonce", "ternminer");
+        ANNONCE.put("statuAnnonce", "COMPLETEDANNONCE");
         mDbRef.updateChildren(ANNONCE);
         DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
         dAnnonce.removeValue();

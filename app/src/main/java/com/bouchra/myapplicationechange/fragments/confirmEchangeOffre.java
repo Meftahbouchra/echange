@@ -22,7 +22,6 @@ import com.bouchra.myapplicationechange.activities.ReviewUser;
 import com.bouchra.myapplicationechange.activities.profilUser;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Offre;
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -110,11 +109,11 @@ public class confirmEchangeOffre extends Fragment {
                     annonce = snapshot.getValue(Annonce.class);
 
                     titte_annonce.setText(TitreAnnonce);
-                    Glide.with(getActivity())
+                   /* Glide.with(getActivity())
                             .asBitmap()
                             .load(ImageAnnoce)
-                            .into(img_annonc);
-
+                            .into(img_annonc);*/
+                    Picasso.get().load(ImageAnnoce).into(img_annonc);
                     recupererUser(UserAnnonce);
                     Log.e("user li dar aanonce is", UserAnnonce);
 
