@@ -51,6 +51,7 @@ public class ReviewUser extends AppCompatActivity {
     private String IDResiver;
     private DatabaseReference databaseReference;
     PreferenceUtils preferences;
+    String nameCategorie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class ReviewUser extends AppCompatActivity {
 
                         }
                     });
+
 
                 }
                 if (ajou.hasExtra("offre")) {
@@ -190,6 +192,43 @@ public class ReviewUser extends AppCompatActivity {
                                 }
                                 if (ajou.hasExtra("offre")) {
                                     Offre offre = (Offre) getIntent().getSerializableExtra("offre");
+                                    //get name categorie
+
+                                    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                                    DatabaseReference databaseReference = firebaseDatabase.getReference("Categorie");
+                                    databaseReference.addValueEventListener(new ValueEventListener() {
+
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
+
+                                                for (DataSnapshot key : postSnapshot.getChildren()) {
+
+                                                    String IDannonce = key.getKey();
+                                                    // Log.e("Data here", IDannonce);
+                                                    if (IDannonce.equals(offre.getAnnonceId())) {
+                                                        String nom = postSnapshot.getKey();
+                                                        nameCategorie = nom;
+                                                        Log.e("catego", nameCategorie);
+
+
+                                                    }
+                                                }
+
+
+                                            }
+
+                                        }
+
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+
                                     Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre()).child("statu")
                                             .setValue("COMPLETED")
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -300,9 +339,12 @@ public class ReviewUser extends AppCompatActivity {
         ANNONCE.put("dateAnnonce", annonce.getDateAnnonce());
         ANNONCE.put("IdOffreSelected", annonce.getIdOffreSelected());
         ANNONCE.put("statu", "COMPLETEDANNONCE");
+        ANNONCE.put("categorie", nameCategorie);
         mDbRef.updateChildren(ANNONCE);
         DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
         dAnnonce.removeValue();
+        DatabaseReference dCategorie = FirebaseDatabase.getInstance().getReference("Categorie").child(nameCategorie).child(annonce.getIdAnnonce());
+        dCategorie.removeValue();
     }
 
     @Override

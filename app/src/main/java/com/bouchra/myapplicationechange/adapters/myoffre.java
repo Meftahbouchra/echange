@@ -237,6 +237,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
 
                     } else {
+
                         PreferenceUtils preferenceUtils = new PreferenceUtils(context);
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(Offre);// khasni nadi id ta3 aanonce machi ta3 id ta3 offre
                         Offre offree = new Offre();
@@ -314,6 +315,9 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
 
 
+
+    }
+    private void selectOffre(){
 
     }
 

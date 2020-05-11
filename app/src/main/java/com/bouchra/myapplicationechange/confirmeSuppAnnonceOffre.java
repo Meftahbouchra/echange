@@ -2,8 +2,6 @@ package com.bouchra.myapplicationechange;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,11 +9,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.bouchra.myapplicationechange.activities.DetailMesannonce;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +20,7 @@ public class confirmeSuppAnnonceOffre extends AppCompatDialogFragment {
     String Offre = null;
     com.bouchra.myapplicationechange.models.Annonce Annonce;
     com.bouchra.myapplicationechange.models.Offre offre;
-    String nn;
+    String nn = "";
 
     @NonNull
     @Override
@@ -58,45 +53,8 @@ public class confirmeSuppAnnonceOffre extends AppCompatDialogFragment {
 // mansuprimich datat f info; ndiha l historique
                         String shox;
 
-                        final FirebaseDatabase[] firebaseDatabase = {FirebaseDatabase.getInstance()};
-                        DatabaseReference databaseReference = firebaseDatabase[0].getReference("Categorie");
-                        databaseReference.addValueEventListener(new ValueEventListener() {
 
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                    for (DataSnapshot key : postSnapshot.getChildren()) {
-
-                                        String IDannonce = key.getKey();
-                                        // Log.e("Data here", IDannonce);
-                                        if (IDannonce.equals(Annonce.getIdAnnonce())) {
-                                            String nom = postSnapshot.getKey();
-                                         /*   String   nomCategorie = nom;
-                                            Log.e("Data here", nomCategorie);*/
-                                            //view(nom);
-                                            Log.e("Data here", nom);
-                                            //Toast.makeText(getContext(), ""+nom, Toast.LENGTH_SHORT).show();
-
-
-                                        }
-                                    }
-
-
-                                }
-
-                            }
-
-
-
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
-                        ((DetailMesannonce) getActivity()).deleteAnnonce();
+                       ((DetailMesannonce) getActivity()).deleteAnnonce();
                     })
                     .setNegativeButton("Non", (dialog, which) -> {
 
@@ -108,7 +66,7 @@ public class confirmeSuppAnnonceOffre extends AppCompatDialogFragment {
     }
 
     private void view(String nomCategorie) {
-        Toast.makeText(getContext(), "" + nomCategorie, Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(getContext(), "" + nomCategorie, Toast.LENGTH_SHORT).show();
     }
 
     private void deleteOffre(com.bouchra.myapplicationechange.models.Offre offre) {

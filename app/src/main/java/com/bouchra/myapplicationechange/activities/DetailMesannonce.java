@@ -37,6 +37,8 @@ public class DetailMesannonce extends AppCompatActivity {
     private ImageView img;
     private TextView retour;
     private TextView menu;
+    String nameCategorie;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,42 @@ public class DetailMesannonce extends AppCompatActivity {
             bottomsheet.setArguments(b2);
             bottomsheet.show(getSupportFragmentManager(), "manipAnnonce");
 
+//get name categorie
 
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference("Categorie");
+            databaseReference.addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
+
+                        for (DataSnapshot key : postSnapshot.getChildren()) {
+
+                            String IDannonce = key.getKey();
+                            // Log.e("Data here", IDannonce);
+                            if (IDannonce.equals(annonce.getIdAnnonce())) {
+                                String nom = postSnapshot.getKey();
+                                nameCategorie = nom;
+                                Log.e("catego", nameCategorie);
+
+
+                            }
+                        }
+
+
+                    }
+
+                }
+
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
 
 
 
@@ -160,7 +197,6 @@ public class DetailMesannonce extends AppCompatActivity {
 
     public void deleteAnnonce() {
 
-
         DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(annonce.getUserId()).child(annonce.getIdAnnonce());
         Map<String, Object> ANNONCE = new HashMap<>();
         ANNONCE.put("idAnnonce", annonce.getIdAnnonce());
@@ -173,16 +209,19 @@ public class DetailMesannonce extends AppCompatActivity {
         ANNONCE.put("dateAnnonce", annonce.getDateAnnonce());
         ANNONCE.put("IdOffreSelected", annonce.getIdOffreSelected());
         ANNONCE.put("statu", "DELETEDANNONCE");
-        //  ANNONCE.put("Categorie", nameCategorie);
+        ANNONCE.put("categorie", nameCategorie);
         mDbRef.updateChildren(ANNONCE);
         if (annonce.getStatu().equals("CREATED")) {
-
+            DatabaseReference dCategorie = FirebaseDatabase.getInstance().getReference("Categorie").child(nameCategorie).child(annonce.getIdAnnonce());
+            dCategorie.removeValue();
             DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
             dAnnonce.removeValue();
         } else {
             getOffres(annonce.getIdAnnonce());
             DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
             dAnnonce.removeValue();
+            DatabaseReference dCategorie = FirebaseDatabase.getInstance().getReference("Categorie").child(nameCategorie).child(annonce.getIdAnnonce());
+            dCategorie.removeValue();
         }
 
 
@@ -251,4 +290,5 @@ public class DetailMesannonce extends AppCompatActivity {
 
 
     }
+
 }

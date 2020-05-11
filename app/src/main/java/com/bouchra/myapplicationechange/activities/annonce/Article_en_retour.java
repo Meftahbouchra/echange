@@ -61,10 +61,11 @@ Article_en_retour extends AppCompatActivity {
                 }
             });
             // add catrgori
-            DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Categorie");
+            DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Categorie").child(selectedCateg);
             //Writing Hashmap
             Map<String, Object> idANNONCE = new HashMap<>();
-            idANNONCE.put(selectedCateg + "/" + annonce.getIdAnnonce(), "");
+            idANNONCE.put(annonce.getIdAnnonce(), annonce.getIdAnnonce());
+          //  idANNONCE.put(selectedCateg + "/" + annonce.getIdAnnonce(), annonce.getIdAnnonce());
 
 
             mDbRef.updateChildren(idANNONCE);

@@ -1,8 +1,7 @@
 package com.bouchra.myapplicationechange.activities;
 
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,13 +23,12 @@ import java.util.ArrayList;
 
 public class Historique extends AppCompatActivity {
     PreferenceUtils preferenceUtils;
-    Button btn;
+
     private ArrayList<Annonce> annonces;
     private ArrayList<Offre> offres;
     private RecyclerView recyclerView;
     private myhistorique myhistorique;
 
-    String oui;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,64 +39,55 @@ public class Historique extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyle_historique);
         annonces = new ArrayList<>();
         offres = new ArrayList<>();
-        btn = findViewById(R.id.btn);
         myhistorique = new myhistorique(this, annonces, offres);
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(myhistorique);
 
-        btn.setOnClickListener(v -> {
-            final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-            DatabaseReference databaseReference = firebaseDatabase.getReference("Historique").child(preferenceUtils.getMember().getIdMembre());
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
-                        String statu = postSnapshot.child("statu").getValue().toString();
-                        if (statu.equals("DELETEOFFRE")) {
-                            offres.add(postSnapshot.getValue(Offre.class));
-                            myhistorique.notifyDataSetChanged();
-                            Toast.makeText(getApplicationContext(), "offre suprimer", Toast.LENGTH_SHORT).show();
-                        }
-                        if (statu.equals("REJECTED")) {
-                            Toast.makeText(getApplicationContext(), "annonce suprimer, REJECTED annonce non select cette offre", Toast.LENGTH_SHORT).show();
-                            offres.add(postSnapshot.getValue(Offre.class));
-                            myhistorique.notifyDataSetChanged();
-                        }
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Historique").child(preferenceUtils.getMember().getIdMembre());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Log.e("data", postSnapshot.toString());
+                    Offre offre = new Offre();
+                    Annonce annonce = new Annonce();
+                    String statu = postSnapshot.child("statu").getValue().toString();
+                    if (statu.equals("DELETEOFFRE") || statu.equals("REJECTED") || statu.equals("COMPLETEDOFFRE")) {
+                      //  offres.add(postSnapshot.getValue(Offre.class));
+                        offre = postSnapshot.getValue(Offre.class);
+                        offres.add(offre);
 
-                        if (statu.equals("COMPLETEDOFFRE")) {
-                            Toast.makeText(getApplicationContext(), "achange terminer offre", Toast.LENGTH_SHORT).show();
-                            offres.add(postSnapshot.getValue(Offre.class));
-                            myhistorique.notifyDataSetChanged();
-                        }
-                        if (statu.equals("COMPLETEDANNONCE")) {
-                            Toast.makeText(getApplicationContext(), " echange terminer anonce", Toast.LENGTH_SHORT).show();
-                            annonces.add(postSnapshot.getValue(Annonce.class));
-                            oui="oui";
-                            myhistorique.notifyDataSetChanged();
-                        }
-                        if (statu.equals("DELETEDANNONCE")) {
-                            Toast.makeText(getApplicationContext(), "annonce suprimer", Toast.LENGTH_SHORT).show();
-                            annonces.add(postSnapshot.getValue(Annonce.class));
-                            oui="oui";
-                            myhistorique.notifyDataSetChanged();
-                        }
 
                     }
 
+                    if (statu.equals("COMPLETEDANNONCE") || statu.equals("DELETEDANNONCE")) {
+                        //annonces.add(postSnapshot.getValue(Annonce.class));
+                        annonce = postSnapshot.getValue(Annonce.class);
+                        annonces.add(annonce);
+
+
+
+                    }
+
+                    myhistorique.notifyDataSetChanged();
+
+
                 }
 
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
+            }
 
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
         });
+
 
     }
 
