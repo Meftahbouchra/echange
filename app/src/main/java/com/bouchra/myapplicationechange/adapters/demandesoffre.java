@@ -119,9 +119,8 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
             public void onClick(View v) {
                 ConfirmeOffre confirmeOffre = new ConfirmeOffre();
                 Bundle b2 = new Bundle();
-                b2.putString("nomOffre", offre.getNomOffre());
+                b2.putSerializable("offre",offre);
                 b2.putString("nomAnnonce", nomAnnonce);
-                b2.putString("idOffre", offre.getIdOffre());
                 confirmeOffre.setArguments(b2);
                 confirmeOffre.show(((AppCompatActivity) context).getSupportFragmentManager(), "fragment");
 

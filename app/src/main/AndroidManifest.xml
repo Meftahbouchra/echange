@@ -21,7 +21,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.Historique"></activity>
+        <activity android:name=".activities.Notification"></activity>
+        <activity android:name=".activities.Historique" />
         <activity android:name=".activities.ModiferOffre" />
         <activity android:name=".activities.ReviewUser" />
         <activity android:name=".activities.ConfirmEchange" />

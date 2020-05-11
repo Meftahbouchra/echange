@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Commune;
+import com.bouchra.myapplicationechange.models.Notification;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bouchra.myapplicationechange.models.Wilaya;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
@@ -44,7 +45,7 @@ public class AjoutOffre extends AppCompatActivity {
     private ArrayList<Wilaya> wilaya = new ArrayList<Wilaya>();
     private ArrayList<Commune> communes = new ArrayList<Commune>();
     private String[] wilayaname;
-    private DatabaseReference databaseReference, databasereference;
+    private DatabaseReference databaseReference, databasereference, data;
     private String selectedWilaya, selectedVille;
     private Annonce annonce;
     private Button annuler;
@@ -112,7 +113,7 @@ public class AjoutOffre extends AppCompatActivity {
                 */
                     if (task2.isSuccessful()) {
                         setStatuAnnonce();
-
+                        addNotification(annonce, offre);
                         Toast.makeText(this, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
                         Intent an = new Intent(AjoutOffre.this, debut.class);
                         startActivity(an);
@@ -193,6 +194,24 @@ public class AjoutOffre extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void addNotification(Annonce annonce, Offre offre) {
+        data = FirebaseDatabase.getInstance().getReference("Notification").child(annonce.getUserId());
+        Notification notification = new Notification();
+        notification.setIdsender(offre.getIdUser());
+        notification.setIdreceiver(annonce.getUserId());
+        notification.setDateNotification(new Date());
+        notification.setContenuNotification("sendOffre");
+        notification.setIdNotification(String.valueOf(offre.getIdOffre().hashCode()) + annonce.getIdAnnonce().hashCode());
+        data.child(String.valueOf(offre.getIdOffre().hashCode()) + annonce.getIdAnnonce().hashCode()).setValue(notification).addOnCompleteListener(task2 -> {
+            if (task2.isSuccessful()) {
+
+
+            }
+        });
+
 
     }
 

@@ -249,16 +249,16 @@ public class confirmEchangeAnnonce extends Fragment {
     private void deletOffre(Offre offre) {
         DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(offre.getIdUser()).child(offre.getIdOffre());
         Map<String, Object> OFFRE = new HashMap<>();
-        OFFRE.put("NomOffre", offre.getNomOffre());
-        OFFRE.put("IdOffre", offre.getIdOffre());
-        OFFRE.put("IdAnnonceOffre", offre.getAnnonceId());
-        OFFRE.put("CommuneOffre", offre.getCommune());
-        OFFRE.put("DateOffre", offre.getDateOffre());
-        OFFRE.put("DesciptionOffre", offre.getDescriptionOffre());
-        OFFRE.put("IdUserOffre", offre.getIdUser());
-        OFFRE.put("ImageOffre", offre.getImages());
-        OFFRE.put("WilayaOffre", offre.getWilaya());
-        OFFRE.put("statuOffre", "REJECTED");
+        OFFRE.put("nomOffre", offre.getNomOffre());
+        OFFRE.put("idOffre", offre.getIdOffre());
+        OFFRE.put("annonceId", offre.getAnnonceId());
+        OFFRE.put("commune", offre.getCommune());
+        OFFRE.put("dateOffre", offre.getDateOffre());
+        OFFRE.put("descriptionOffre", offre.getDescriptionOffre());
+        OFFRE.put("idUser", offre.getIdUser());
+        OFFRE.put("images", offre.getImages());
+        OFFRE.put("wilaya", offre.getWilaya());
+        OFFRE.put("statu", "REJECTED");
         mDbRef.updateChildren(OFFRE);
         DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre());
         dOffre.removeValue();

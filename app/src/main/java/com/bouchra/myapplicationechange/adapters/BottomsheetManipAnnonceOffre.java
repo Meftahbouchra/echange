@@ -14,12 +14,13 @@ import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.DetailMesannonce;
 import com.bouchra.myapplicationechange.activities.ModiferOffre;
 import com.bouchra.myapplicationechange.confirmeSuppAnnonceOffre;
+import com.bouchra.myapplicationechange.models.Annonce;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BottomsheetManipAnnonceOffre extends BottomSheetDialogFragment {
 
     String Offre = null;
-    String annonce = null;
+  Annonce annonce;
     com.bouchra.myapplicationechange.models.Offre offreObject;
 
     @Nullable
@@ -27,7 +28,7 @@ public class BottomsheetManipAnnonceOffre extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bottom_sheet_manip_annonce, container, false);
         Offre = this.getArguments().getString("fromOffre");
-        annonce = this.getArguments().getString("fromAnnonce");
+        annonce = (Annonce) this.getArguments().getSerializable("fromAnnonce");
         offreObject = (com.bouchra.myapplicationechange.models.Offre) this.getArguments().getSerializable("objectOffre");
         Button btnModifier = v.findViewById(R.id.btn_modifier);
         Button btnSupprimer = v.findViewById(R.id.btn_supprimer);
@@ -58,11 +59,11 @@ public class BottomsheetManipAnnonceOffre extends BottomSheetDialogFragment {
     }
 
 
-    private void openDialog(String offre, String annone, com.bouchra.myapplicationechange.models.Offre offreObject) {
+    private void openDialog(String offre, Annonce annonce, com.bouchra.myapplicationechange.models.Offre offreObject) {
 
         confirmeSuppAnnonceOffre confirmeSuppAnnonce = new confirmeSuppAnnonceOffre();
         Bundle b2 = new Bundle();
-        b2.putString("Annonce", annone);
+        b2.putSerializable("Annonce",annonce);
         b2.putSerializable("offreObject", offreObject);
         confirmeSuppAnnonce.setArguments(b2);
         confirmeSuppAnnonce.show(getFragmentManager(), "confirmeSuppAnnonceOffre");

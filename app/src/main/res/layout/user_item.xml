@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_marginTop="15dp"
-   android:background="@color/Login_form_details"
     android:layout_height="90dp"
+    android:layout_marginTop="15dp"
+    android:background="@color/Login_form_details"
     android:padding="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -13,35 +13,34 @@
         android:src="@drawable/user" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="hello word"
-        android:textStyle="bold"
         android:id="@+id/username"
-        android:layout_toRightOf="@id/profileomage"
-        android:layout_toEndOf="@id/profileomage"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-      />
-    <TextView
-        android:layout_below="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/profileomage"
+        android:layout_toRightOf="@id/profileomage"
         android:text="hello word"
-        android:textColor="@color/black"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/msg"
-        android:layout_toRightOf="@id/profileomage"
-        android:layout_toEndOf="@id/profileomage"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        />
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/username"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/profileomage"
+        android:layout_toRightOf="@id/profileomage"
         android:text="hello word"
-        android:textColor="@color/black"
+        android:textColor="@color/black" />
+
+    <TextView
         android:id="@+id/dat_heur"
-       android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        />
+        android:layout_alignParentBottom="true"
+        android:text="hello word"
+        android:textColor="@color/black" />
 </RelativeLayout>

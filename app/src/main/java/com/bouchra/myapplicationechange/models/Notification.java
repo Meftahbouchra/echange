@@ -5,16 +5,34 @@ import java.util.Date;
 public class Notification {
     private String idNotification;
     private Date dateNotification;
-    private int code;
+    private String idsender;
+    private String idreceiver;
+
 
     public Notification() {
     }
 
-    public Notification(String idNotification, Date dateNotification, int code, String titreNotification, String contenuNotification) {
+    public String getIdsender() {
+        return idsender;
+    }
+
+    public void setIdsender(String idsender) {
+        this.idsender = idsender;
+    }
+
+    public String getIdreceiver() {
+        return idreceiver;
+    }
+
+    public void setIdreceiver(String idreceiver) {
+        this.idreceiver = idreceiver;
+    }
+
+    public Notification(String idNotification, Date dateNotification, String idsender, String idreceiver, String contenuNotification) {
         this.idNotification = idNotification;
         this.dateNotification = dateNotification;
-        this.code = code;
-        this.titreNotification = titreNotification;
+        this.idsender = idsender;
+        this.idreceiver = idreceiver;
         this.contenuNotification = contenuNotification;
     }
 
@@ -34,21 +52,6 @@ public class Notification {
         this.dateNotification = dateNotification;
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getTitreNotification() {
-        return titreNotification;
-    }
-
-    public void setTitreNotification(String titreNotification) {
-        this.titreNotification = titreNotification;
-    }
 
     public String getContenuNotification() {
         return contenuNotification;
@@ -58,7 +61,7 @@ public class Notification {
         this.contenuNotification = contenuNotification;
     }
 
-    private String titreNotification;
+
     private String contenuNotification;
 
 

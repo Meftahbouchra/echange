@@ -50,7 +50,7 @@ public class DetailMesannonce extends AppCompatActivity {
         menu.setOnClickListener(v -> {
             BottomsheetManipAnnonceOffre bottomsheet = new BottomsheetManipAnnonceOffre();
             Bundle b2 = new Bundle();
-            b2.putString("fromAnnonce", annonce.getTitreAnnonce());
+            b2.putSerializable("fromAnnonce", annonce);
             bottomsheet.setArguments(b2);
             bottomsheet.show(getSupportFragmentManager(), "manipAnnonce");
 
@@ -64,18 +64,7 @@ public class DetailMesannonce extends AppCompatActivity {
         voirOffres = findViewById(R.id.voir);
         voirOffres.setOnClickListener(v -> {
             Intent ajou = new Intent(DetailMesannonce.this, DemandesOffre.class);
-            ajou.putExtra("nomAnnonce", annonce.getTitreAnnonce()); //key* value
-            ajou.putExtra("idAnnonce", annonce.getIdAnnonce());
-            ajou.putExtra("descp", annonce.getDescriptionAnnonce());
-            ajou.putExtra("statu", annonce.getStatu());
-            ajou.putExtra("userid", annonce.getUserId());
-            ajou.putExtra("commune", annonce.getCommune());
-            ajou.putExtra("wilaya", annonce.getWilaya());
-            ajou.putStringArrayListExtra("articleret", annonce.getArticleEnRetour());
-            ajou.putStringArrayListExtra("images", annonce.getImages());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
-            String str = simpleDateFormat.format(annonce.getDateAnnonce());
-            ajou.putExtra("date", str);
+            ajou.putExtra("annonce", annonce);
             startActivity(ajou);
             finish();
 
@@ -170,18 +159,21 @@ public class DetailMesannonce extends AppCompatActivity {
     }
 
     public void deleteAnnonce() {
+
+
         DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(annonce.getUserId()).child(annonce.getIdAnnonce());
         Map<String, Object> ANNONCE = new HashMap<>();
-        ANNONCE.put("IdAnnonce", annonce.getIdAnnonce());
-        ANNONCE.put("TitreAnnonce", annonce.getTitreAnnonce());
-        ANNONCE.put("CommuneAnnonce", annonce.getCommune());
-        ANNONCE.put("WilayaAnnonce", annonce.getWilaya());
-        ANNONCE.put("ImagesAnnonce", annonce.getImages());
-        ANNONCE.put("DescriptionAnnonce", annonce.getDescriptionAnnonce());
-        ANNONCE.put("ArticleEnRetourAnnonce", annonce.getArticleEnRetour());
-        ANNONCE.put("DateAnnonce", annonce.getDateAnnonce());
-        ANNONCE.put("IdOffreSelectedAnnonce", annonce.getIdOffreSelected());
-        ANNONCE.put("statuAnnonce", "DELETEDANNONCE");
+        ANNONCE.put("idAnnonce", annonce.getIdAnnonce());
+        ANNONCE.put("titreAnnonce", annonce.getTitreAnnonce());
+        ANNONCE.put("commune", annonce.getCommune());
+        ANNONCE.put("wilaya", annonce.getWilaya());
+        ANNONCE.put("images", annonce.getImages());
+        ANNONCE.put("descriptionAnnonce", annonce.getDescriptionAnnonce());
+        ANNONCE.put("articleEnRetour", annonce.getArticleEnRetour());
+        ANNONCE.put("dateAnnonce", annonce.getDateAnnonce());
+        ANNONCE.put("IdOffreSelected", annonce.getIdOffreSelected());
+        ANNONCE.put("statu", "DELETEDANNONCE");
+        //  ANNONCE.put("Categorie", nameCategorie);
         mDbRef.updateChildren(ANNONCE);
         if (annonce.getStatu().equals("CREATED")) {
 
@@ -202,6 +194,7 @@ public class DetailMesannonce extends AppCompatActivity {
         dOffre.removeValue();*/
 
     }
+
 
     private void getOffres(String idAnnonce) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -229,16 +222,16 @@ public class DetailMesannonce extends AppCompatActivity {
     private void deletOffre(Offre offre) {
         DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(offre.getIdUser()).child(offre.getIdOffre());
         Map<String, Object> OFFRE = new HashMap<>();
-        OFFRE.put("NomOffre", offre.getNomOffre());
-        OFFRE.put("IdOffre", offre.getIdOffre());
-        OFFRE.put("IdAnnonceOffre", offre.getAnnonceId());
-        OFFRE.put("CommuneOffre", offre.getCommune());
-        OFFRE.put("DateOffre", offre.getDateOffre());
-        OFFRE.put("DesciptionOffre", offre.getDescriptionOffre());
-        OFFRE.put("IdUserOffre", offre.getIdUser());
-        OFFRE.put("ImageOffre", offre.getImages());
-        OFFRE.put("WilayaOffre", offre.getWilaya());
-        OFFRE.put("statuOffre", "REJECTED");
+        OFFRE.put("nomOffre", offre.getNomOffre());
+        OFFRE.put("idOffre", offre.getIdOffre());
+        OFFRE.put("annonceId", offre.getAnnonceId());
+        OFFRE.put("commune", offre.getCommune());
+        OFFRE.put("dateOffre", offre.getDateOffre());
+        OFFRE.put("descriptionOffre", offre.getDescriptionOffre());
+        OFFRE.put("idUser", offre.getIdUser());
+        OFFRE.put("images", offre.getImages());
+        OFFRE.put("wilaya", offre.getWilaya());
+        OFFRE.put("statu", "REJECTED");
         mDbRef.updateChildren(OFFRE);
         DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre());
         dOffre.removeValue();

@@ -15,6 +15,7 @@ import com.bouchra.myapplicationechange.activities.Historique;
 import com.bouchra.myapplicationechange.activities.MessageList;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.MainActivity;
+import com.bouchra.myapplicationechange.activities.Notification;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -59,19 +60,21 @@ public class plus extends Fragment {
             updateUI();
 
 
-
         });
-        historique.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), Historique.class);
-                startActivity(intent);
-            }
+        notification.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), Notification.class));
+            getActivity().finish();
+        });
+        historique.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), Historique.class);
+            startActivity(intent);
+            getActivity().finish();
         });
         //goto message
         message.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), MessageList.class);
             startActivity(intent);
+            getActivity().finish();
         });
         //partager un message
         parteger.setOnClickListener(v -> {

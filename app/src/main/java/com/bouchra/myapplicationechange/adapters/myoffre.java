@@ -22,6 +22,7 @@ import com.bouchra.myapplicationechange.activities.DetailAnnonce;
 import com.bouchra.myapplicationechange.activities.ReviewUser;
 import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.models.Notification;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -255,6 +256,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
                             if (task2.isSuccessful()) {
                                 setStatuAnnonce();
+                                addNotification(Offre, offree);
                                 Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
                                 Intent an = new Intent(context, debut.class);
                                 context.startActivity(an);
@@ -271,6 +273,45 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
 
         });
+
+
+
+    }
+
+    private void addNotification(String iDannonce, Offre offre) {
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Annonce").child(iDannonce);
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                Annonce annonce=snapshot.getValue(Annonce.class);
+                DatabaseReference  data = FirebaseDatabase.getInstance().getReference("Notification").child(annonce.getUserId());
+                Notification notification = new Notification();
+                notification.setIdsender(offre.getIdUser());
+                notification.setIdreceiver(annonce.getUserId());
+                notification.setDateNotification(new Date());
+                notification.setContenuNotification("sendOffre");
+                notification.setIdNotification(String.valueOf(offre.getIdOffre().hashCode()) + annonce.getIdAnnonce().hashCode());
+                data.child(String.valueOf(offre.getIdOffre().hashCode()) + annonce.getIdAnnonce().hashCode()).setValue(notification).addOnCompleteListener(task2 -> {
+                    if (task2.isSuccessful()) {
+
+
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Getting model failed, log a message
+            }
+        });
+
+
 
 
 

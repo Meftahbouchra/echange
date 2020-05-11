@@ -33,7 +33,7 @@ public class DemandesOffre extends AppCompatActivity {
     private ArrayList<Offre> offres;
     private RecyclerView recyclerView;
     private ArrayList<Membre> membres;
-  //  private ArrayList<Annonce>annonces;
+    //  private ArrayList<Annonce>annonces;
     private String annonce;//if offre
 
 
@@ -47,22 +47,20 @@ public class DemandesOffre extends AppCompatActivity {
         setContentView(R.layout.activity_demandes_offre);
         recyclerView = findViewById(R.id.recyle_demandesoffres);
 
-        offres = new ArrayList<>();// sbor nwrilk ok
+        offres = new ArrayList<>();
         membres = new ArrayList<>();
+
+
         Intent ajou = getIntent();
-        String nomAnnon = ajou.getStringExtra("nomAnnonce");
-
-        String IdAnnonce=ajou.getStringExtra("idAnnonce");
-
-        demandesoffre = new demandesoffre(this, offres, membres, nomAnnon,annonce);
+        Annonce annonce1 = (Annonce) ajou.getSerializableExtra("annonce");
 
 
+        demandesoffre = new demandesoffre(this, offres, membres, annonce1.getTitreAnnonce(), annonce);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
         recyclerView.setAdapter(demandesoffre);
+
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Offre").child(IdAnnonce);
+        DatabaseReference ref = database.getReference("Offre").child(annonce1.getIdAnnonce());
         ref.addValueEventListener(new ValueEventListener() {//Nous attacherons un ValueEventListener à la référence pour lire les données.
             @Override
             public void onDataChange(DataSnapshot snapshot) {/*
@@ -110,22 +108,22 @@ public class DemandesOffre extends AppCompatActivity {
             }
 
         });
-        //////////////////////////////////////////////////////////
-        String idAnnonce = ajou.getStringExtra("idAnnonce");
-         FirebaseDatabase databasee = FirebaseDatabase.getInstance();
-        DatabaseReference reff = databasee.getReference("Annonce").child(idAnnonce);//hna
+
+
+        FirebaseDatabase databasee = FirebaseDatabase.getInstance();
+        DatabaseReference reff = databasee.getReference("Annonce").child(annonce1.getIdAnnonce());
         reff.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String Idoffre="";
-                    if (dataSnapshot.getValue() != null) {
-                        Idoffre = dataSnapshot.child("idOffreSelected").getValue().toString();
-                        annonce=Idoffre;
-                        demandesoffre.setAnnonce(annonce);
-                    } else {
-                        Log.e("TAG", " it's null.");
-                        annonce=" ";
-                    }
+                String Idoffre = "";
+                if (dataSnapshot.getValue() != null) {
+                    Idoffre = dataSnapshot.child("idOffreSelected").getValue().toString();
+                    annonce = Idoffre;
+                    demandesoffre.setAnnonce(annonce);
+                } else {
+                    Log.e("TAG", " it's null.");
+                    annonce = " ";
+                }
                 Log.e("id Offre", Idoffre);
                 Log.e("id annonce", annonce);
 
@@ -142,44 +140,29 @@ public class DemandesOffre extends AppCompatActivity {
 
     public void selectedoffre(String idOffre) {
         Intent ajou = getIntent();
-        String idAnnonce = ajou.getStringExtra("idAnnonce");
-
-        String descp = ajou.getStringExtra("descp");
-       // String date = ajou.getStringExtra("date");
-        String statu = ajou.getStringExtra("statu");
-        String userid = ajou.getStringExtra("userid");
-        String commune = ajou.getStringExtra("commune");
-        String wilaya = ajou.getStringExtra("wilaya");
-        ArrayList<String>articleret = ajou.getStringArrayListExtra("articleret");
-        ArrayList<String>images = ajou.getStringArrayListExtra("images");
-        String nomAnnon = ajou.getStringExtra("nomAnnonce");
-        String date = ajou.getStringExtra("date");
-
+        Annonce annonce1 = (Annonce) ajou.getSerializableExtra("annonce");
 
 
         DatabaseReference databaseReference;
-        databaseReference = FirebaseDatabase.getInstance().getReference("Annonce").child(idAnnonce); // nkharaj id ta3 annonce
+        databaseReference = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce1.getIdAnnonce()); // nkharaj id ta3 annonce
         Annonce annonce = new Annonce();
-       annonce.setArticleEnRetour(articleret);
-       annonce.setImages(images);
-       annonce.setWilaya(wilaya);
-       annonce.setCommune(commune);
-       annonce.setIdAnnonce(idAnnonce);
-       annonce.setUserId(userid);
-       annonce.setStatu("ASSINED");
-       annonce.setTitreAnnonce(nomAnnon);
-       annonce.setDescriptionAnnonce(descp);
+        annonce.setArticleEnRetour(annonce1.getArticleEnRetour());
+        annonce.setImages(annonce1.getImages());
+        annonce.setWilaya(annonce1.getWilaya());
+        annonce.setCommune(annonce1.getCommune());
+        annonce.setIdAnnonce(annonce1.getIdAnnonce());
+        annonce.setUserId(annonce1.getUserId());
+        annonce.setStatu("ASSINED");
+        annonce.setTitreAnnonce(annonce1.getTitreAnnonce());
+        annonce.setDescriptionAnnonce(annonce1.getDescriptionAnnonce());
 
-       // SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
-      //  String str = simpleDateFormat.format(date);
-       // annonce.setDateAnnonce(str);
         annonce.setDateAnnonce(new Date());////////////////////////////////////////////////////***************************************
 // hda  li zdnah
         annonce.setIdOffreSelected(idOffre);
 
         databaseReference.setValue(annonce).addOnCompleteListener(task2 -> {
             if (task2.isSuccessful()) {
-        etatConfirmOffre(idOffre,idAnnonce);
+                etatConfirmOffre(idOffre, annonce1.getIdAnnonce());
 
             }
         });
@@ -189,29 +172,29 @@ public class DemandesOffre extends AppCompatActivity {
 
     private void etatConfirmOffre(String idOffre, String idAnnonce) {
 
-            Task<Void> databasereference;
-            databasereference = FirebaseDatabase.getInstance().getReference("Offre").child(idAnnonce).child(idOffre).child("statu")
-                    .setValue("NEED_To_Be_CONFIRM")
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                //// Toast.makeText(context, "Un email a ètè envoyè, veuillez consulter votre boite email", Toast.LENGTH_SHORT).show();
+        Task<Void> databasereference;
+        databasereference = FirebaseDatabase.getInstance().getReference("Offre").child(idAnnonce).child(idOffre).child("statu")
+                .setValue("NEED_To_Be_CONFIRM")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            //// Toast.makeText(context, "Un email a ètè envoyè, veuillez consulter votre boite email", Toast.LENGTH_SHORT).show();
 
 
-                            } else {
-                                // Toast.makeText(context, "Échec de l'envoi", Toast.LENGTH_SHORT).show();
-                            }
+                        } else {
+                            // Toast.makeText(context, "Échec de l'envoi", Toast.LENGTH_SHORT).show();
                         }
+                    }
 
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 // get and show proper error message
-                            Toast.makeText(DemandesOffre.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DemandesOffre.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
 
-                        }
-                    });
+                    }
+                });
 
     }
 

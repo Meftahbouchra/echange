@@ -18,6 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.RecycleViewArticleRetour;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.notification.APIService;
+import com.bouchra.myapplicationechange.notification.Client;
+import com.bouchra.myapplicationechange.notification.Data;
+import com.bouchra.myapplicationechange.notification.Response;
+import com.bouchra.myapplicationechange.notification.Sender;
+import com.bouchra.myapplicationechange.notification.Token;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,9 +33,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 
 public class ModifierAnnonce extends Fragment {
@@ -42,7 +53,10 @@ public class ModifierAnnonce extends Fragment {
     private RecyclerView recyclerView;
     private RecycleViewArticleRetour postAdapter;
     ArrayList<String> posts = new ArrayList<>();
+    private boolean notify = false;
+    private APIService apiService;
 
+    PreferenceUtils preferenceUtils;
 
     public ModifierAnnonce() {
     }
@@ -58,6 +72,8 @@ public class ModifierAnnonce extends Fragment {
         textView = view.findViewById(R.id.ajout_article);
         enregister = view.findViewById(R.id.enregister);
         recyclerView = view.findViewById(R.id.rec_retour);
+        preferenceUtils = new PreferenceUtils(getContext());
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
         textView.setOnClickListener(v -> {
             ajoutArticle();
         });
@@ -88,10 +104,13 @@ public class ModifierAnnonce extends Fragment {
                 .into(imgAnnonc);
         enregister.setOnClickListener(v -> {
             updateAnnonce();
+            getOffres(annonce.getIdAnnonce());
+
         });
         return view;
 
     }
+
 
     private void updateAnnonce() {
         String titre_Annonce = nomAnnonce.getText().toString();
@@ -172,6 +191,10 @@ public class ModifierAnnonce extends Fragment {
                     String user = postSnapshot.child("idUser").getValue().toString();
                     Log.e("userli dar offre ", user);
                     Toast.makeText(getContext(), "jcp chkyn" + user, Toast.LENGTH_SHORT).show();
+                    if (notify) {
+                        senNotification(user, preferenceUtils.getMember().getNomMembre(), "annonce modifer !!");
+                    }
+                    notify = false;
 // send notification
                 }
 
@@ -184,6 +207,42 @@ public class ModifierAnnonce extends Fragment {
             }
         });
     }
+
+    private void senNotification(final String userid, final String name, final String message) {
+        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = allTokens.orderByKey().equalTo(userid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Token token = ds.getValue(Token.class);
+                    Data data = new Data(preferenceUtils.getMember().getIdMembre(), name + " : " + message, "Notification", userid, R.drawable.user); // logo of application
+
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<Response>() {
+                                @Override
+                                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                                    Toast.makeText(getContext(), "" + response.message(), Toast.LENGTH_SHORT).show();
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<Response> call, Throwable t) {
+
+                                }
+                            });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     /* private void senNotification(final String Idreceiver, final String nameSander, final String message) {
          DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");

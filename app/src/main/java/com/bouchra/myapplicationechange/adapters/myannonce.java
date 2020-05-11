@@ -21,14 +21,18 @@ import com.bouchra.myapplicationechange.activities.DetailMesannonce;
 import com.bouchra.myapplicationechange.activities.ReviewUser;
 import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.models.Notification;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -178,7 +182,7 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
 
                             if (task2.isSuccessful()) {
                                 setStatuAnnonce();
-
+                                addNotification(offre, offrre);
                                 Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
                                 Intent an = new Intent(context, debut.class);
                                 context.startActivity(an);
@@ -198,6 +202,40 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
 
 
     }
+    private void addNotification(String idannonce, Offre offre) {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Annonce").child(idannonce);
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                        Annonce annonce=snapshot.getValue(Annonce.class);
+                DatabaseReference data = FirebaseDatabase.getInstance().getReference("Notification").child(annonce.getUserId());
+                Notification notification = new Notification();
+                notification.setIdsender(offre.getIdUser());
+                notification.setIdreceiver(annonce.getUserId());
+                notification.setDateNotification(new Date());
+                notification.setContenuNotification("sendOffre");
+                notification.setIdNotification(String.valueOf(offre.getIdOffre().hashCode()) + annonce.getIdAnnonce().hashCode());
+                data.child(String.valueOf(offre.getIdOffre().hashCode()) + annonce.getIdAnnonce().hashCode()).setValue(notification).addOnCompleteListener(task2 -> {
+                    if (task2.isSuccessful()) {
+
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Getting model failed, log a message
+            }
+        });
+
+
+    }
+
 
     private void setStatuAnnonce() {
         databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(offre).child("statu")
@@ -226,6 +264,7 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
 
     @Override
     public int getItemCount() {
+
         return mesannonce.size();
     }
 

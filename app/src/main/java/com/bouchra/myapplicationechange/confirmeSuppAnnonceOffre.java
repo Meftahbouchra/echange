@@ -2,6 +2,8 @@ package com.bouchra.myapplicationechange;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,8 +11,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.bouchra.myapplicationechange.activities.DetailMesannonce;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +23,9 @@ import java.util.Map;
 public class confirmeSuppAnnonceOffre extends AppCompatDialogFragment {
     String name = null;
     String Offre = null;
-    String Annonce = null;
+    com.bouchra.myapplicationechange.models.Annonce Annonce;
     com.bouchra.myapplicationechange.models.Offre offre;
+    String nn;
 
     @NonNull
     @Override
@@ -27,7 +33,7 @@ public class confirmeSuppAnnonceOffre extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 
-        Annonce = this.getArguments().getString("Annonce");
+        Annonce = (com.bouchra.myapplicationechange.models.Annonce) this.getArguments().getSerializable("Annonce");
         offre = (com.bouchra.myapplicationechange.models.Offre) this.getArguments().getSerializable("offreObject");
         if (offre != null) {
             name = offre.getNomOffre();
@@ -45,13 +51,52 @@ public class confirmeSuppAnnonceOffre extends AppCompatDialogFragment {
             //return builder.create();
         }
         if (Annonce != null) {
-            name = Annonce;
+            name = Annonce.getTitreAnnonce();
             builder.setTitle("Supprimer")
                     .setMessage("Souhaitez-vous vraiment supprimer cette " + name + "?")
                     .setPositiveButton("Oui", (dialog, which) -> {
 // mansuprimich datat f info; ndiha l historique
-                        ((DetailMesannonce) getActivity()).deleteAnnonce();
+                        String shox;
 
+                        final FirebaseDatabase[] firebaseDatabase = {FirebaseDatabase.getInstance()};
+                        DatabaseReference databaseReference = firebaseDatabase[0].getReference("Categorie");
+                        databaseReference.addValueEventListener(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                    for (DataSnapshot key : postSnapshot.getChildren()) {
+
+                                        String IDannonce = key.getKey();
+                                        // Log.e("Data here", IDannonce);
+                                        if (IDannonce.equals(Annonce.getIdAnnonce())) {
+                                            String nom = postSnapshot.getKey();
+                                         /*   String   nomCategorie = nom;
+                                            Log.e("Data here", nomCategorie);*/
+                                            //view(nom);
+                                            Log.e("Data here", nom);
+                                            //Toast.makeText(getContext(), ""+nom, Toast.LENGTH_SHORT).show();
+
+
+                                        }
+                                    }
+
+
+                                }
+
+                            }
+
+
+
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        ((DetailMesannonce) getActivity()).deleteAnnonce();
                     })
                     .setNegativeButton("Non", (dialog, which) -> {
 
@@ -62,19 +107,23 @@ public class confirmeSuppAnnonceOffre extends AppCompatDialogFragment {
         return builder.create();
     }
 
+    private void view(String nomCategorie) {
+        Toast.makeText(getContext(), "" + nomCategorie, Toast.LENGTH_SHORT).show();
+    }
+
     private void deleteOffre(com.bouchra.myapplicationechange.models.Offre offre) {
         DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(offre.getIdUser()).child(offre.getIdOffre());
         Map<String, Object> OFFRE = new HashMap<>();
-        OFFRE.put("NomOffre", offre.getNomOffre());
-        OFFRE.put("IdOffre", offre.getIdOffre());
-        OFFRE.put("IdAnnonceOffre", offre.getAnnonceId());
-        OFFRE.put("CommuneOffre", offre.getCommune());
-        OFFRE.put("DateOffre", offre.getDateOffre());
-        OFFRE.put("DesciptionOffre", offre.getDescriptionOffre());
-        OFFRE.put("IdUserOffre", offre.getIdUser());
-        OFFRE.put("ImageOffre", offre.getImages());
-        OFFRE.put("WilayaOffre", offre.getWilaya());
-        OFFRE.put("statuOffre", "DELETEOFFRE");
+        OFFRE.put("nomOffre", offre.getNomOffre());
+        OFFRE.put("idOffre", offre.getIdOffre());
+        OFFRE.put("annonceId", offre.getAnnonceId());
+        OFFRE.put("commune", offre.getCommune());
+        OFFRE.put("dateOffre", offre.getDateOffre());
+        OFFRE.put("descriptionOffre", offre.getDescriptionOffre());
+        OFFRE.put("idUser", offre.getIdUser());
+        OFFRE.put("images", offre.getImages());
+        OFFRE.put("wilaya", offre.getWilaya());
+        OFFRE.put("statu", "DELETEOFFRE");
         mDbRef.updateChildren(OFFRE);
         DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre());
         dOffre.removeValue();
