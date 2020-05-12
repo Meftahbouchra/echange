@@ -54,43 +54,40 @@ public class Historique extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Log.e("data", postSnapshot.toString());
-                    Offre offre = new Offre();
-                    Annonce annonce = new Annonce();
-                    String statu = postSnapshot.child("statu").getValue().toString();
-                    if (statu.equals("DELETEOFFRE") || statu.equals("REJECTED") || statu.equals("COMPLETEDOFFRE")) {
-                        //  offres.add(postSnapshot.getValue(Offre.class));
-                        offre = postSnapshot.getValue(Offre.class);
-                        historiques.add(offre);
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        Log.e("data", postSnapshot.toString());
+                        Offre offre = new Offre();
+                        Annonce annonce = new Annonce();
+                        String statu = postSnapshot.child("statu").getValue().toString();
+                        if (statu.equals("DELETEOFFRE") || statu.equals("REJECTED") || statu.equals("COMPLETEDOFFRE")) {
+                            //  offres.add(postSnapshot.getValue(Offre.class));
+                            offre = postSnapshot.getValue(Offre.class);
+                            historiques.add(offre);
 
 
-                    }
+                        }
 
-                    if (statu.equals("COMPLETEDANNONCE") || statu.equals("DELETEDANNONCE")) {
-                        //annonces.add(postSnapshot.getValue(Annonce.class));
-                        annonce = postSnapshot.getValue(Annonce.class);
-                        historiques.add(annonce);
+                        if (statu.equals("COMPLETEDANNONCE") || statu.equals("DELETEDANNONCE")) {
+                            //annonces.add(postSnapshot.getValue(Annonce.class));
+                            annonce = postSnapshot.getValue(Annonce.class);
+                            historiques.add(annonce);
 
 
+                        }
 
-                    }
-                    myhistorique.notifyDataSetChanged();
-
-                    if (historiques.size() == 0) {
-                        information.setText("Vous n'avez pas d' article ici ");
-                        recyclerView.setVisibility(View.GONE);
-                    } else {
+                        myhistorique.notifyDataSetChanged();
                         information.setVisibility(View.GONE);
                         recyclerView.setAdapter(myhistorique);
-                        /// myhistorique.notifyDataSetChanged();
-
 
 
                     }
 
-                }
+                } else {
+                    information.setText("Vous n'avez pas d' article ici ");
+                    recyclerView.setVisibility(View.GONE);
 
+                }
 
             }
 
@@ -100,7 +97,6 @@ public class Historique extends AppCompatActivity {
 
             }
         });
-
 
 
     }

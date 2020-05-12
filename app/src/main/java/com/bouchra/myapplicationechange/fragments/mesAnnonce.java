@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +34,7 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
     private ArrayList<Annonce> annonces;//////////////hadi li rna njobi fiha m fire base
     private RecyclerView recyclerView;
     SearchView editsearch;
+    private TextView information;
 
     Date date = new Date();
     private String offre;
@@ -51,6 +53,7 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
         View view = inflater.inflate(R.layout.activity_mesannonces, container, false);
 
         recyclerView = view.findViewById(R.id.recyle_mesannonces);
+        information=view.findViewById(R.id.information);
         annonces = new ArrayList<>();
         if (offre == null) {
             myannonce = new myannonce(getContext(), annonces);
@@ -80,7 +83,19 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
 
 
                 }
+                if (annonces.size() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    information.setText("Vous n'avez pas d'annonces");
+
+
+                }else {
+                    information.setVisibility(View.GONE);
+
+                }
+
             }
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

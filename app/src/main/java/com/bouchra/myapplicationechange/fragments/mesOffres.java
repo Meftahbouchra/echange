@@ -77,18 +77,8 @@ public class mesOffres extends Fragment {
                         Log.e("userli dar annon howa: ", idnonce);
                         if (user.equals(preferenceUtils.getMember().getIdMembre())) {
                             offres.add(off.getValue(Offre.class));
-                            if (offres.size() == 0) {
-                                recyclerView.setVisibility(View.GONE);
-                                information.setText("Vous n'avez pas d'offres");
-
-
-                            } else {
-                                information.setVisibility(View.GONE);
-                                myoffre.notifyDataSetChanged();
-                                idannoncE = idnonce;
-                                myoffre.setIdAnnonce(idannoncE);
-                            }
-
+                            myoffre.notifyDataSetChanged();
+                            idannoncE = idnonce;
 
                         }
 // hna f dakhal had l requete kont n3ayat l annonce njbd annonce bch yrohlgha kiytovhi 3la l offre aya wlat dirli f array ta3 annonce wlat dirli bali
@@ -99,6 +89,16 @@ public class mesOffres extends Fragment {
 
 
                 }
+                if (offres.size() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    information.setText("Vous n'avez pas d'offres");
+
+
+                } else {
+                    information.setVisibility(View.GONE);
+                    myoffre.setIdAnnonce(idannoncE);
+                }
+
             }
 
             @Override

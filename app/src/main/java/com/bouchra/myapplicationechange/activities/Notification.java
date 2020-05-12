@@ -18,7 +18,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
 import java.util.ArrayList;
 
 public class Notification extends AppCompatActivity {
@@ -48,28 +47,19 @@ public class Notification extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if(snapshot.hasChildren()){
-
-                }else {
-
-                }
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-
-
-                    notifications.add(postSnapshot.getValue(com.bouchra.myapplicationechange.models.Notification.class));
-                    mynotification.notifyDataSetChanged();
-                    information.setVisibility(View.GONE);
-                    recyclerView.setAdapter(mynotification);
-                    if (notifications.size() == 0) {
-                        information.setText("Vous n'avez pas de notification ");
-                        recyclerView.setVisibility(View.GONE);
+                if (snapshot.exists()) {
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        notifications.add(postSnapshot.getValue(com.bouchra.myapplicationechange.models.Notification.class));
+                        mynotification.notifyDataSetChanged();
+                        information.setVisibility(View.GONE);
+                        recyclerView.setAdapter(mynotification);
                     }
 
-
-
-
-
+                } else {
+                    information.setText("Vous n'avez pas de notification ");
+                    recyclerView.setVisibility(View.GONE);
                 }
+
             }
 
             @Override
