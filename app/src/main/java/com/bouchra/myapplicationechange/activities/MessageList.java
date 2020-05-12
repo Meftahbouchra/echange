@@ -3,7 +3,9 @@ package com.bouchra.myapplicationechange.activities;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
 import android.webkit.URLUtil;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +34,7 @@ public class MessageList extends AppCompatActivity {
     private PreferenceUtils preferenceUtils;
     private DatabaseReference l;
     private String lastmsg = "";
+    private TextView information;
 
 
     @Override
@@ -39,6 +42,7 @@ public class MessageList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.masaagelist);
         recyclerView = findViewById(R.id.recycle_view);
+        information = findViewById(R.id.information);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         preferenceUtils = new PreferenceUtils(this);
@@ -123,8 +127,16 @@ public class MessageList extends AppCompatActivity {
                         onlyUsers.add(user);
                     }
                 }
-                userAdapter = new messagesAdapter(MessageList.this, onlyUsers, lastmsg);
-                recyclerView.setAdapter(userAdapter);
+                if (onlyUsers.size() == 0) {
+                    information.setText("Vous n'avez pas de conversation ");
+                    recyclerView.setVisibility(View.GONE);
+
+                } else {
+                    information.setVisibility(View.GONE);
+                    userAdapter = new messagesAdapter(MessageList.this, onlyUsers, lastmsg);
+                    recyclerView.setAdapter(userAdapter);
+                }
+
 
             }
 
@@ -133,6 +145,7 @@ public class MessageList extends AppCompatActivity {
 
             }
         });
+
 
     }
 

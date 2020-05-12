@@ -1,6 +1,8 @@
 package com.bouchra.myapplicationechange.activities;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,16 +26,19 @@ public class Notification extends AppCompatActivity {
     private ArrayList<com.bouchra.myapplicationechange.models.Notification> notifications;
     PreferenceUtils preferenceUtils;
     private RecyclerView recyclerView;
+    private TextView information;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
         recyclerView = findViewById(R.id.Notifications);
-        notifications= new ArrayList<>();
-        mynotification = new mynotification(this, notifications);
+        information = findViewById(R.id.information);
+        notifications = new ArrayList<>();
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mynotification);
+        mynotification = new mynotification(Notification.this, notifications);
+
 
         preferenceUtils = new PreferenceUtils(this);
 
@@ -43,11 +48,25 @@ public class Notification extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                if(snapshot.hasChildren()){
+
+                }else {
+
+                }
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
 
 
                     notifications.add(postSnapshot.getValue(com.bouchra.myapplicationechange.models.Notification.class));
                     mynotification.notifyDataSetChanged();
+                    information.setVisibility(View.GONE);
+                    recyclerView.setAdapter(mynotification);
+                    if (notifications.size() == 0) {
+                        information.setText("Vous n'avez pas de notification ");
+                        recyclerView.setVisibility(View.GONE);
+                    }
+
+
+
 
 
                 }
@@ -58,7 +77,6 @@ public class Notification extends AppCompatActivity {
 
             }
         });
-
 
     }
 

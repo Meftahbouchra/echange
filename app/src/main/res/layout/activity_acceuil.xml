@@ -327,26 +327,39 @@
             android:layout_marginStart="263dp"
             android:layout_marginBottom="414dp"
             android:text="Maps" />
+        <TextView
+            android:id="@+id/informationDafault"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:textSize="25sp"
+android:text="lkh "
+            android:layout_below="@+id/viw2"
 
+            />
+        <TextView
+            android:id="@+id/informationRecherche"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:textSize="25sp"
+            android:text="kjjfh j"
+            android:layout_below="@+id/viw2"
+
+            />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyle_public"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@+id/viw2"
 
             android:layout_marginTop="16dp"
 
             android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="37dp"
-            android:layout_marginBottom="224dp"
-            android:text="Button" />
+
 
 
     </RelativeLayout>

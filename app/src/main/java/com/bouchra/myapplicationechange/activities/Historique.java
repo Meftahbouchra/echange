@@ -2,6 +2,8 @@ package com.bouchra.myapplicationechange.activities;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +29,7 @@ public class Historique extends AppCompatActivity {
     private ArrayList<com.bouchra.myapplicationechange.models.Historique> historiques = new ArrayList<>();
 
     private RecyclerView recyclerView;
+    private TextView information;
     private myhistorique myhistorique;
 
 
@@ -37,11 +40,13 @@ public class Historique extends AppCompatActivity {
         preferenceUtils = new PreferenceUtils(this);
 
         recyclerView = findViewById(R.id.recyle_historique);
-        myhistorique = new myhistorique(this,historiques);
+        myhistorique = new myhistorique(this, historiques);
+        information = findViewById(R.id.information);
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(myhistorique);
+
+        //recyclerView.setAdapter(myhistorique);
 
 
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -55,7 +60,7 @@ public class Historique extends AppCompatActivity {
                     Annonce annonce = new Annonce();
                     String statu = postSnapshot.child("statu").getValue().toString();
                     if (statu.equals("DELETEOFFRE") || statu.equals("REJECTED") || statu.equals("COMPLETEDOFFRE")) {
-                      //  offres.add(postSnapshot.getValue(Offre.class));
+                        //  offres.add(postSnapshot.getValue(Offre.class));
                         offre = postSnapshot.getValue(Offre.class);
                         historiques.add(offre);
 
@@ -70,9 +75,19 @@ public class Historique extends AppCompatActivity {
 
 
                     }
-
                     myhistorique.notifyDataSetChanged();
 
+                    if (historiques.size() == 0) {
+                        information.setText("Vous n'avez pas d' article ici ");
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        information.setVisibility(View.GONE);
+                        recyclerView.setAdapter(myhistorique);
+                        /// myhistorique.notifyDataSetChanged();
+
+
+
+                    }
 
                 }
 
@@ -85,6 +100,7 @@ public class Historique extends AppCompatActivity {
 
             }
         });
+
 
 
     }

@@ -5,7 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.Historique">
+    <TextView
+        android:id="@+id/information"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="25dp"
+        android:gravity="center"
+        android:text=" "
+        android:textSize="25sp"
 
+        />
 
 
     <androidx.recyclerview.widget.RecyclerView

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +33,7 @@ public class mesOffres extends Fragment {
     private RecyclerView recyclerView;
     // SearchView editsearch;
     private String offre;
+    private TextView information;
 
 
     public mesOffres() {
@@ -47,6 +49,7 @@ public class mesOffres extends Fragment {
         View view = inflater.inflate(R.layout.activity_mesoffres, container, false);
 
         recyclerView = view.findViewById(R.id.recyle_mesoffres);
+        information = view.findViewById(R.id.information);
         offres = new ArrayList<>();
         if (offre == null) {
             myoffre = new myoffre(getContext(), offres, idannoncE);
@@ -74,9 +77,18 @@ public class mesOffres extends Fragment {
                         Log.e("userli dar annon howa: ", idnonce);
                         if (user.equals(preferenceUtils.getMember().getIdMembre())) {
                             offres.add(off.getValue(Offre.class));
-                            myoffre.notifyDataSetChanged();
-                            idannoncE = idnonce;
-                            myoffre.setIdAnnonce(idannoncE);
+                            if (offres.size() == 0) {
+                                recyclerView.setVisibility(View.GONE);
+                                information.setText("Vous n'avez pas d'offres");
+
+
+                            } else {
+                                information.setVisibility(View.GONE);
+                                myoffre.notifyDataSetChanged();
+                                idannoncE = idnonce;
+                                myoffre.setIdAnnonce(idannoncE);
+                            }
+
 
                         }
 // hna f dakhal had l requete kont n3ayat l annonce njbd annonce bch yrohlgha kiytovhi 3la l offre aya wlat dirli f array ta3 annonce wlat dirli bali

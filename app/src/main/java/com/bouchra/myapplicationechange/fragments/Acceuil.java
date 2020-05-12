@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.activities.DetailMesannonce;
 import com.bouchra.myapplicationechange.activities.GoogleMaps;
 import com.bouchra.myapplicationechange.activities.MainActivity;
 import com.bouchra.myapplicationechange.activities.annonce.AnnonceActivity;
@@ -53,6 +52,8 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     private SearchView editsearch;
     private String categorie;
     private String WilayaName;
+    private TextView informationDafault;
+    private TextView informationRecherche;
     private String wilaya = "", searchText = "";
     private TextView tout, vehicules, telephones, Automobiles, pieces_detachees, immobilier, vetements, livres, eletronique_et_electromenager, accessoires_de_mode,
             cosmetiques_et_beaute, maison_et_fournitures, loisirs_et_devertissements, matiriaux_et_equipements;
@@ -65,7 +66,8 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_acceuil, container, false);
-
+        informationDafault = view.findViewById(R.id.informationDafault);
+        informationRecherche = view.findViewById(R.id.informationRecherche);
         linearLayout2 = view.findViewById(R.id.layout1);
         nom_wilaya = view.findViewById(R.id.nom_wilaya);
         // textView2 = view.findViewById(R.id.txt22);
@@ -87,13 +89,6 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         loisirs_et_devertissements = view.findViewById(R.id.loisirs_et_devertissements);
         matiriaux_et_equipements = view.findViewById(R.id.matiriaux_et_equipements);
 
-
-        Button button44 = view.findViewById(R.id.button3);
-
-        button44.setOnClickListener(v -> {
-            Intent goin = new Intent(getActivity(), DetailMesannonce.class);
-            startActivity(goin);
-        });
 
         addAnnonce = view.findViewById(R.id.ajou_annonce);
         addAnnonce.setOnClickListener(v -> {
@@ -261,11 +256,21 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         ArrayList<Annonce> output = new ArrayList<>();
         for (Annonce object : annonces) {
             String obj = object.getTitreAnnonce().toLowerCase();
-            if (obj.contains(keyWord.toLowerCase()) && object.getWilaya().toLowerCase().contains(wilaya.toLowerCase()))
+            if (obj.contains(keyWord.toLowerCase()) && object.getWilaya().toLowerCase().contains(wilaya.toLowerCase())){
                 output.add(object);
+                informationDafault.setVisibility(View.GONE);
+                informationRecherche.setVisibility(View.GONE);
+                publicAdapter.setMesannonce(output);
+                publicAdapter.notifyDataSetChanged();
+            }else {
+               // informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
+                informationDafault.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+            }
+
         }
-        publicAdapter.setMesannonce(output);
-        publicAdapter.notifyDataSetChanged();
+
+
     }
 
     public void affichageParDefaut() {
@@ -288,14 +293,25 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                     if (!user.equals(preferenceUtils.getMember().getIdMembre())) {
                         if (!statu.equals("NEED_REVIEW") && !statu.equals("COMPLETED")) {
                             annonces.add(postSnapshot.getValue(Annonce.class));
+
+                        }
+                        if (annonces.size() == 0) {
+                            //   informationDafault.setText("Pour le moment il n'y a aucune anonce publiè");
+                            informationRecherche.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.GONE);
+                        } else {
+                            informationDafault.setVisibility(View.GONE);
+                            informationRecherche.setVisibility(View.GONE);
+                            publicAdapter.setMesannonce(annonces);
+                            publicAdapter.notifyDataSetChanged();
                         }
 
                     }
 
 
                 }
-                publicAdapter.setMesannonce(annonces);
-                publicAdapter.notifyDataSetChanged();
+
+
             }
 
             @Override
@@ -337,6 +353,9 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                                 if (!user.equals(preferenceUtils.getMember().getIdMembre())) {
                                     annonces.add(snapshot.getValue(Annonce.class));
                                 }
+
+                                informationRecherche.setVisibility(View.GONE);
+                                informationDafault.setVisibility(View.GONE);
                                 publicAdapter.setMesannonce(annonces);
                                 publicAdapter.notifyDataSetChanged();
 
@@ -351,10 +370,14 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
 
                     }
-                } else {
-                    publicAdapter.setMesannonce(annonces);
+                } else {// mkanch f had l categoreri
+                //    informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
+                    informationDafault.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+
+                   /* publicAdapter.setMesannonce(annonces);
                     publicAdapter.notifyDataSetChanged();
-                    Log.e("nbrdeannoncepourlesvide", (String.valueOf(annonces.size())));
+                    Log.e("nbrdeannoncepourlesvide", (String.valueOf(annonces.size())));*/
 
                 }
             }
