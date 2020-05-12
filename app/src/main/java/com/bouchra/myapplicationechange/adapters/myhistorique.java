@@ -1,8 +1,7 @@
 package com.bouchra.myapplicationechange.adapters;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.fragments.confirmEchangeAnnonce;
+import com.bouchra.myapplicationechange.activities.ReviewUser;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.models.Historique;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bumptech.glide.Glide;
 
@@ -26,15 +23,12 @@ import java.util.ArrayList;
 
 public class myhistorique extends RecyclerView.Adapter<myhistorique.ViewHolder> {
     private Context context;
-    private ArrayList<Annonce> mesannonce;
-    private ArrayList<Offre> offres;
-    private ArrayList<String> all = new ArrayList<>();
+    private ArrayList<Historique> historiques = new ArrayList<>();
 
 
-    public myhistorique(Context context, ArrayList<Annonce> mesannonce, ArrayList<Offre> offres) {
+    public myhistorique(Context context, ArrayList<Historique> historiques) {
         this.context = context;
-        this.mesannonce = mesannonce;
-        this.offres = offres;
+        this.historiques = historiques;
     }
 
 
@@ -48,10 +42,10 @@ public class myhistorique extends RecyclerView.Adapter<myhistorique.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull myhistorique.ViewHolder holder, int position) {
-        if (offres.size() != 0) {
+        if (historiques.get(position) instanceof Offre) {
             // offre
 
-            Offre offre = offres.get(position);
+            Offre offre = (Offre) historiques.get(position);
             holder.titte.setText(offre.getNomOffre());
             holder.desc.setText(offre.getDescriptionOffre());
             holder.ville.setText(offre.getWilaya());
@@ -60,13 +54,6 @@ public class myhistorique extends RecyclerView.Adapter<myhistorique.ViewHolder> 
             String str = simpleDateFormat.format(offre.getDateOffre());
             holder.datH.setText(str);
             holder.statu.setText(offre.getStatu());
-           /* all.add(str);
-            all.add(offre.getNomOffre());
-            all.add(offre.getDescriptionOffre());
-            all.add(offre.getWilaya());
-            all.add(offre.getCommune());
-            all.add(offre.getImages().get(0));
-            all.add(offre.getStatu());*/
 
 
             switch (offre.getStatu()) {
@@ -83,10 +70,10 @@ public class myhistorique extends RecyclerView.Adapter<myhistorique.ViewHolder> 
 
 
         }
-        if (mesannonce.size() != 0) {
+        if (historiques.get(position) instanceof Annonce) {
             //annonce
-            Log.e("data", mesannonce.toString());
-            Annonce annonce = mesannonce.get(position);
+
+            Annonce annonce = (Annonce) historiques.get(position);
             holder.titte.setText(annonce.getTitreAnnonce());
             holder.desc.setText(annonce.getDescriptionAnnonce());
             holder.ville.setText(annonce.getWilaya());
@@ -98,13 +85,7 @@ public class myhistorique extends RecyclerView.Adapter<myhistorique.ViewHolder> 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
             String str = simpleDateFormat.format(annonce.getDateAnnonce());
             holder.datH.setText(str);
-           /* all.add(str);
-            all.add(annonce.getTitreAnnonce());
-            all.add(annonce.getDescriptionAnnonce());
-            all.add(annonce.getWilaya());
-            all.add(annonce.getCommune());
-            all.add(annonce.getImages().get(0));
-            all.add(annonce.getStatu());*/
+
             switch (annonce.getStatu()) {
                 //statu
                 case "DELETEDANNONCE":
@@ -115,19 +96,15 @@ public class myhistorique extends RecyclerView.Adapter<myhistorique.ViewHolder> 
                     break;
             }
             holder.itemView.setOnClickListener(v -> {
-                        if (annonce.getStatu().equals("COMPLETEDANNONCE")) {
-                            String msg = "nonButton";
-                            FragmentManager manager = ((FragmentActivity)context).getSupportFragmentManager();
-                            FragmentTransaction t = manager.beginTransaction();
-                            final confirmEchangeAnnonce m4 = new confirmEchangeAnnonce();
-                            Bundle b2 = new Bundle();
-                            b2.putSerializable("annonce", annonce);
-                            b2.putString("fromReview", msg);
-                            m4.setArguments(b2);
-                            t.add(R.id.fragment, m4);
-                            t.commit();
+                if (annonce.getStatu().equals("COMPLETEDANNONCE")) {
+                    Intent intent = new Intent(context, ReviewUser.class);
+                    intent.putExtra("annonce", annonce);//offre
+                    // intent.putSerializable("annonce", annonce);
+                    intent.putExtra("annonce", annonce);
+                    intent.putExtra("send", "khod3a");
+                    context.startActivity(intent);
 
-                        }
+                }
             });
 
         }
@@ -138,24 +115,7 @@ public class myhistorique extends RecyclerView.Adapter<myhistorique.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        if (mesannonce.size() == 0 && offres.size() == 0) {
-            return 0;
-
-        } else {
-            if (mesannonce.size() != 0 && offres.size() == 0) {
-                return mesannonce.size();
-            } else {
-                if (mesannonce.size() == 0 && offres.size() != 0) {
-                    return offres.size();
-                } else {
-
-                    return 1;
-                }
-            }
-
-        }
-
-
+        return historiques.size();
     }
 
 

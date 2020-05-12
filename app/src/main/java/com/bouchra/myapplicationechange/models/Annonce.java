@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Annonce implements Serializable {// bch nkdo nrsloha ù blasa lblsa whdkhra
+public class Annonce extends Historique implements Serializable {// bch nkdo nrsloha ù blasa lblsa whdkhra
     private String idAnnonce;
     private String titreAnnonce;
     private String descriptionAnnonce;

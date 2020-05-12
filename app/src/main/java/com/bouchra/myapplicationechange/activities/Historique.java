@@ -24,8 +24,8 @@ import java.util.ArrayList;
 public class Historique extends AppCompatActivity {
     PreferenceUtils preferenceUtils;
 
-    private ArrayList<Annonce> annonces;
-    private ArrayList<Offre> offres;
+    private ArrayList<com.bouchra.myapplicationechange.models.Historique> historiques = new ArrayList<>();
+
     private RecyclerView recyclerView;
     private myhistorique myhistorique;
 
@@ -37,9 +37,7 @@ public class Historique extends AppCompatActivity {
         preferenceUtils = new PreferenceUtils(this);
 
         recyclerView = findViewById(R.id.recyle_historique);
-        annonces = new ArrayList<>();
-        offres = new ArrayList<>();
-        myhistorique = new myhistorique(this, annonces, offres);
+        myhistorique = new myhistorique(this,historiques);
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -59,7 +57,7 @@ public class Historique extends AppCompatActivity {
                     if (statu.equals("DELETEOFFRE") || statu.equals("REJECTED") || statu.equals("COMPLETEDOFFRE")) {
                       //  offres.add(postSnapshot.getValue(Offre.class));
                         offre = postSnapshot.getValue(Offre.class);
-                        offres.add(offre);
+                        historiques.add(offre);
 
 
                     }
@@ -67,7 +65,7 @@ public class Historique extends AppCompatActivity {
                     if (statu.equals("COMPLETEDANNONCE") || statu.equals("DELETEDANNONCE")) {
                         //annonces.add(postSnapshot.getValue(Annonce.class));
                         annonce = postSnapshot.getValue(Annonce.class);
-                        annonces.add(annonce);
+                        historiques.add(annonce);
 
 
 

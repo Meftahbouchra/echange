@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Offre implements Serializable {
+public class Offre extends Historique implements Serializable {
     private String idOffre;
     private Date dateOffre;
     private String nomOffre;

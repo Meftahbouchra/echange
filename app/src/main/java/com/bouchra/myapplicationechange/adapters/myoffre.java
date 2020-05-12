@@ -1,6 +1,7 @@
 package com.bouchra.myapplicationechange.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -119,7 +121,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                         BottomsheetManipAnnonceOffre bottomsheet = new BottomsheetManipAnnonceOffre();
                         Bundle b2 = new Bundle();
                         b2.putString("fromOffre", offre.getNomOffre());
-                        b2.putSerializable("objectOffre",offre);
+                        b2.putSerializable("objectOffre", offre);
                         bottomsheet.setArguments(b2);
                         bottomsheet.show(((FragmentActivity) context).getSupportFragmentManager(), bottomsheet.getTag());
 
@@ -226,7 +228,7 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                 }
 
 
-            }else {
+            } else {
                 if (offre.getStatu().equals("NEED_To_Be_CONFIRM")) {
                     Toast.makeText(context, "Vous ne peux pas attribuée ce offre,il attend d'etre confirme !", Toast.LENGTH_SHORT).show();
 
@@ -238,34 +240,51 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
                     } else {
 
-                        PreferenceUtils preferenceUtils = new PreferenceUtils(context);
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(Offre);// khasni nadi id ta3 aanonce machi ta3 id ta3 offre
-                        Offre offree = new Offre();
-                        offree.setAnnonceId(Offre);
-                        offree.setDateOffre(new Date());// jc ila ndirah f date ta3 annonce wl    ndir   h bali jdidi
-                        offree.setDescriptionOffre(offre.getDescriptionOffre());
-                        offree.setIdOffre(String.valueOf(offree.getDateOffre().hashCode()) + offree.getAnnonceId().hashCode());
-                        offree.setNomOffre(offre.getNomOffre());
-                        offree.setWilaya(offre.getWilaya());
-                        offree.setCommune(offre.getCommune());
-                        offree.setIdUser(preferenceUtils.getMember().getIdMembre());
-                        offree.setStatu("CREATED");
-                        // offre.setImages();
-                        // khasni id user li dar l offre
+                        new AlertDialog.Builder(context)
+                                .setTitle("Echanger votre object")
+                                .setMessage("Souhaitez vous vraiment envoyer cette" + offre.getNomOffre() + "comme un offre ?")
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("Envoyer", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // Continue with send operation
 
-                        databaseReference.child(String.valueOf(offree.getDateOffre().hashCode()) + offree.getAnnonceId().hashCode()).setValue(offree).addOnCompleteListener(task2 -> {
+                                        PreferenceUtils preferenceUtils = new PreferenceUtils(context);
+                                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(Offre);// khasni nadi id ta3 aanonce machi ta3 id ta3 offre
+                                        Offre offree = new Offre();
+                                        offree.setAnnonceId(Offre);
+                                        offree.setDateOffre(new Date());// jc ila ndirah f date ta3 annonce wl    ndir   h bali jdidi
+                                        offree.setDescriptionOffre(offre.getDescriptionOffre());
+                                        offree.setIdOffre(String.valueOf(offree.getDateOffre().hashCode()) + offree.getAnnonceId().hashCode());
+                                        offree.setNomOffre(offre.getNomOffre());
+                                        offree.setWilaya(offre.getWilaya());
+                                        offree.setCommune(offre.getCommune());
+                                        offree.setIdUser(preferenceUtils.getMember().getIdMembre());
+                                        offree.setStatu("CREATED");
+                                        // offre.setImages();
+                                        // khasni id user li dar l offre
 
-                            if (task2.isSuccessful()) {
-                                setStatuAnnonce();
-                                addNotification(Offre, offree);
-                                Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
-                                Intent an = new Intent(context, debut.class);
-                                context.startActivity(an);
+                                        databaseReference.child(String.valueOf(offree.getDateOffre().hashCode()) + offree.getAnnonceId().hashCode()).setValue(offree).addOnCompleteListener(task2 -> {
 
-                            } else {
-                                Toast.makeText(context, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
-                            }
-                        });
+                                            if (task2.isSuccessful()) {
+                                                setStatuAnnonce();
+                                                addNotification(Offre, offree);
+                                                Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
+                                                Intent an = new Intent(context, debut.class);
+                                                context.startActivity(an);
+
+                                            } else {
+                                                Toast.makeText(context, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                    }
+                                })
+                                // A null listener allows the button to dismiss the dialog and take no further action.
+                                .setNegativeButton("Annuler", null)
+                                //  .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+
+
                     }
 
                 }
@@ -274,7 +293,6 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
 
         });
-
 
 
     }
@@ -288,8 +306,8 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
-                Annonce annonce=snapshot.getValue(Annonce.class);
-                DatabaseReference  data = FirebaseDatabase.getInstance().getReference("Notification").child(annonce.getUserId());
+                Annonce annonce = snapshot.getValue(Annonce.class);
+                DatabaseReference data = FirebaseDatabase.getInstance().getReference("Notification").child(annonce.getUserId());
                 Notification notification = new Notification();
                 notification.setIdsender(offre.getIdUser());
                 notification.setIdreceiver(annonce.getUserId());
@@ -313,13 +331,8 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
         });
 
 
-
-
-
     }
-    private void selectOffre(){
 
-    }
 
     private void setStatuAnnonce() {
         databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(Offre).child("statu")
@@ -343,7 +356,6 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                     }
                 });
     }
-
 
 
     @Override

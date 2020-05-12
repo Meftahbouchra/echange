@@ -1,6 +1,7 @@
 package com.bouchra.myapplicationechange.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -162,35 +164,53 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                         Toast.makeText(context, "Vous ne peux pas attribuée cette annonce ,elle a été déja échngé !", Toast.LENGTH_SHORT).show();
 
 
+
                     } else {
-                        PreferenceUtils preferenceUtils = new PreferenceUtils(context);
-                        databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(offre);
-                        Offre offrre = new Offre();
-                        offrre.setAnnonceId(offre);
-                        offrre.setDateOffre(new Date());// jc ila ndirah f date ta3 annonce wl    ndir   h bali jdidi
-                        offrre.setDescriptionOffre(annonce.getDescriptionAnnonce());
-                        offrre.setIdOffre(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode());
-                        offrre.setNomOffre(annonce.getTitreAnnonce());
-                        offrre.setWilaya(annonce.getWilaya());
-                        offrre.setCommune(annonce.getCommune());
-                        offrre.setIdUser(preferenceUtils.getMember().getIdMembre());
-                        offrre.setStatu("CREATED");
-                        // offre.setImages();
-                        // khasni id user li dar l offre
 
-                        databaseReference.child(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode()).setValue(offrre).addOnCompleteListener(task2 -> {
+                        new AlertDialog.Builder(context)
+                                .setTitle("Echanger votre object")
+                                .setMessage("Souhaitez vous vraiment envoyer cette"+annonce.getTitreAnnonce()+ "comme un offre ?")
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("Envoyer", new DialogInterface.OnClickListener() {//android.R.string.yes
+                                    public void onClick(DialogInterface dialog, int which) {
 
-                            if (task2.isSuccessful()) {
-                                setStatuAnnonce();
-                                addNotification(offre, offrre);
-                                Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
-                                Intent an = new Intent(context, debut.class);
-                                context.startActivity(an);
+                                        PreferenceUtils preferenceUtils = new PreferenceUtils(context);
+                                        databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(offre);
+                                        Offre offrre = new Offre();
+                                        offrre.setAnnonceId(offre);
+                                        offrre.setDateOffre(new Date());// jc ila ndirah f date ta3 annonce wl    ndir   h bali jdidi
+                                        offrre.setDescriptionOffre(annonce.getDescriptionAnnonce());
+                                        offrre.setIdOffre(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode());
+                                        offrre.setNomOffre(annonce.getTitreAnnonce());
+                                        offrre.setWilaya(annonce.getWilaya());
+                                        offrre.setCommune(annonce.getCommune());
+                                        offrre.setIdUser(preferenceUtils.getMember().getIdMembre());
+                                        offrre.setStatu("CREATED");
+                                        // offre.setImages();
+                                        // khasni id user li dar l offre
 
-                            } else {
-                                Toast.makeText(context, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
-                            }
-                        });
+                                        databaseReference.child(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode()).setValue(offrre).addOnCompleteListener(task2 -> {
+
+                                            if (task2.isSuccessful()) {
+                                                setStatuAnnonce();
+                                                addNotification(offre, offrre);
+                                                Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
+                                                Intent an = new Intent(context, debut.class);
+                                                context.startActivity(an);
+
+                                            } else {
+                                                Toast.makeText(context, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+
+                                    }
+                                })
+                                // A null listener allows the button to dismiss the dialog and take no further action.
+                                .setNegativeButton("Annuler", null)
+                              //  .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+
                     }
 
                 }
