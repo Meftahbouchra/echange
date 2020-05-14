@@ -6,22 +6,22 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.BootomSheetDialogCamGall;
+import com.bouchra.myapplicationechange.adapters.myImage;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -33,9 +33,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 public class ImagesStorage extends AppCompatActivity {
@@ -45,10 +44,13 @@ public class ImagesStorage extends AppCompatActivity {
     public Uri imguri;
 
     private static final String IMAGE_DIRECTORY = "/Echangedarticle";
-    private int GALLERY = 1, CAMERA = 3 , CAMERA_PERMISSION = 2 , WRITE_EXTERNAL_STORAGE = 4 , READ_EXTERNAL_STORAGE = 5;
-    private ImageView imageview;
+    private int GALLERY = 1, CAMERA = 3, CAMERA_PERMISSION = 2, WRITE_EXTERNAL_STORAGE = 4, READ_EXTERNAL_STORAGE = 5;
+    // private ImageView imageview;
     private Annonce annonce;
     private String selectedCateg;
+    private ArrayList<Uri> listImages;
+    private com.bouchra.myapplicationechange.adapters.myImage myImage;
+    RecyclerView recyclerView;
 
 
     @Override
@@ -56,18 +58,31 @@ public class ImagesStorage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_images_storage);
 
-        //StorageReference Fire base
+        //StorageReference Firebase
         mStorageRef = FirebaseStorage.getInstance().getReference("Images Annonce");
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
         selectedCateg = getIntent().getStringExtra("categorie");
-        imageview = findViewById(R.id.image_view);
+        //  imageview = findViewById(R.id.image_view);
+        recyclerView = findViewById(R.id.recycleImages);
 
+        listImages = new ArrayList<>();
+        myImage = new myImage(this, listImages);
+        // recycle view horizontal
 
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(myImage);
         // bottom shet
         Button buttonOpenBottomSheet = findViewById(R.id.button_sheet);
         buttonOpenBottomSheet.setOnClickListener(v -> {
-            BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
-            bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");
+            if (listImages.size() <= 5) {
+                BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
+                bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");
+            } else {
+                Toast.makeText(this, "Vous ne pouvez pas ajouter d'autres photos ", Toast.LENGTH_SHORT).show();
+            }
+
             //1
             //kindir ch3al mn activity troh l had fragment ta3 la tof aya ndi m3ah intent 3la hsab min rah jay
             //In your Activity
@@ -86,8 +101,12 @@ public class ImagesStorage extends AppCompatActivity {
         });
 
         findViewById(R.id.next).setOnClickListener(v -> {
-            if (imguri != null) {
+
+            if (listImages.size() != 0) {
+
                 Fileuploader();
+            } else {
+                Toast.makeText(this, "Ajouter des images a votre annonce ", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -96,7 +115,7 @@ public class ImagesStorage extends AppCompatActivity {
     public void choosePhotoFromGallary() {
         if (!checkExternalStorageWritePermission()) {
             resuestExternalStorageWritePermission();
-        } else if(!checkExternalStorageREADPermission()){
+        } else if (!checkExternalStorageREADPermission()) {
             resuestExternalStorageREADPermission();
         } else {
             Intent galleryIntent = new Intent(Intent.ACTION_PICK,
@@ -109,9 +128,9 @@ public class ImagesStorage extends AppCompatActivity {
     public void takePhotoFromCamera() {
         if (!checkCameraPermission()) {
             resuestCameraPermission();
-        } else if (!checkExternalStorageWritePermission()){
+        } else if (!checkExternalStorageWritePermission()) {
             resuestExternalStorageWritePermission();
-        } else if (!checkExternalStorageREADPermission()){
+        } else if (!checkExternalStorageREADPermission()) {
             resuestExternalStorageREADPermission();
         } else {
             Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -132,11 +151,14 @@ public class ImagesStorage extends AppCompatActivity {
                 Uri contentURI = data.getData();
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
-                    imguri = Uri.parse(saveImage(bitmap));
+                    //imguri = Uri.parse(saveImage(bitmap));
 
                     Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
                     //*******************
-                    imageview.setImageBitmap(bitmap);
+                    // imageview.setImageBitmap(bitmap);
+
+                    listImages.add(Uri.parse(saveImage(bitmap)));
+                    myImage.notifyDataSetChanged();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -147,20 +169,23 @@ public class ImagesStorage extends AppCompatActivity {
         } else if (requestCode == CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             //******************
-            imageview.setImageBitmap(thumbnail);
-            imguri = Uri.parse(saveImage(thumbnail));
+            // imageview.setImageBitmap(thumbnail);
+            // imguri = Uri.parse(saveImage(thumbnail));
+
+            listImages.add(Uri.parse(saveImage(thumbnail)));
+            myImage.notifyDataSetChanged();
+
+
+
             Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
-        } else if (requestCode == CAMERA_PERMISSION){
+        } else if (requestCode == CAMERA_PERMISSION) {
             //takePhotoFromCamera();
-        } else if (requestCode == WRITE_EXTERNAL_STORAGE){
+        } else if (requestCode == WRITE_EXTERNAL_STORAGE) {
             //takePhotoFromCamera();
-        } else if (requestCode == READ_EXTERNAL_STORAGE){
+        } else if (requestCode == READ_EXTERNAL_STORAGE) {
             //takePhotoFromCamera();
         }
     }
-
-
-
 
 
     public String saveImage(Bitmap myBitmap) {
@@ -194,38 +219,45 @@ public class ImagesStorage extends AppCompatActivity {
         }
         return "";
     }
+
     private void Fileuploader() {
-        Log.e("img here", imguri.toString());
-        try {
-            InputStream stream = new FileInputStream(String.valueOf(imguri));
-            //StorageReference ref = mStorageRef.child("images/" + UUID.randomUUID().toString());
-            StorageReference ref = mStorageRef.child(annonce.getIdAnnonce() + UUID.randomUUID().toString());
-            ref.putStream(stream)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        Toast.makeText(ImagesStorage.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                        taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
-                                    annonce.getImages().add(String.valueOf(task));
-                                    Log.e("Image link", String.valueOf(task));
-                                    Intent ajou = new Intent(ImagesStorage.this, Article_en_retour.class);
-                                    ajou.putExtra("annonce", annonce); //key* value
-                                    ajou.putExtra("Categ", selectedCateg);
-                                    startActivity(ajou);
-                                    finish();
-                                }
-                        );
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(ImagesStorage.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show())
-                    .addOnProgressListener(taskSnapshot -> {
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-                                .getTotalByteCount());
-                    });
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+
+        for (Uri uri : listImages) {
+            imguri = uri;
+            Log.e("img here", imguri.toString());
+            try {
+                InputStream stream = new FileInputStream(String.valueOf(imguri));
+                //StorageReference ref = mStorageRef.child("images/" + UUID.randomUUID().toString());
+                StorageReference ref = mStorageRef.child(annonce.getIdAnnonce() + UUID.randomUUID().toString());
+                ref.putStream(stream)
+                        .addOnSuccessListener(taskSnapshot -> {
+                            Toast.makeText(ImagesStorage.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
+                                        annonce.getImages().add(String.valueOf(task));
+                                        Log.e("Image link", String.valueOf(task));
+                                        Intent ajou = new Intent(ImagesStorage.this, Article_en_retour.class);
+                                        ajou.putExtra("annonce", annonce); //key* value
+                                        ajou.putExtra("Categ", selectedCateg);
+                                        startActivity(ajou);
+                                        finish();
+                                    }
+                            );
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(ImagesStorage.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show())
+                        .addOnProgressListener(taskSnapshot -> {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                                    .getTotalByteCount());
+                        });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+
 
     }
 
 
+    //permission
     private boolean checkCameraPermission() {
         //check if camera permission is enabel or not
         boolean result = ContextCompat.checkSelfPermission(this,
@@ -233,11 +265,12 @@ public class ImagesStorage extends AppCompatActivity {
         return result;
     }
 
-    private  boolean checkExternalStorageWritePermission(){
+    private boolean checkExternalStorageWritePermission() {
         return ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
     }
-    private  boolean checkExternalStorageREADPermission(){
+
+    private boolean checkExternalStorageREADPermission() {
         return ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
     }
@@ -247,7 +280,6 @@ public class ImagesStorage extends AppCompatActivity {
         ActivityCompat.requestPermissions(ImagesStorage.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION);
         Toast.makeText(this, "resuestCameraPermission", Toast.LENGTH_SHORT).show();
     }
-
 
     private void resuestExternalStorageWritePermission() {
         //request runtime camera permission
@@ -260,7 +292,6 @@ public class ImagesStorage extends AppCompatActivity {
         ActivityCompat.requestPermissions(ImagesStorage.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE);
         Toast.makeText(this, "resuest_READ_EXTERNAL_STORAGE", Toast.LENGTH_SHORT).show();
     }
-
 
 
 }

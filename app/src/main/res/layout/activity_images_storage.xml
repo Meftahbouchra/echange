@@ -15,6 +15,15 @@
         android:layout_margin="16dp"
         android:background="@drawable/ajouter_des_photos" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleImages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@+id/button_sheet" />
+
+
     <TextView
         android:id="@+id/txtv"
         android:layout_width="match_parent"
@@ -22,33 +31,24 @@
         android:layout_below="@+id/button_sheet"
         android:layout_marginLeft="10dp"
         android:text="Vous pouvez ajouter 6 images à votre annnonce"
-        android:textColor="@color/bleu"
+        android:textColor="@color/black"
         android:textSize="14dp" />
 
 
-    <ImageView
-        android:id="@+id/image_view"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentStart="true"
-
-
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="300dp" />
-
     <Button
         android:id="@+id/next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/btn_floating"
+        android:orientation="horizontal"
+        android:text="Suivant"
         android:textAllCaps="false"
-        android:text="Next" />
-
-
+        android:textColor="@color/Login_form_details"
+        android:textSize="20dp" />
 
 
 </RelativeLayout>
