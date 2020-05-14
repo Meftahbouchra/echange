@@ -17,6 +17,9 @@ import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.DetailAnnonce;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bumptech.glide.Glide;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
+import com.synnapps.carouselview.ImageListener;
 
 import java.util.ArrayList;
 
@@ -36,7 +39,7 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
+        private CarouselView imageView;
         private TextView textView;
         private RelativeLayout relativeLayout;
 
@@ -46,6 +49,7 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
             imageView = itemView.findViewById(R.id.img_article);
             textView = itemView.findViewById(R.id.titte_annonce);
             relativeLayout = itemView.findViewById(R.id.layout_annonce);
+
 
         }
     }
@@ -69,22 +73,40 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
         //  holder.imageView.setImageBitmap(a.getImages());
         //Loading image from Glide library.
         Log.e("Url", a.getImages().get(0));
-        Glide.with(context)
-                .load(a.getImages().get(0))
-                .centerCrop()
-                .into(holder.imageView);
-        holder.itemView.setOnClickListener(v -> {
-            Intent affiche = new Intent(context, DetailAnnonce.class);
-            affiche.putExtra("annonce", a);
-            context.startActivity(affiche);
-     /*
-                Intent intent = new Intent(mContext, GalleryActivity.class);
-                intent.putExtra("image_url", mImages.get(position));
-                intent.putExtra("image_name", mImageNames.get(position));
-                mContext.startActivity(intent);*/
+        ArrayList<String> images = new ArrayList<>();
+        for (String image : a.getImages()) {
+            images.add(image);
+        }
+        holder.imageView.setPageCount(images.size());
+        holder.imageView.setImageListener(new ImageListener() {
+            @Override
+            public void setImageForPosition(int position, ImageView imageView) {
+                //imageView.setImageURI(images.get(position));
+                Glide.with(context)
+                        .load(images.get(position))
+                        .centerCrop()
+                        .into(imageView);
 
+
+            }
         });
+        holder.imageView.setImageClickListener(new ImageClickListener() {
+            @Override
+            public void onClick(int position) {
+                Intent affiche = new Intent(context, DetailAnnonce.class);
+                affiche.putExtra("annonce", a);
+                context.startActivity(affiche);
 
+            }
+        });
+     /*  holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent affiche = new Intent(context, DetailAnnonce.class);
+                //  affiche.putExtra("annonce", onBindViewHolder.a);
+                context.startActivity(affiche);
+            }
+        });*/
 
     }
 
