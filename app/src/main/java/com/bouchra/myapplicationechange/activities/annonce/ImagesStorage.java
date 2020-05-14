@@ -114,19 +114,8 @@ public class ImagesStorage extends AppCompatActivity {
         } else if (!checkExternalStorageREADPermission()){
             resuestExternalStorageREADPermission();
         } else {
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                try {
-                    imguri = Uri.parse(createImageFile());
-                    if (!imguri.equals("")) {
-                        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imguri);
-                        startActivityForResult(cameraIntent, CAMERA);
-                    }
-                } catch (IOException ex) {
-                    Log.i("ERROR", "IOException FILE CANNOT CREATE");
-                }
-            }
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, CAMERA);
         }
 
     }
@@ -170,20 +159,6 @@ public class ImagesStorage extends AppCompatActivity {
         }
     }
 
-
-    private String createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-       return  image.getAbsolutePath();
-    }
 
 
 
