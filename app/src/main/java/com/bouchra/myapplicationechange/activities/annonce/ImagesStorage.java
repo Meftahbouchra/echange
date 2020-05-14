@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -14,7 +15,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bouchra.myapplicationechange.R;
@@ -30,7 +33,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 public class ImagesStorage extends AppCompatActivity {
@@ -40,7 +45,7 @@ public class ImagesStorage extends AppCompatActivity {
     public Uri imguri;
 
     private static final String IMAGE_DIRECTORY = "/Echangedarticle";
-    private int GALLERY = 1, CAMERA = 2;
+    private int GALLERY = 1, CAMERA = 3 , CAMERA_PERMISSION = 2 , WRITE_EXTERNAL_STORAGE = 4 , READ_EXTERNAL_STORAGE = 5;
     private ImageView imageview;
     private Annonce annonce;
     private String selectedCateg;
@@ -89,15 +94,14 @@ public class ImagesStorage extends AppCompatActivity {
 
     // photo gallery or camera methodes
     public void choosePhotoFromGallary() {
-        if (!checkStoragePermission()) {
-            resuestStoragePermission();
+        if (!checkExternalStorageWritePermission()) {
+            resuestExternalStorageWritePermission();
+        } else if(!checkExternalStorageREADPermission()){
+            resuestExternalStorageREADPermission();
         } else {
-
             Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
             startActivityForResult(galleryIntent, GALLERY);
-
         }
 
     }
@@ -105,9 +109,24 @@ public class ImagesStorage extends AppCompatActivity {
     public void takePhotoFromCamera() {
         if (!checkCameraPermission()) {
             resuestCameraPermission();
+        } else if (!checkExternalStorageWritePermission()){
+            resuestExternalStorageWritePermission();
+        } else if (!checkExternalStorageREADPermission()){
+            resuestExternalStorageREADPermission();
         } else {
-            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(intent, CAMERA);
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                try {
+                    imguri = Uri.parse(createImageFile());
+                    if (!imguri.equals("")) {
+                        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imguri);
+                        startActivityForResult(cameraIntent, CAMERA);
+                    }
+                } catch (IOException ex) {
+                    Log.i("ERROR", "IOException FILE CANNOT CREATE");
+                }
+            }
         }
 
     }
@@ -141,19 +160,38 @@ public class ImagesStorage extends AppCompatActivity {
             //******************
             imageview.setImageBitmap(thumbnail);
             imguri = Uri.parse(saveImage(thumbnail));
-
-
-
             Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
+        } else if (requestCode == CAMERA_PERMISSION){
+            //takePhotoFromCamera();
+        } else if (requestCode == WRITE_EXTERNAL_STORAGE){
+            //takePhotoFromCamera();
+        } else if (requestCode == READ_EXTERNAL_STORAGE){
+            //takePhotoFromCamera();
         }
     }
+
+
+    private String createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+       return  image.getAbsolutePath();
+    }
+
+
 
 
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+        File wallpaperDirectory = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         // have the object build the directory structure, if needed.
         if (!wallpaperDirectory.exists()) {
             wallpaperDirectory.mkdirs();
@@ -162,7 +200,11 @@ public class ImagesStorage extends AppCompatActivity {
         try {
             File f = new File(wallpaperDirectory, Calendar.getInstance()
                     .getTimeInMillis() + ".jpg");
-            f.createNewFile();
+            if (!f.exists()) {
+                if (!f.createNewFile()) {
+                    throw new IOException("Cant able to create file");
+                }
+            }
             FileOutputStream fo = new FileOutputStream(f);
             fo.write(bytes.toByteArray());
             MediaScannerConnection.scanFile(getApplicationContext(),
@@ -209,36 +251,41 @@ public class ImagesStorage extends AppCompatActivity {
     }
 
 
-
-
-    private boolean checkStoragePermission() {
-        //check if storage permission is enabel or not
-        boolean result = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-        return result;
-    }
-
-    private void resuestStoragePermission() {
-        //request runtime storage permission
-       // ActivityCompat.requestPermissions(this, storagePermission, STORAGE_REQUEST_CODE);
-        Toast.makeText(this, "resuestStoragePermission", Toast.LENGTH_SHORT).show();
-    }
-
-
     private boolean checkCameraPermission() {
         //check if camera permission is enabel or not
         boolean result = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
-        boolean resultl = ContextCompat.checkSelfPermission(this,
+        return result;
+    }
+
+    private  boolean checkExternalStorageWritePermission(){
+        return ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-        return result && resultl;
+    }
+    private  boolean checkExternalStorageREADPermission(){
+        return ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
     }
 
     private void resuestCameraPermission() {
         //request runtime camera permission
-      //  ActivityCompat.requestPermissions(this, cameraPermission, CAMERA_REQUEST_CODE);
+        ActivityCompat.requestPermissions(ImagesStorage.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION);
         Toast.makeText(this, "resuestCameraPermission", Toast.LENGTH_SHORT).show();
-
     }
+
+
+    private void resuestExternalStorageWritePermission() {
+        //request runtime camera permission
+        ActivityCompat.requestPermissions(ImagesStorage.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE);
+        Toast.makeText(this, "resuest_WRITE_EXTERNAL_STORAGE", Toast.LENGTH_SHORT).show();
+    }
+
+    private void resuestExternalStorageREADPermission() {
+        //request runtime camera permission
+        ActivityCompat.requestPermissions(ImagesStorage.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE);
+        Toast.makeText(this, "resuest_READ_EXTERNAL_STORAGE", Toast.LENGTH_SHORT).show();
+    }
+
+
 
 }
