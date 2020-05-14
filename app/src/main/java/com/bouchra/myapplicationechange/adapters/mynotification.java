@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.ConfirmEchange;
 import com.bouchra.myapplicationechange.activities.DemandesOffre;
+import com.bouchra.myapplicationechange.activities.DetailAnnonce;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Notification;
 import com.bouchra.myapplicationechange.models.Offre;
@@ -90,42 +91,74 @@ public class mynotification extends RecyclerView.Adapter<mynotification.ViewHold
 
 
             } else {
-                final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference ref = database.getReference("Annonce");
+                if (notification.getContenuNotification().equals("updateAnnonce")) {
+                    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference ref = database.getReference("Annonce");
 
-                ref.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    ref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                            String userId = dataSnapshot.child("userId").getValue().toString();
-                            if (notification.getIdreceiver().equals(userId)) {
-                                Annonce annonce = dataSnapshot.getValue(Annonce.class);
-                                if (annonce.getStatu().equals("ATTEND_DE_CONFIRMATION_D_OFFRE") || annonce.getStatu().equals("ASSINED")) {
-                                    Intent ajou = new Intent(context, DemandesOffre.class);
-                                    ajou.putExtra("annonce", annonce);
-                                    context.startActivity(ajou);
+                                String userId = dataSnapshot.child("userId").getValue().toString();
+                                if (notification.getIdsender().equals(userId)) {
+                                    Annonce annonce = dataSnapshot.getValue(Annonce.class);
+                                    if (annonce.getStatu().equals("ATTEND_DE_CONFIRMATION_D_OFFRE") || annonce.getStatu().equals("ASSINED")) {
+                                        Intent affiche = new Intent(context, DetailAnnonce.class);
+                                        affiche.putExtra("annonce", annonce);
+                                        context.startActivity(affiche);
+                                    }
+
                                 }
-
                             }
+
+
                         }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                        }
+                    });
 
 
+                } else {
+                    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference ref = database.getReference("Annonce");
+
+                    ref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                                String userId = dataSnapshot.child("userId").getValue().toString();
+                                if (notification.getIdreceiver().equals(userId)) {
+                                    Annonce annonce = dataSnapshot.getValue(Annonce.class);
+                                    if (annonce.getStatu().equals("ATTEND_DE_CONFIRMATION_D_OFFRE") || annonce.getStatu().equals("ASSINED")) {
+                                        Intent ajou = new Intent(context, DemandesOffre.class);
+                                        ajou.putExtra("annonce", annonce);
+                                        context.startActivity(ajou);
+                                    }
+
+                                }
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+                }
             }
         });
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Membre").child(notification.getIdsender());
-
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -135,14 +168,21 @@ public class mynotification extends RecyclerView.Adapter<mynotification.ViewHold
                 String contenu = notification.getContenuNotification();
                 String smgaccept = " a accepté votre offre.";
                 String msgenvoyer = " a envoyer une offre pour votre annonce.";
+                String mgdUpdate = " a modifier une annonce .";
 
                 if (contenu.equals("acceptOffre")) {
                     String MSG = "<b><font color=#000>" + nameUser + "</font></b>" + smgaccept;
                     holder.showNotification.setText(Html.fromHtml(MSG));
 
                 } else {
-                    String MSG = "<b>" + nameUser + "</b>" + msgenvoyer;
-                    holder.showNotification.setText(Html.fromHtml(MSG));
+                    if (notification.getContenuNotification().equals("updateAnnonce")) {
+                        String MSG = "<b><font color=#000>" + nameUser + "</font></b>" + mgdUpdate;
+                        holder.showNotification.setText(Html.fromHtml(MSG));
+
+                    } else {
+                        String MSG = "<b><font color=#000>" + nameUser + "</font></b>" + msgenvoyer;
+                        holder.showNotification.setText(Html.fromHtml(MSG));
+                    }
                 }
 
 

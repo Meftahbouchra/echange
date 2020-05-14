@@ -333,8 +333,8 @@
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"
             android:gravity="center"
+            android:text="informationDafault"
             android:textSize="25sp"
-android:text="lkh "
             android:layout_below="@+id/viw2"
 
             />
@@ -344,8 +344,8 @@ android:text="lkh "
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"
             android:gravity="center"
+            android:text="informationRecherche"
             android:textSize="25sp"
-            android:text="kjjfh j"
             android:layout_below="@+id/viw2"
 
             />

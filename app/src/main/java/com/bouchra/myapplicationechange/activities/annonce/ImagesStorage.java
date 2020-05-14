@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bouchra.myapplicationechange.R;
@@ -23,10 +22,6 @@ import com.bouchra.myapplicationechange.adapters.BootomSheetDialogCamGall;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -36,7 +31,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.List;
 import java.util.UUID;
 
 public class ImagesStorage extends AppCompatActivity {
@@ -91,32 +85,31 @@ public class ImagesStorage extends AppCompatActivity {
                 Fileuploader();
             }
         });
+    }
 
-        if (ContextCompat.checkSelfPermission(ImagesStorage.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            if (ActivityCompat.shouldShowRequestPermissionRationale(ImagesStorage.this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            } else {
-                ActivityCompat.requestPermissions(ImagesStorage.this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        111);
-            }
+    // photo gallery or camera methodes
+    public void choosePhotoFromGallary() {
+        if (!checkStoragePermission()) {
+            resuestStoragePermission();
+        } else {
+
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+            startActivityForResult(galleryIntent, GALLERY);
+
         }
 
     }
 
-
-    // photo gallery or camera methodes
-    public void choosePhotoFromGallary() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(galleryIntent, GALLERY);
-    }
-
     public void takePhotoFromCamera() {
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
+        if (!checkCameraPermission()) {
+            resuestCameraPermission();
+        } else {
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, CAMERA);
+        }
+
     }
 
     @Override
@@ -132,6 +125,7 @@ public class ImagesStorage extends AppCompatActivity {
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
                     imguri = Uri.parse(saveImage(bitmap));
+
                     Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
                     //*******************
                     imageview.setImageBitmap(bitmap);
@@ -147,9 +141,13 @@ public class ImagesStorage extends AppCompatActivity {
             //******************
             imageview.setImageBitmap(thumbnail);
             imguri = Uri.parse(saveImage(thumbnail));
+
+
+
             Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -179,44 +177,12 @@ public class ImagesStorage extends AppCompatActivity {
         }
         return "";
     }
-
-    private void requestMultiplePermissions() {
-        Dexter.withActivity(this)
-                .withPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        // check if all permissions are granted
-                        if (report.areAllPermissionsGranted()) {
-                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
-                        }
-
-                        // check for permanent denial of any permission
-                        if (report.isAnyPermissionPermanentlyDenied()) {
-                            // show alert dialog navigating to Settings
-                            //openSettingsDialog();
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<com.karumi.dexter.listener.PermissionRequest> permissions, PermissionToken token) {
-
-                    }
-
-
-                }).
-                withErrorListener(error -> Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show())
-                .onSameThread()
-                .check();
-    }
-
     private void Fileuploader() {
+        Log.e("img here", imguri.toString());
         try {
             InputStream stream = new FileInputStream(String.valueOf(imguri));
-            StorageReference ref = mStorageRef.child("images/" + UUID.randomUUID().toString());
+            //StorageReference ref = mStorageRef.child("images/" + UUID.randomUUID().toString());
+            StorageReference ref = mStorageRef.child(annonce.getIdAnnonce() + UUID.randomUUID().toString());
             ref.putStream(stream)
                     .addOnSuccessListener(taskSnapshot -> {
                         Toast.makeText(ImagesStorage.this, "Uploaded", Toast.LENGTH_SHORT).show();
@@ -242,5 +208,37 @@ public class ImagesStorage extends AppCompatActivity {
 
     }
 
+
+
+
+    private boolean checkStoragePermission() {
+        //check if storage permission is enabel or not
+        boolean result = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        return result;
+    }
+
+    private void resuestStoragePermission() {
+        //request runtime storage permission
+       // ActivityCompat.requestPermissions(this, storagePermission, STORAGE_REQUEST_CODE);
+        Toast.makeText(this, "resuestStoragePermission", Toast.LENGTH_SHORT).show();
+    }
+
+
+    private boolean checkCameraPermission() {
+        //check if camera permission is enabel or not
+        boolean result = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
+        boolean resultl = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        return result && resultl;
+    }
+
+    private void resuestCameraPermission() {
+        //request runtime camera permission
+      //  ActivityCompat.requestPermissions(this, cameraPermission, CAMERA_REQUEST_CODE);
+        Toast.makeText(this, "resuestCameraPermission", Toast.LENGTH_SHORT).show();
+
+    }
 
 }

@@ -99,9 +99,9 @@ public class AnnonceActivity extends AppCompatActivity {
 
 
                 selectedCateg = parent.getItemAtPosition(position).toString();
-                if (!selectedCateg.equals("Catègorie")) {
+
                     isSelected = true;
-                }
+
 
             }
 

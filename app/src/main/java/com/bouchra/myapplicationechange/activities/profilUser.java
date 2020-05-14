@@ -111,7 +111,7 @@ public class profilUser extends AppCompatActivity {
 
                 }
                 if (nbrComm == 0) {
-                    avis.setText(nbrComm);
+                    avis.setText("0");
                 } else {
                     float resultat = totalRepos / nbrComm;
                     avis.setText(String.valueOf(resultat));

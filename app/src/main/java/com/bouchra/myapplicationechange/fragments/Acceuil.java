@@ -254,19 +254,26 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
     public void Recherche(String keyWord, String wilaya) {
         ArrayList<Annonce> output = new ArrayList<>();
+        output.clear();
         for (Annonce object : annonces) {
             String obj = object.getTitreAnnonce().toLowerCase();
-            if (obj.contains(keyWord.toLowerCase()) && object.getWilaya().toLowerCase().contains(wilaya.toLowerCase())){
+            if (obj.contains(keyWord.toLowerCase()) && object.getWilaya().toLowerCase().contains(wilaya.toLowerCase())) {
                 output.add(object);
-                informationDafault.setVisibility(View.GONE);
-                informationRecherche.setVisibility(View.GONE);
-                publicAdapter.setMesannonce(output);
-                publicAdapter.notifyDataSetChanged();
-            }else {
-               // informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
-                informationDafault.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.GONE);
+
             }
+
+
+        }
+        if (output.size() == 0) {
+            informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
+            informationDafault.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
+
+        } else {
+            informationDafault.setVisibility(View.GONE);
+            informationRecherche.setVisibility(View.GONE);
+            publicAdapter.setMesannonce(output);
+            publicAdapter.notifyDataSetChanged();
 
         }
 
@@ -295,20 +302,19 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                             annonces.add(postSnapshot.getValue(Annonce.class));
 
                         }
-                        if (annonces.size() == 0) {
-                            //   informationDafault.setText("Pour le moment il n'y a aucune anonce publiè");
-                            informationRecherche.setVisibility(View.GONE);
-                            recyclerView.setVisibility(View.GONE);
-                        } else {
-                            informationDafault.setVisibility(View.GONE);
-                            informationRecherche.setVisibility(View.GONE);
-                            publicAdapter.setMesannonce(annonces);
-                            publicAdapter.notifyDataSetChanged();
-                        }
+
 
                     }
-
-
+                }
+                if (annonces.size() == 0) {
+                    informationDafault.setText("Pour le moment il n'y a aucune anonce publiè");
+                    informationRecherche.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+                } else {
+                    informationDafault.setVisibility(View.GONE);
+                    informationRecherche.setVisibility(View.GONE);
+                    publicAdapter.setMesannonce(annonces);
+                    publicAdapter.notifyDataSetChanged();
                 }
 
 
@@ -323,6 +329,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     }
 
     public void affichageParCategorie(String categ) {
+
         annonces.clear();
         Log.e("nom categorie ", categ);
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -333,13 +340,16 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        String IDannonce = postSnapshot.getKey();// hna psq nskak ghir key li howa id annonce
+
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot id : dataSnapshot.getChildren()) {
+                        String IDannonce = id.getKey();
                         Log.e("Data here", IDannonce);
+
                         //annonce
                         PreferenceUtils preferenceUtils = new PreferenceUtils(getContext());
                         final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        // DatabaseReference ref = database.getReference("Annonce").child(IDannonce);
                         DatabaseReference ref = database.getReference("Annonce").child(IDannonce);
 
                         ref.addValueEventListener(new ValueEventListener() {
@@ -352,12 +362,19 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
                                 if (!user.equals(preferenceUtils.getMember().getIdMembre())) {
                                     annonces.add(snapshot.getValue(Annonce.class));
+                                    informationRecherche.setVisibility(View.GONE);
+                                    informationDafault.setVisibility(View.GONE);
+                                    publicAdapter.setMesannonce(annonces);
+                                    publicAdapter.notifyDataSetChanged();
+                                }else {
+                                    informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
+                                    informationDafault.setVisibility(View.GONE);
+                                    recyclerView.setVisibility(View.GONE);
+
+                                    Toast.makeText(getContext(), "kayan ghir ta3ak", Toast.LENGTH_SHORT).show();
                                 }
 
-                                informationRecherche.setVisibility(View.GONE);
-                                informationDafault.setVisibility(View.GONE);
-                                publicAdapter.setMesannonce(annonces);
-                                publicAdapter.notifyDataSetChanged();
+
 
 
                             }
@@ -370,16 +387,27 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
 
                     }
-                } else {// mkanch f had l categoreri
-                //    informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
+
+
+                } else {
+                    informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
                     informationDafault.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
+
+                    Toast.makeText(getContext(), "mknch f had l categ", Toast.LENGTH_SHORT).show();
+                }
+
+
+                // }
+                /*else {mkanch f had l categoreri informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
+                    informationDafault.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);*/
 
                    /* publicAdapter.setMesannonce(annonces);
                     publicAdapter.notifyDataSetChanged();
                     Log.e("nbrdeannoncepourlesvide", (String.valueOf(annonces.size())));*/
 
-                }
+                // }
             }
 
             @Override

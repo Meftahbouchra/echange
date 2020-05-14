@@ -18,12 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.RecycleViewArticleRetour;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.models.Notification;
+import com.bouchra.myapplicationechange.models.Offre;
 import com.bouchra.myapplicationechange.notification.APIService;
 import com.bouchra.myapplicationechange.notification.Client;
-import com.bouchra.myapplicationechange.notification.Data;
-import com.bouchra.myapplicationechange.notification.Response;
-import com.bouchra.myapplicationechange.notification.Sender;
-import com.bouchra.myapplicationechange.notification.Token;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,13 +31,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
+import java.util.Date;
 
 
 public class ModifierAnnonce extends Fragment {
@@ -55,6 +50,7 @@ public class ModifierAnnonce extends Fragment {
     ArrayList<String> posts = new ArrayList<>();
     private boolean notify = false;
     private APIService apiService;
+    private DatabaseReference data;
 
     PreferenceUtils preferenceUtils;
 
@@ -104,7 +100,7 @@ public class ModifierAnnonce extends Fragment {
                 .into(imgAnnonc);
         enregister.setOnClickListener(v -> {
             updateAnnonce();
-            getOffres(annonce.getIdAnnonce());
+
 
         });
         return view;
@@ -136,32 +132,10 @@ public class ModifierAnnonce extends Fragment {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                // getOffres(annonce.getIdAnnonce());
-                                final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference ref = database.getReference("Offre").child(annonce.getIdAnnonce());
-       /* PreferenceUtils preferenceUtils;
-        preferenceUtils = new PreferenceUtils(getContext());*/
-                                ref.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot snapshot) {
-                                        if (snapshot != null) {
-                                            for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                                                String user = postSnapshot.child("idUser").getValue().toString();
-                                                Log.e("userli dar offre ", user);
-                                                Toast.makeText(getContext(), "jcp chkyn" + user, Toast.LENGTH_SHORT).show();
-// send notification
-                                            }
+                                if (!annonce.getStatu().equals("NEED_To_Be_CONFIRM") && !annonce.getStatu().equals("NEED_REVIEW") && !annonce.getStatu().equals("COMPLETED")) {
+                                    getOffres(annonce);
 
-                                        } else Log.e("khataa", "khataa");
-
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        // Getting model failed, log a message
-                                    }
-                                });
+                                }
 
                             }
                         }
@@ -179,23 +153,18 @@ public class ModifierAnnonce extends Fragment {
         }
     }
 
-    private void getOffres(String idAnnonce) {
+    private void getOffres(Annonce annonce) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Offre").child(idAnnonce);
+        DatabaseReference ref = database.getReference("Offre").child(annonce.getIdAnnonce());
        /* PreferenceUtils preferenceUtils;
         preferenceUtils = new PreferenceUtils(getContext());*/
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    String user = postSnapshot.child("idUser").getValue().toString();
-                    Log.e("userli dar offre ", user);
-                    Toast.makeText(getContext(), "jcp chkyn" + user, Toast.LENGTH_SHORT).show();
-                    if (notify) {
-                        senNotification(user, preferenceUtils.getMember().getNomMembre(), "annonce modifer !!");
-                    }
-                    notify = false;
-// send notification
+                    Offre offre = postSnapshot.getValue(Offre.class);
+
+                    addNotification(annonce, offre);
                 }
 
 
@@ -208,76 +177,26 @@ public class ModifierAnnonce extends Fragment {
         });
     }
 
-    private void senNotification(final String userid, final String name, final String message) {
-        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
-        Query query = allTokens.orderByKey().equalTo(userid);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Token token = ds.getValue(Token.class);
-                    Data data = new Data(preferenceUtils.getMember().getIdMembre(), name + " : " + message, "Notification", userid, R.drawable.user); // logo of application
+    // nrsl l mol l offre balo badal f annonce
+    private void addNotification(Annonce annonce, Offre offre) {
+        data = FirebaseDatabase.getInstance().getReference("Notification").child(offre.getIdUser());
+        Notification notification = new Notification();
+        notification.setIdsender(annonce.getUserId());
+        notification.setIdreceiver(offre.getIdUser());
+        notification.setDateNotification(new Date());
+        notification.setContenuNotification("updateAnnonce");
+        notification.setIdNotification(String.valueOf(offre.getIdOffre().hashCode()) + annonce.getIdAnnonce().hashCode());
+        data.child(String.valueOf(offre.getIdOffre().hashCode()) + annonce.getIdAnnonce().hashCode()).setValue(notification).addOnCompleteListener(task2 -> {
+            if (task2.isSuccessful()) {
 
-                    Sender sender = new Sender(data, token.getToken());
-                    apiService.sendNotification(sender)
-                            .enqueue(new Callback<Response>() {
-                                @Override
-                                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                                    Toast.makeText(getContext(), "" + response.message(), Toast.LENGTH_SHORT).show();
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<Response> call, Throwable t) {
-
-                                }
-                            });
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+
+
     }
 
 
-    /* private void senNotification(final String Idreceiver, final String nameSander, final String message) {
-         DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
-         Query query = allTokens.orderByKey().equalTo(userid);
-         query.addValueEventListener(new ValueEventListener() {
-             @Override
-             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                     Token token = ds.getValue(Token.class);
-                     Data data = new Data(preferenceUtils.getMember().getIdMembre(), name + " : " + message, "Nouveau message", userid, R.drawable.user); // logo of application
-
-                     Sender sender = new Sender(data, token.getToken());
-                     apiService.sendNotification(sender)
-                             .enqueue(new Callback<Response>() {
-                                 @Override
-                                 public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                                     Toast.makeText(MessageActivity.this, "" + response.message(), Toast.LENGTH_SHORT).show();
-
-                                 }
-
-                                 @Override
-                                 public void onFailure(Call<Response> call, Throwable t) {
-
-                                 }
-                             });
-                 }
-
-             }
-
-             @Override
-             public void onCancelled(@NonNull DatabaseError databaseError) {
-
-             }
-         });
-     }*/
     public void ajoutArticle() {
         String x = editText.getText().toString();
         if (posts.size() < 10) {
