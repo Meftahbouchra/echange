@@ -108,6 +108,7 @@ public class AjoutOffre extends AppCompatActivity {
             bundle.putString("linkOffre", "fromOffre");
             bottomsheet.setArguments(bundle);
             bottomsheet.show((this).getSupportFragmentManager(), "Image Dialog");
+
         });
 
 
@@ -120,6 +121,14 @@ public class AjoutOffre extends AppCompatActivity {
                 idAnnonce = annonce.getIdAnnonce();
             }
         }
+
+        suppImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imguri = null;
+                pic.setImageBitmap(null);
+            }
+        });
 
         suiv.setOnClickListener(v -> {
             if (imguri != null) {
