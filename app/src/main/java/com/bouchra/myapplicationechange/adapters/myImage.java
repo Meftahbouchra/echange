@@ -42,24 +42,9 @@ public class myImage extends RecyclerView.Adapter<myImage.ViewHolder> {
             images.remove(position);
             this.notifyDataSetChanged();
 
-
-            // this.notifyDataSetChanged();
-
-            //  images.notify
-            //  this.notify();
         });
-        /*
 
-        h.remove.setOnClickListener(v -> {
 
-            list.remove(position);
-            // adapter hna khas ndirolah refresh
-            // ins pour refresh vta3 view
-
-            this.notifyDataSetChanged();
-
-        });
-         */
 
 
     }

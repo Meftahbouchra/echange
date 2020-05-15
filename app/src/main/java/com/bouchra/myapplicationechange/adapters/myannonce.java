@@ -164,12 +164,11 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                         Toast.makeText(context, "Vous ne peux pas attribuée cette annonce ,elle a été déja échngé !", Toast.LENGTH_SHORT).show();
 
 
-
                     } else {
 
                         new AlertDialog.Builder(context)
                                 .setTitle("Echanger votre object")
-                                .setMessage("Souhaitez vous vraiment envoyer cette"+annonce.getTitreAnnonce()+ "comme un offre ?")
+                                .setMessage("Souhaitez vous vraiment envoyer cette" + annonce.getTitreAnnonce() + "comme un offre ?")
                                 // Specifying a listener allows you to take an action before dismissing the dialog.
                                 // The dialog is automatically dismissed when a dialog button is clicked.
                                 .setPositiveButton("Envoyer", new DialogInterface.OnClickListener() {//android.R.string.yes
@@ -187,8 +186,7 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                                         offrre.setCommune(annonce.getCommune());
                                         offrre.setIdUser(preferenceUtils.getMember().getIdMembre());
                                         offrre.setStatu("CREATED");
-                                        // offre.setImages();
-                                        // khasni id user li dar l offre
+                                        offrre.setImage(annonce.getImages().get(0));
 
                                         databaseReference.child(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode()).setValue(offrre).addOnCompleteListener(task2 -> {
 
@@ -208,7 +206,7 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                                 })
                                 // A null listener allows the button to dismiss the dialog and take no further action.
                                 .setNegativeButton("Annuler", null)
-                              //  .setIcon(android.R.drawable.ic_dialog_alert)
+                                //  .setIcon(android.R.drawable.ic_dialog_alert)
                                 .show();
 
                     }
@@ -222,6 +220,7 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
 
 
     }
+
     private void addNotification(String idannonce, Offre offre) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Annonce").child(idannonce);
@@ -230,7 +229,7 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
-                        Annonce annonce=snapshot.getValue(Annonce.class);
+                Annonce annonce = snapshot.getValue(Annonce.class);
                 DatabaseReference data = FirebaseDatabase.getInstance().getReference("Notification").child(annonce.getUserId());
                 Notification notification = new Notification();
                 notification.setIdsender(offre.getIdUser());

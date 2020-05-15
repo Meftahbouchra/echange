@@ -256,7 +256,7 @@ public class confirmEchangeAnnonce extends Fragment {
         OFFRE.put("dateOffre", offre.getDateOffre());
         OFFRE.put("descriptionOffre", offre.getDescriptionOffre());
         OFFRE.put("idUser", offre.getIdUser());
-        OFFRE.put("images", offre.getImages());
+        OFFRE.put("images", offre.getImage());
         OFFRE.put("wilaya", offre.getWilaya());
         OFFRE.put("statu", "REJECTED");
         mDbRef.updateChildren(OFFRE);

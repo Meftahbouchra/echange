@@ -20,7 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class BottomsheetManipAnnonceOffre extends BottomSheetDialogFragment {
 
     String Offre = null;
-  Annonce annonce;
+    Annonce annonce;
     com.bouchra.myapplicationechange.models.Offre offreObject;
 
     @Nullable
@@ -63,7 +63,7 @@ public class BottomsheetManipAnnonceOffre extends BottomSheetDialogFragment {
 
         confirmeSuppAnnonceOffre confirmeSuppAnnonce = new confirmeSuppAnnonceOffre();
         Bundle b2 = new Bundle();
-        b2.putSerializable("Annonce",annonce);
+        b2.putSerializable("Annonce", annonce);
         b2.putSerializable("offreObject", offreObject);
         confirmeSuppAnnonce.setArguments(b2);
         confirmeSuppAnnonce.show(getFragmentManager(), "confirmeSuppAnnonceOffre");

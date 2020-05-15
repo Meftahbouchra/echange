@@ -27,6 +27,7 @@ import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Notification;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -94,10 +95,11 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
         holder.commune.setText(offre.getCommune());
 
         // hadi ta3 photo mzal mndirha
-        /*Glide.with(context)
-                .load(annonce.getImages().get(0))
+       Glide.with(context)
+                .load(offre.getImage())
                 .centerCrop()
-                .into(holder.imgAnnonce);*/
+                .into(holder.img_offre);
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
         String str = simpleDateFormat.format(offre.getDateOffre());
         holder.dateh.setText(str);

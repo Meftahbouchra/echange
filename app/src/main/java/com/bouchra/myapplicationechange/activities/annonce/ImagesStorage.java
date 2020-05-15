@@ -1,6 +1,7 @@
 package com.bouchra.myapplicationechange.activities.annonce;
 
 import android.Manifest;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -69,7 +70,7 @@ public class ImagesStorage extends AppCompatActivity {
         myImage = new myImage(this, listImages);
         // recycle view horizontal
 
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(myImage);
@@ -77,8 +78,13 @@ public class ImagesStorage extends AppCompatActivity {
         Button buttonOpenBottomSheet = findViewById(R.id.button_sheet);
         buttonOpenBottomSheet.setOnClickListener(v -> {
             if (listImages.size() <= 5) {
+               /* BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
+                bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");*/
                 BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
-                bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");
+                Bundle bundle = new Bundle();
+                bundle.putString("linkAnnonce","fromAnnonce");
+                bottomsheet.setArguments(bundle);
+                bottomsheet.show((this).getSupportFragmentManager(),"Image Dialog");
             } else {
                 Toast.makeText(this, "Vous ne pouvez pas ajouter d'autres photos ", Toast.LENGTH_SHORT).show();
             }
@@ -118,9 +124,11 @@ public class ImagesStorage extends AppCompatActivity {
         } else if (!checkExternalStorageREADPermission()) {
             resuestExternalStorageREADPermission();
         } else {
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(galleryIntent, GALLERY);
+
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);// EXTRA_ALLOW_MULTIPLE n'est disponible que pour l api >=
+            startActivityForResult(intent, GALLERY);
         }
 
     }
@@ -148,22 +156,46 @@ public class ImagesStorage extends AppCompatActivity {
         }
         if (requestCode == GALLERY) {
             if (data != null) {
-                Uri contentURI = data.getData();
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
-                    //imguri = Uri.parse(saveImage(bitmap));
+                if (data.getClipData() != null) {
+                    ClipData mClipData = data.getClipData();
+                    for (int i = 0; i < mClipData.getItemCount(); i++) {
+                        ClipData.Item item = mClipData.getItemAt(i);
+                        Uri uri = item.getUri();
+                        // display your images
 
-                    Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
-                    //*******************
-                    // imageview.setImageBitmap(bitmap);
+                        Bitmap bitmap = null;
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                            if (listImages.size() <= 5) {
+                                listImages.add(Uri.parse(saveImage(bitmap)));
+                                myImage.notifyDataSetChanged();
+                            } else {
+                                Toast.makeText(this, "Vous ne pouvez pas ajouter d'autres photos ", Toast.LENGTH_SHORT).show();
+                            }
 
-                    listImages.add(Uri.parse(saveImage(bitmap)));
-                    myImage.notifyDataSetChanged();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
+
+                    }
+                } else if (data.getData() != null) {
+                    Uri uri = data.getData();
+                    // display your image
+
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                        listImages.add(Uri.parse(saveImage(bitmap)));
+                        myImage.notifyDataSetChanged();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
+
+
             }
 
         } else if (requestCode == CAMERA) {
@@ -174,7 +206,6 @@ public class ImagesStorage extends AppCompatActivity {
 
             listImages.add(Uri.parse(saveImage(thumbnail)));
             myImage.notifyDataSetChanged();
-
 
 
             Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();

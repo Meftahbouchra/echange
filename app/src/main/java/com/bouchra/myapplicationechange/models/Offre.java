@@ -1,24 +1,32 @@
 package com.bouchra.myapplicationechange.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class Offre extends Historique implements Serializable {
     private String idOffre;
     private Date dateOffre;
     private String nomOffre;
+    private String image;
 
-    public Offre(String idOffre, Date dateOffre, String nomOffre, String annonceId, String wilaya, String idUser, String statu, String commune, ArrayList<String> images, String descriptionOffre) {
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Offre(String idOffre, Date dateOffre, String nomOffre, String image, String annonceId, String wilaya, String idUser, String statu, String commune, String descriptionOffre) {
         this.idOffre = idOffre;
         this.dateOffre = dateOffre;
         this.nomOffre = nomOffre;
+        this.image = image;
         this.annonceId = annonceId;
         this.wilaya = wilaya;
         this.idUser = idUser;
         this.statu = statu;
         this.commune = commune;
-        this.images = images;
         this.descriptionOffre = descriptionOffre;
     }
 
@@ -69,16 +77,10 @@ public class Offre extends Historique implements Serializable {
         this.commune = commune;
     }
 
-    public ArrayList<String> getImages() {
-        return images;
-    }
 
-    public void setImages(ArrayList<String> images) {
-        this.images = images;
-    }
 
     private String commune;
-    private ArrayList<String> images = new ArrayList<>();
+
 
 
     public Offre() {

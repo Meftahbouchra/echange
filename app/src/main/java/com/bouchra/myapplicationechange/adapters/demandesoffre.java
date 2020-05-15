@@ -18,6 +18,7 @@ import com.bouchra.myapplicationechange.ConfirmeOffre;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.models.Offre;
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -66,11 +67,11 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
         holder.titreOffre.setText(offre.getNomOffre());
         //Loading image from Glide library.
         // la tof mazal mndirha
-      /*  Log.e("Url", offre.getImages().get(0));
+
         Glide.with(context)
-                .load(offre.getImages().get(0))
+                .load(offre.getImage())
                 .centerCrop()
-                .into(holder.imageOffre);*/
+                .into(holder.imageOffre);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
         String str = simpleDateFormat.format(offre.getDateOffre());
         holder.timeOffre.setText(str);
