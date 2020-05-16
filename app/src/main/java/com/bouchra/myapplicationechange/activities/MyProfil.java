@@ -1,5 +1,6 @@
 package com.bouchra.myapplicationechange.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,14 +9,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.CommentaireAdapter;
-import com.bouchra.myapplicationechange.fragments.editMyProfil;
+import com.bouchra.myapplicationechange.editMyProfil;
 import com.bouchra.myapplicationechange.models.Commentaire;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.database.DataSnapshot;
@@ -93,13 +92,8 @@ public class MyProfil extends AppCompatActivity {
         editProfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager manager = getSupportFragmentManager();
-                FragmentTransaction t = manager.beginTransaction();
-                final editMyProfil m4 = new editMyProfil();
-                Bundle b2 = new Bundle();
-                m4.setArguments(b2);
-                t.add(R.id.editfragment, m4);
-                t.commit();
+               startActivity(new Intent(MyProfil.this, editMyProfil.class));
+               finish();
             }
         });
 

@@ -1,10 +1,12 @@
 package com.bouchra.myapplicationechange.fragments;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,14 +18,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.adapters.BootomSheetDialogCamGall;
 import com.bouchra.myapplicationechange.adapters.RecycleViewArticleRetour;
+import com.bouchra.myapplicationechange.adapters.myImage;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Notification;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bouchra.myapplicationechange.notification.APIService;
 import com.bouchra.myapplicationechange.notification.Client;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -51,8 +54,12 @@ public class ModifierAnnonce extends Fragment {
     private boolean notify = false;
     private APIService apiService;
     private DatabaseReference data;
-
+    private ArrayList<String> list = new ArrayList<>();
     PreferenceUtils preferenceUtils;
+
+    private ArrayList<Uri> listImages;
+    private com.bouchra.myapplicationechange.adapters.myImage myImage;
+    RecyclerView recyclerViewImages;
 
     public ModifierAnnonce() {
     }
@@ -69,6 +76,27 @@ public class ModifierAnnonce extends Fragment {
         enregister = view.findViewById(R.id.enregister);
         recyclerView = view.findViewById(R.id.rec_retour);
         preferenceUtils = new PreferenceUtils(getContext());
+        recyclerViewImages = view.findViewById(R.id.recycleImages);
+
+        listImages = new ArrayList<>();
+
+        Button buttonOpenBottomSheet = view.findViewById(R.id.button_sheet);
+        buttonOpenBottomSheet.setOnClickListener(v -> {
+            if (listImages.size() <= 5) {
+               /* BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
+                bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");*/
+                BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
+                Bundle bundle = new Bundle();
+                bundle.putString("linkAnnonce", "fromAnnonce");
+                bottomsheet.setArguments(bundle);
+                bottomsheet.show(getFragmentManager(), "Image Dialog");
+            } else {
+                Toast.makeText(getContext(), "Vous ne pouvez pas ajouter d'autres photos ", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+
         apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
         textView.setOnClickListener(v -> {
             ajoutArticle();
@@ -93,11 +121,33 @@ public class ModifierAnnonce extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(postAdapter);
         }
+       /* for (int i = 0; i < annonce.getImages().size(); i++) {
+            //  list.add(annonce.getImages().get(i));
+            String imageUser = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSNe5yo7hl-b5UHwropa_-4hNehtgV4w6wkFM1gw-o59SW93FNt";
 
-        Glide.with(this)
+            Log.e("srin image is :", annonce.getImages().get(i));
+            listImages.add(Uri.parse(imageUser));
+            myImage.notifyDataSetChanged();
+        }*/
+       int img=R.drawable.user;
+        listImages.add(Uri.parse(String.valueOf(img)));
+        myImage = new myImage(getContext(), listImages);
+        // recycle view horizontal
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerViewImages.setLayoutManager(linearLayoutManager);
+        recyclerViewImages.setAdapter(myImage);
+        //myImage.notifyDataSetChanged();
+        /*Glide.with(this)
                 .asBitmap()
                 .load(annonce.getImages().get(0))
-                .into(imgAnnonc);
+                .into(imgAnnonc);*/
+     /*   if (annonce.getImages().size()<= 5) {
+            listImages.add(Uri.parse(saveImage(bitmap)));
+            myImage.notifyDataSetChanged();
+        } else {
+            Toast.makeText(this, "Vous ne pouvez pas ajouter d'autres photos ", Toast.LENGTH_SHORT).show();
+        }*/
         enregister.setOnClickListener(v -> {
             updateAnnonce();
 
@@ -220,6 +270,8 @@ public class ModifierAnnonce extends Fragment {
         }// vous avez atteint la limite des postes possible
 
     }
+
+
 
 }
 

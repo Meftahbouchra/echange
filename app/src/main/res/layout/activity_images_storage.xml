@@ -28,12 +28,12 @@
         android:id="@+id/txtv"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_below="@+id/button_sheet"
+        android:layout_below="@id/button_sheet"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:text="Vous pouvez ajouter 6 images à votre annnonce"
         android:textColor="@color/black"
         android:textSize="14dp" />
-
 
     <Button
         android:id="@+id/next"

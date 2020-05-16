@@ -27,6 +27,7 @@ public class PreferenceUtils {
     public static final String GOOGLE_MEMBER = "google_user";
     public static final String DATE_MEMBER = "date_user";
     public static final String PHOTO_USER="photo_user";
+    public  static final  String MOTDEPASSE="mot_de_passe";
 
     public PreferenceUtils(Context context) {
         this.context = context;
@@ -47,6 +48,7 @@ public class PreferenceUtils {
         member.setDateInscription(new Date(pref.getLong(DATE_MEMBER, new Date().getTime())));
         member.setIdMembre(pref.getString(ID_MEMBER, ""));
         member.setPhotoUser(pref.getString(PHOTO_USER,""));
+        member.setMotDePasse(pref.getString(MOTDEPASSE,""));
         return member;
     }
 
@@ -60,6 +62,7 @@ public class PreferenceUtils {
         editor.putString(GOOGLE_MEMBER, member.getLienCompteGoogle());
         editor.putLong(DATE_MEMBER, member.getDateInscription().getTime());
         editor.putString(PHOTO_USER,member.getPhotoUser());
+        editor.putString(MOTDEPASSE,member.getMotDePasse());
         editor.commit();
     }
 

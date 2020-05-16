@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.AjoutOffre;
 import com.bouchra.myapplicationechange.activities.annonce.ImagesStorage;
+import com.bouchra.myapplicationechange.editMyProfil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
@@ -21,6 +22,8 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
 
     String Offre = null;
     String Annonce = null;
+    String Profile = null;
+
 
     @Nullable
     @Override
@@ -28,6 +31,8 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
         View v = inflater.inflate(R.layout.bottom_sheet_camera_gallery, container, false);
         Offre = this.getArguments().getString("linkOffre");
         Annonce = this.getArguments().getString("linkAnnonce");
+        Profile = this.getArguments().getString("linkProfile");
+
         Button button1 = v.findViewById(R.id.btn_camera);
         Button button2 = v.findViewById(R.id.btn_gallery);
         button1.setOnClickListener(v1 -> {
@@ -38,7 +43,9 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
             if (Annonce != null) {
                 ((ImagesStorage) getActivity()).takePhotoFromCamera();
             }
-
+            if (Profile != null ) {
+                ((editMyProfil) getActivity()).pickFromCamera();
+            }
             dismiss();
 
         });
@@ -50,6 +57,9 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
             }
             if (Annonce != null) {
                 ((ImagesStorage) getActivity()).choosePhotoFromGallary();
+            }
+            if (Profile != null ) {
+                ((editMyProfil) getActivity()).pickFromGallery();
             }
 
             dismiss();

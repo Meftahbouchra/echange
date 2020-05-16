@@ -36,6 +36,24 @@
 
 
         </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/button_sheet"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/ajouter_des_photos" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycleImages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@+id/button_sheet" />
+        </RelativeLayout>
 
 
         <EditText
@@ -55,7 +73,7 @@
             android:paddingLeft="10dp"
             android:textColorHint="@color/gris" />
 
-
+<!--  image one picture original
         <ImageView
             android:id="@+id/img_annonc"
             android:layout_width="match_parent"
@@ -63,7 +81,7 @@
             android:layout_marginHorizontal="32dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/card_items"
-            app:srcCompat="@drawable/user" />
+            app:srcCompat="@drawable/user" />-->
 
         <EditText
             android:id="@+id/desci_annonce"
