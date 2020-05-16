@@ -85,7 +85,7 @@ public class editMyProfil extends AppCompatActivity {
         number.setText(String.valueOf(preferenceUtils.getMember().getNumTel()));
         //image_user
         Picasso.get().load(preferenceUtils.getMember().getPhotoUser()).into(image_user);
-        imagrUri=Uri.parse(preferenceUtils.getMember().getPhotoUser());
+        imagrUri = Uri.parse(preferenceUtils.getMember().getPhotoUser());
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         tack_Pict.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +101,7 @@ public class editMyProfil extends AppCompatActivity {
             }
 
         });
-        if(preferenceUtils.getMember().getMotDePasse().isEmpty()){
+        if (preferenceUtils.getMember().getMotDePasse().isEmpty()) {
             passwordLayout.setVisibility(View.GONE);
 
         }
@@ -154,8 +154,8 @@ public class editMyProfil extends AppCompatActivity {
         passwordLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("kayan pasword",preferenceUtils.getMember().getMotDePasse());
-                 getSupportFragmentManager().beginTransaction().add(R.id.fragment, new editPassword(), "editpassword").commit();
+                Log.e("kayan pasword", preferenceUtils.getMember().getMotDePasse());
+                getSupportFragmentManager().beginTransaction().add(R.id.fragment, new editPassword(), "editpassword").commit();
 
             }
         });

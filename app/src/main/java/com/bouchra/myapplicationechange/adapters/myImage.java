@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -37,13 +38,13 @@ public class myImage extends RecyclerView.Adapter<myImage.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull myImage.ViewHolder holder, int position) {
         Uri uri = images.get(position);
-        holder.imageAnnonce.setImageURI(uri);
+      //holder.imageAnnonce.setImageURI(uri);//ta3tina Unable to decode stream: java.io.FileNotFoundException , aya ndiro picasso
         holder.suppImage.setOnClickListener(v -> {
             images.remove(position);
             this.notifyDataSetChanged();
 
         });
-
+       Picasso.get().load(uri).into(holder.imageAnnonce);
 
 
 

@@ -14,6 +14,7 @@ import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.AjoutOffre;
 import com.bouchra.myapplicationechange.activities.annonce.ImagesStorage;
 import com.bouchra.myapplicationechange.editMyProfil;
+import com.bouchra.myapplicationechange.fragments.ModifierAnnonce;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
@@ -23,7 +24,8 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
     String Offre = null;
     String Annonce = null;
     String Profile = null;
-
+    String modierannonce = null;
+    private ModifierAnnonce modifierAnnonce;
 
     @Nullable
     @Override
@@ -32,7 +34,8 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
         Offre = this.getArguments().getString("linkOffre");
         Annonce = this.getArguments().getString("linkAnnonce");
         Profile = this.getArguments().getString("linkProfile");
-
+        modierannonce = this.getArguments().getString("linkModifierannonce");
+        modifierAnnonce = new ModifierAnnonce();
         Button button1 = v.findViewById(R.id.btn_camera);
         Button button2 = v.findViewById(R.id.btn_gallery);
         button1.setOnClickListener(v1 -> {
@@ -43,8 +46,11 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
             if (Annonce != null) {
                 ((ImagesStorage) getActivity()).takePhotoFromCamera();
             }
-            if (Profile != null ) {
+            if (Profile != null) {
                 ((editMyProfil) getActivity()).pickFromCamera();
+            }
+            if(modierannonce!=null){
+                modifierAnnonce.takePhotoFromCamera();
             }
             dismiss();
 
@@ -58,8 +64,11 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
             if (Annonce != null) {
                 ((ImagesStorage) getActivity()).choosePhotoFromGallary();
             }
-            if (Profile != null ) {
+            if (Profile != null) {
                 ((editMyProfil) getActivity()).pickFromGallery();
+            }
+            if(modierannonce!=null){
+                modifierAnnonce.choosePhotoFromGallary();
             }
 
             dismiss();
