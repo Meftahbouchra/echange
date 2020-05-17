@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#efefef"
-    tools:context=".fragments.ModifierAnnonce">
+    tools:context=".activities.ModifierAnnonce">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,15 +73,15 @@
             android:paddingLeft="10dp"
             android:textColorHint="@color/gris" />
 
-<!--  image one picture original
-        <ImageView
-            android:id="@+id/img_annonc"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/card_items"
-            app:srcCompat="@drawable/user" />-->
+        <!--  image one picture original
+                <ImageView
+                    android:id="@+id/img_annonc"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/card_items"
+                    app:srcCompat="@drawable/user" />-->
 
         <EditText
             android:id="@+id/desci_annonce"

@@ -9,12 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.BottomsheetManipAnnonceOffre;
-import com.bouchra.myapplicationechange.fragments.ModifierAnnonce;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bumptech.glide.Glide;
@@ -279,15 +276,11 @@ public class DetailMesannonce extends AppCompatActivity {
     public void goToFragmentModifier() {
         // getSupportFragmentManager().beginTransaction().add(R.id.fragment,new ModifierAnnonce(),"ModifierAnnonce").commit();
         //PACK DATA IN A BUNDLE
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction t = manager.beginTransaction();
-        final ModifierAnnonce m4 = new ModifierAnnonce();
-        Bundle b2 = new Bundle();
-        b2.putSerializable("annonce", annonce);
-        m4.setArguments(b2);
-        t.add(R.id.fragment, m4);
-        t.commit();
 
+        Intent intent = new Intent(DetailMesannonce.this, ModifierAnnonce.class);
+        intent.putExtra("annonce", annonce);
+        startActivity(intent);
+        finish();
 
     }
 

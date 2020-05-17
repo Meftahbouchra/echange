@@ -55,6 +55,8 @@ Article_en_retour extends AppCompatActivity {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Annonce");
             databaseReference.child(annonce.getIdAnnonce()).setValue(annonce).addOnCompleteListener(task2 -> {
                 if (task2.isSuccessful()) {
+                    Intent annul = new Intent(Article_en_retour.this, debut.class);
+                    startActivity(annul);
                     finish();
                 } else {
                     Toast.makeText(getApplicationContext(), "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();

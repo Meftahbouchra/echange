@@ -82,9 +82,9 @@ public class ImagesStorage extends AppCompatActivity {
                 bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");*/
                 BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
                 Bundle bundle = new Bundle();
-                bundle.putString("linkAnnonce","fromAnnonce");
+                bundle.putString("linkAnnonce", "fromAnnonce");
                 bottomsheet.setArguments(bundle);
-                bottomsheet.show((this).getSupportFragmentManager(),"Image Dialog");
+                bottomsheet.show((this).getSupportFragmentManager(), "Image Dialog");
             } else {
                 Toast.makeText(this, "Vous ne pouvez pas ajouter d'autres photos ", Toast.LENGTH_SHORT).show();
             }
@@ -111,6 +111,8 @@ public class ImagesStorage extends AppCompatActivity {
             if (listImages.size() != 0) {
 
                 Fileuploader();
+
+
             } else {
                 Toast.makeText(this, "Ajouter des images a votre annonce ", Toast.LENGTH_SHORT).show();
             }
@@ -252,9 +254,11 @@ public class ImagesStorage extends AppCompatActivity {
     }
 
     private void Fileuploader() {
-
+        int size = listImages.size();
+        ArrayList<Uri> LIST = new ArrayList<>();
         for (Uri uri : listImages) {
             imguri = uri;
+
             Log.e("img here", imguri.toString());
             try {
                 InputStream stream = new FileInputStream(String.valueOf(imguri));
@@ -264,13 +268,22 @@ public class ImagesStorage extends AppCompatActivity {
                         .addOnSuccessListener(taskSnapshot -> {
                             Toast.makeText(ImagesStorage.this, "Uploaded", Toast.LENGTH_SHORT).show();
                             taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
+
                                         annonce.getImages().add(String.valueOf(task));
+                                        LIST.add(imguri);
                                         Log.e("Image link", String.valueOf(task));
-                                        Intent ajou = new Intent(ImagesStorage.this, Article_en_retour.class);
+                                        if (LIST.size() == size) {
+                                            Intent ajou = new Intent(ImagesStorage.this, Article_en_retour.class);
+                                            ajou.putExtra("annonce", annonce); //key* value
+                                            ajou.putExtra("Categ", selectedCateg);
+                                            startActivity(ajou);
+                                            finish();
+                                        }
+                                     /* Intent ajou = new Intent(ImagesStorage.this, Article_en_retour.class);
                                         ajou.putExtra("annonce", annonce); //key* value
                                         ajou.putExtra("Categ", selectedCateg);
                                         startActivity(ajou);
-                                        finish();
+                                        finish();*/
                                     }
                             );
                         })
