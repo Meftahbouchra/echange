@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.DetailMesannonce;
 import com.bouchra.myapplicationechange.activities.ModiferOffre;
-import com.bouchra.myapplicationechange.confirmeSuppAnnonceOffre;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 

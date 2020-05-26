@@ -1,6 +1,5 @@
 package com.bouchra.myapplicationechange.adapters;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,17 +13,17 @@ import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.AjoutOffre;
 import com.bouchra.myapplicationechange.activities.ModifierAnnonce;
 import com.bouchra.myapplicationechange.activities.annonce.ImagesStorage;
-import com.bouchra.myapplicationechange.editMyProfil;
+import com.bouchra.myapplicationechange.activities.editMyProfil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
 
-    private BottomSheetLIstener mListner;
-
-    String Offre = null;
-    String Annonce = null;
-    String Profile = null;
-    String modierannonce = null;
+    private String Offre = null;
+    private String Annonce = null;
+    private String Profile = null;
+    private String modierannonce = null;
+    private Button btnCamera;
+    private Button btnGallery;
 
     @Nullable
     @Override
@@ -35,9 +34,9 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
         Profile = this.getArguments().getString("linkProfile");
         modierannonce = this.getArguments().getString("linkModifierannonce");
 
-        Button button1 = v.findViewById(R.id.btn_camera);
-        Button button2 = v.findViewById(R.id.btn_gallery);
-        button1.setOnClickListener(v1 -> {
+        btnCamera = v.findViewById(R.id.btn_camera);
+        btnGallery = v.findViewById(R.id.btn_gallery);
+        btnCamera.setOnClickListener(v1 -> {
 
             if (Offre != null) {
                 ((AjoutOffre) getActivity()).takePhotoFromCamera();
@@ -48,14 +47,13 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
             if (Profile != null) {
                 ((editMyProfil) getActivity()).pickFromCamera();
             }
-            if(modierannonce!=null){
-                ((ModifierAnnonce)getActivity()).takePhotoFromCamera();
+            if (modierannonce != null) {
+                ((ModifierAnnonce) getActivity()).takePhotoFromCamera();
             }
             dismiss();
 
         });
-        button2.setOnClickListener(v12 -> {
-
+        btnGallery.setOnClickListener(v12 -> {
 
             if (Offre != null) {
                 ((AjoutOffre) getActivity()).choosePhotoFromGallary();
@@ -66,8 +64,8 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
             if (Profile != null) {
                 ((editMyProfil) getActivity()).pickFromGallery();
             }
-            if(modierannonce!=null){
-                ((ModifierAnnonce)getActivity()).choosePhotoFromGallary();
+            if (modierannonce != null) {
+                ((ModifierAnnonce) getActivity()).choosePhotoFromGallary();
             }
 
             dismiss();
@@ -77,21 +75,5 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
         return v;
     }
 
-
-    public interface BottomSheetLIstener {
-        void onButtonCliked(String text);
-
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            mListner = (BottomSheetLIstener) context;
-        } catch (ClassCastException e) {
-            // throw  new ClassCastException(context.toString()+ "doit mettre en oeuvre BottomSheetLIstener");
-        }
-
-    }
 }
 

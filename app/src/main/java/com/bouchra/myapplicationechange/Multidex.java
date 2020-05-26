@@ -12,5 +12,4 @@ public class Multidex extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-}// hadi mnshakhach!
-// kyn prblm f appl
+}

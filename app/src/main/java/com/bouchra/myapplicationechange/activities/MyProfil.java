@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.CommentaireAdapter;
-import com.bouchra.myapplicationechange.editMyProfil;
 import com.bouchra.myapplicationechange.models.Commentaire;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.database.DataSnapshot;

@@ -1,4 +1,4 @@
-package com.bouchra.myapplicationechange;
+package com.bouchra.myapplicationechange.adapters;
 
 import android.app.Dialog;
 import android.os.Bundle;

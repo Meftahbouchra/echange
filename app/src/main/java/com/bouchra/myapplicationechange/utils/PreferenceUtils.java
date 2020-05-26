@@ -43,8 +43,8 @@ public class PreferenceUtils {
         member.setNumTel(pref.getInt(NUM_MEMBER, 0));
         member.setEmail(pref.getString(EMAIL_MEMBER, ""));
         member.setAdresseMembre(pref.getString(ADDR_MEMBER, ""));
-        member.setLienCompteFb(pref.getString(FB_MEMBER, ""));
-        member.setLienCompteGoogle(pref.getString(GOOGLE_MEMBER, ""));
+      //  member.setLienCompteFb(pref.getString(FB_MEMBER, ""));
+      //  member.setLienCompteGoogle(pref.getString(GOOGLE_MEMBER, ""));
         member.setDateInscription(new Date(pref.getLong(DATE_MEMBER, new Date().getTime())));
         member.setIdMembre(pref.getString(ID_MEMBER, ""));
         member.setPhotoUser(pref.getString(PHOTO_USER,""));
@@ -58,8 +58,8 @@ public class PreferenceUtils {
         editor.putInt(NUM_MEMBER, member.getNumTel());
         editor.putString(EMAIL_MEMBER, member.getEmail());
         editor.putString(ADDR_MEMBER, member.getAdresseMembre());
-        editor.putString(FB_MEMBER, member.getLienCompteFb());
-        editor.putString(GOOGLE_MEMBER, member.getLienCompteGoogle());
+      //  editor.putString(FB_MEMBER, member.getLienCompteFb());
+       // editor.putString(GOOGLE_MEMBER, member.getLienCompteGoogle());
         editor.putLong(DATE_MEMBER, member.getDateInscription().getTime());
         editor.putString(PHOTO_USER,member.getPhotoUser());
         editor.putString(MOTDEPASSE,member.getMotDePasse());

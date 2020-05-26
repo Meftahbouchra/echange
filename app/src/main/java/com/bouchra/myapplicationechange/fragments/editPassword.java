@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.editMyProfil;
+import com.bouchra.myapplicationechange.activities.editMyProfil;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;

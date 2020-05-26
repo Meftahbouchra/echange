@@ -29,16 +29,21 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class AnnonceActivity extends AppCompatActivity {
-    private Button next, annuler;
-    private EditText titreAnnonce, descAnnonce;
+    private Button next;
+    private Button annuler;
+    private EditText titreAnnonce;
+    private EditText descAnnonce;
     private String titre_Annonce = "";
-    private String selectedWilaya, selectedVille, selectedCateg;
+    private String selectedWilaya;
+    private String selectedVille;
+    private String selectedCateg;
     private String desc_Annonce = "";
     private Boolean isSelected = false;
-    private Spinner wilayaSpinner, villeSpinner;
-    ArrayList<Wilaya> wilaya = new ArrayList<Wilaya>();
-    ArrayList<Commune> communes = new ArrayList<Commune>();
-    String[] wilayaname;
+    private Spinner wilayaSpinner;
+    private Spinner villeSpinner;
+    private ArrayList<Wilaya> wilaya = new ArrayList<Wilaya>();
+    private ArrayList<Commune> communes = new ArrayList<Commune>();
+    private String[] wilayaname;
     private PreferenceUtils preferenceUtils;
 
 
@@ -54,12 +59,13 @@ public class AnnonceActivity extends AppCompatActivity {
         wilayaSpinner = findViewById(R.id.spinner_wilaya);
         annuler = findViewById(R.id.annuler);
         preferenceUtils = new PreferenceUtils(this);
+
         annuler.setOnClickListener(v -> {
             Intent annul = new Intent(AnnonceActivity.this, debut.class);
             startActivity(annul);
             finish();
         });
-        // btn ajouter des article en retour
+
         next.setOnClickListener(v -> {
             titre_Annonce = titreAnnonce.getText().toString();
             desc_Annonce = descAnnonce.getText().toString();
@@ -87,8 +93,7 @@ public class AnnonceActivity extends AppCompatActivity {
 
         });
 
-        //Spinner
-
+        //Spinner categorie item from String
         Spinner spinner = findViewById(R.id.spinner_cat);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.choix_categorie, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -96,13 +101,8 @@ public class AnnonceActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
-
-
                 selectedCateg = parent.getItemAtPosition(position).toString();
-
-                    isSelected = true;
-
-
+                isSelected = true;
             }
 
             @Override
@@ -111,7 +111,7 @@ public class AnnonceActivity extends AppCompatActivity {
             }
         });
 
-
+//get  all wilaya  and commune from fichier JSON
         JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(readFileFromRawDirectory(R.raw.wilayas));
@@ -138,7 +138,7 @@ public class AnnonceActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
+// afichier les communes de wilaya correspondante
         wilayaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {

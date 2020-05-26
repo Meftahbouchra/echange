@@ -41,17 +41,15 @@ import java.util.UUID;
 public class ImagesStorage extends AppCompatActivity {
 
 
-    StorageReference mStorageRef;
+    private StorageReference mStorageRef;
     public Uri imguri;
-
-    private static final String IMAGE_DIRECTORY = "/Echangedarticle";
     private int GALLERY = 1, CAMERA = 3, CAMERA_PERMISSION = 2, WRITE_EXTERNAL_STORAGE = 4, READ_EXTERNAL_STORAGE = 5;
-    // private ImageView imageview;
     private Annonce annonce;
     private String selectedCateg;
     private ArrayList<Uri> listImages;
     private com.bouchra.myapplicationechange.adapters.myImage myImage;
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
+    private   Button buttonOpenBottomSheet ;
 
 
     @Override
@@ -63,23 +61,19 @@ public class ImagesStorage extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference("Images Annonce");
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
         selectedCateg = getIntent().getStringExtra("categorie");
-        //  imageview = findViewById(R.id.image_view);
         recyclerView = findViewById(R.id.recycleImages);
-
         listImages = new ArrayList<>();
         myImage = new myImage(this, listImages);
-        // recycle view horizontal
 
+        //  set recycle view horizontal
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(myImage);
-        // bottom shet
-        Button buttonOpenBottomSheet = findViewById(R.id.button_sheet);
+        // bottom sheet
+         buttonOpenBottomSheet = findViewById(R.id.button_sheet);
         buttonOpenBottomSheet.setOnClickListener(v -> {
             if (listImages.size() <= 5) {
-               /* BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
-                bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");*/
                 BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
                 Bundle bundle = new Bundle();
                 bundle.putString("linkAnnonce", "fromAnnonce");
@@ -88,31 +82,11 @@ public class ImagesStorage extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Vous ne pouvez pas ajouter d'autres photos ", Toast.LENGTH_SHORT).show();
             }
-
-            //1
-            //kindir ch3al mn activity troh l had fragment ta3 la tof aya ndi m3ah intent 3la hsab min rah jay
-            //In your Activity
-            /*
-            ImageViewDialogFragment dialogFragment = new ImageViewDialogFragment ();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("link",moviesList.get(position).getImage());
-                        dialogFragment.setArguments(bundle);
-                        dialogFragment.show((GalleryReviewActivity.this).getSupportFragmentManager(),"Image Dialog");
-             */
-            //in your DialogFragment
-            /* Bundle bundle = getArguments();
- String imageLink = bundle.getString("link","");
-
-             */
         });
 
         findViewById(R.id.next).setOnClickListener(v -> {
-
             if (listImages.size() != 0) {
-
                 Fileuploader();
-
-
             } else {
                 Toast.makeText(this, "Ajouter des images a votre annonce ", Toast.LENGTH_SHORT).show();
             }

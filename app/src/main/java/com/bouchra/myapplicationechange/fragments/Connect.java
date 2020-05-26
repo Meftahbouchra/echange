@@ -27,11 +27,12 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class Connect extends Fragment {
 
-    private TextInputEditText txtt_email, txtt_password;
-    private Button btnn_Login;
+    private TextInputEditText textEmail;
+    private TextInputEditText textPassword;
+    private Button btnLogin;
     private ImageButton imageButton;
-    private TextView txt_forgtpaswrd , sins;
-
+    private TextView forgetPassword;
+    private TextView goToInscrire;
     private String eemail = "";
     private String ppassword = "";
     private FirebaseAuth mAut;
@@ -43,40 +44,38 @@ public class Connect extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.activity_connect, container, false);
+
+        View view = inflater.inflate(R.layout.activity_connect, container, false);
 
         mAut = FirebaseAuth.getInstance();
-        txtt_email = view.findViewById(R.id.emaill);
-        txtt_password = view.findViewById(R.id.pasward);
-        btnn_Login = view.findViewById(R.id.btnresister);
+        textEmail = view.findViewById(R.id.emaill);
+        textPassword = view.findViewById(R.id.pasward);
+        btnLogin = view.findViewById(R.id.btnresister);
         imageButton = view.findViewById(R.id.btnplac);
-        txt_forgtpaswrd = view.findViewById(R.id.tvoublie);
-        sins=view.findViewById(R.id.go_insc);
-        txt_forgtpaswrd.setOnClickListener(v -> {
+        forgetPassword = view.findViewById(R.id.tvoublie);
+        goToInscrire = view.findViewById(R.id.go_insc);
+
+        forgetPassword.setOnClickListener(v -> {
             showRecorverPasswordDialog();
         });
 
-       imageButton.setOnClickListener(v -> {
-           getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment,new Sinscrire(),"insr").commit();
-       });
+        imageButton.setOnClickListener(v -> {
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new Sinscrire(), "Inscrire").commit();
+        });
 
 
-        sins.setOnClickListener(v -> {
-           getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment,new Sinscrire(),"inscrire").commit();
+        goToInscrire.setOnClickListener(v -> {
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new Sinscrire(), "inscrire").commit();
 
         });
 
-        btnn_Login.setOnClickListener(v -> {
-            eemail = txtt_email.getText().toString();
-            ppassword = txtt_password.getText().toString();
+        btnLogin.setOnClickListener(v -> {
+            eemail = textEmail.getText().toString();
+            ppassword = textPassword.getText().toString();
 
             if (!eemail.isEmpty() && !ppassword.isEmpty()) {
                 if (ppassword.length() >= 6) {
                     loginUser();
-                    //shared referecnces
-                   // PreferenceUtils.saveEmail(eemail, getContext());
-                   // PreferenceUtils.savePassword(ppassword, getContext());
                 } else {
                     Toast.makeText(getContext(), "Le mot de passe doit comporter au mois 6 caractéres ", Toast.LENGTH_LONG).show();
                 }
@@ -94,21 +93,17 @@ public class Connect extends Fragment {
         //Alert Dilaog
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Entrez votre adresse e-meil");
-        //set layout linear layout
         LinearLayout linearLayout = new LinearLayout(getContext());
-        //views to set in dalog
         EditText emailResorv = new EditText(getContext());
         emailResorv.setHint("Adresse e-mail :");
+        emailResorv.setWidth(500);
         emailResorv.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-        emailResorv.setMaxWidth(900);
-      //  emailResorv.setMaxEms(16);
+        //emailResorv.setMaxWidth(900);
         linearLayout.addView(emailResorv);
-       // linearLayout.setPadding(10,10,10,10);
         builder.setView(linearLayout);
         //buton recover
         builder.setPositiveButton("Envoyer", (dialog, which) -> {
-// input email
-            String eeemail=emailResorv.getText().toString().trim();
+            String eeemail = emailResorv.getText().toString().trim();
             beginRecover(eeemail);
         });
 //buton cancel
@@ -125,17 +120,16 @@ public class Connect extends Fragment {
         mAut.sendPasswordResetEmail(eeemail).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-               if(task.isSuccessful()){
-                   Toast.makeText(getContext(), "Un email a ètè envoyè, veuillez consulter votre boite email", Toast.LENGTH_SHORT).show();
-               }else {
-                   Toast.makeText(getContext(), "Échec de l'envoi", Toast.LENGTH_SHORT).show();
-               }
+                if (task.isSuccessful()) {
+                    Toast.makeText(getContext(), "Un email a ètè envoyè, veuillez consulter votre boite email", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Échec de l'envoi", Toast.LENGTH_SHORT).show();
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-// get and show proper error message
-               // Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+
                 Toast.makeText(getContext(), "Échec de l'envoi", Toast.LENGTH_SHORT).show();
             }
         });
@@ -143,7 +137,6 @@ public class Connect extends Fragment {
     }
 
 
-    // f loginUser nshako fire base
     private void loginUser() {
         mAut.signInWithEmailAndPassword(eemail, ppassword).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -156,9 +149,6 @@ public class Connect extends Fragment {
         });
 
     }
-
-
-
 
 
 }

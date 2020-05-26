@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,25 +44,29 @@ import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    private CallbackManager mCallbackManager;
-
-    private FirebaseAuth mAuth;
     private TextView connect;
-    private final String TAG = "MainActivity";
-    private static final int RC_SIGN_IN = 100;
-    GoogleSignInClient mGoogleSignInClient;
+    private Button loginButtonFB;
+    private Button loginButtonGoogle;
+    private PreferenceUtils preferenceUtils;
+    private FirebaseAuth mAuth;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
-    private PreferenceUtils preferenceUtils;
+    private CallbackManager mCallbackManager;
+    private GoogleSignInClient mGoogleSignInClient;
     private String facebookUserTd = " ";
+    private final String TAG = "MainActivity";
+    private static final int RC_SIGN_IN = 100;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // ta3 ggole
+
+        loginButtonFB = findViewById(R.id.loginfb);
+        loginButtonGoogle = findViewById(R.id.logingoogle);
+        connect = findViewById(R.id.connecte);
+
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -71,61 +74,51 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         preferenceUtils = new PreferenceUtils(this);
-        // Initialize Firebase Auth
-
         firebaseAuth = FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mCallbackManager = CallbackManager.Factory.create();
-        Button loginButtonFB = findViewById(R.id.loginfb); // ta3 afcebook
-        Button loginButtonGoogle = findViewById(R.id.logingoogle);// ta3 google
 
-        connect = findViewById(R.id.connecte);
 
         connect.setOnClickListener(v -> {
             getSupportFragmentManager().beginTransaction().add(R.id.fragment, new Connect(), "connect").commit();
         });
 
-// hdi tni dkhla f ta3 facebook
+
         loginButtonFB.setOnClickListener(view -> {
             LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("email", "public_profile"));
             LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
-                    Log.d(TAG, "facebook:en cas de succès:" + loginResult);
+                    Log.d(TAG, "facebook en cas de succès:" + loginResult);
                     handleFacebookAccessToken(loginResult.getAccessToken());
                 }
 
                 @Override
                 public void onCancel() {
-                    Log.d(TAG, "facebook:annuler");
+                    Log.d(TAG, "facebook annuler");
                 }
 
                 @Override
                 public void onError(FacebookException error) {
-                    Log.d(TAG, "facebook:en cas d' erreur", error);
+                    Log.d(TAG, "facebook en cas d' erreur", error);
                 }
             });
         });
-// hadi ta3 gooooogle
-        loginButtonGoogle.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, RC_SIGN_IN);
-            }
+
+        loginButtonGoogle.setOnClickListener(v -> {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
         });
 
     }
 
-
-    // *********************************************************** hado ta3  connection avec facebook mna hta l tli funcyion ta3 update
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
-        // hadi taaaaaaaaaaaaaa3 goooooooogle
+
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -134,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
-
                 Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
@@ -182,13 +174,12 @@ public class MainActivity extends AppCompatActivity {
                             usr.setEmail(user.getEmail());
                             usr.setNomMembre(user.getDisplayName());
                             usr.setIdMembre(ID);
-                            // usr.setPhotoUser(photoUrl);
+                            //usr.setPhotoUser(photoUrl);
                             usr.setPhotoUser(String.valueOf(user.getPhotoUrl()));
                             //usr.setNumTel(Integer.parseInt(user.getPhoneNumber()));
                             usr.setDateInscription(new Date());
                             databaseReference.setValue(usr).addOnCompleteListener(task2 -> {
                                 if (task2.isSuccessful()) {
-                                    //shared
                                     preferenceUtils.setMember(usr);
                                     startActivity(new Intent(MainActivity.this, debut.class));
                                     finish();
@@ -198,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                             });
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:echec", task.getException());
+
                             Toast.makeText(MainActivity.this, "Authentification échouée .",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -206,28 +197,26 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    // hadi tadi l la page zawja li t3rad fiha les D
+
     private void updateUI() {
-        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+        startActivity(new Intent(MainActivity.this, debut.class));
         finish();
     }
 
 
     public void inscrire(View view) {
-        // hada ta3 mn acti  nhal fragm
+
         getSupportFragmentManager().beginTransaction().add(R.id.fragment, new Sinscrire(), "inscrire").commit();
     }
-/////// hadi ta3 gooooogle
+
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         String photoesy = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSNe5yo7hl-b5UHwropa_-4hNehtgV4w6wkFM1gw-o59SW93FNt";
-                        // Sign in success, update UI with the signed-in user's informatio
                         FirebaseUser user = mAuth.getCurrentUser();
                         String ID = firebaseAuth.getCurrentUser().getUid();
                         databaseReference = FirebaseDatabase.getInstance().getReference("Membre").child(ID);
@@ -243,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                         usr.setDateInscription(new Date());
                         databaseReference.setValue(usr).addOnCompleteListener(task2 -> {
                             if (task2.isSuccessful()) {
-                                //shared
+
                                 preferenceUtils.setMember(usr);
                                 startActivity(new Intent(MainActivity.this, debut.class));
                                 finish();
@@ -251,17 +240,16 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
                             }
                         });
-                        // updateUI(user);
+
                     } else {
                         // If sign in fails, display a message to the user.
-
                         Toast.makeText(MainActivity.this, "Login Failed....", Toast.LENGTH_SHORT).show();
-                        // updateUI(null);
+
                     }
 
 
                 }).addOnFailureListener(e -> {
-            //grt and show error mesage
+            //gt and show error mesage
             Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }

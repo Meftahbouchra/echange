@@ -1,8 +1,7 @@
 package com.bouchra.myapplicationechange.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -14,6 +13,8 @@ import com.bouchra.myapplicationechange.fragments.plus;
 import com.bouchra.myapplicationechange.notification.Token;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -21,20 +22,21 @@ import com.google.firebase.iid.FirebaseInstanceId;
 public class debut extends AppCompatActivity {
 
     private PreferenceUtils preferenceUtils;
+    private BottomNavigationView botoomNav;
+    private FirebaseAuth firebaseAuth;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debut);
+
         preferenceUtils = new PreferenceUtils(this);
-        Log.e("Here Error", "Error");
-        Log.e("Here pref ", preferenceUtils.getMember().getIdMembre());
-        BottomNavigationView botoomNav = findViewById(R.id.bottom_navigation);
+        botoomNav = findViewById(R.id.bottom_navigation);
         botoomNav.setOnNavigationItemSelectedListener(navListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.bottom_navigation_fragment_container, new Acceuil()).commit();
-        //update toke
+        //update toke for notification
         updateToken(FirebaseInstanceId.getInstance().getToken());
     }
 
@@ -61,12 +63,14 @@ public class debut extends AppCompatActivity {
                 return true;
             };
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.men_search, menu);
-        return true;
-    }
 
+
+
+    @Override
+    protected void onResume() {
+        check();
+        super.onResume();
+    }
     public void updateToken(String token) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Tokens");
         Token mToken = new Token();
@@ -74,4 +78,23 @@ public class debut extends AppCompatActivity {
         ref.child(preferenceUtils.getMember().getIdMembre()).setValue(mToken);
 
     }
+    private void updateUI() {
+        startActivity(new Intent(debut.this, MainActivity.class));
+        finish();
+    }
+    private void check() {
+        // Check if user is signed in (non-null) and update UI accordingly.
+//get current user
+        FirebaseUser currentUser = firebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+
+            //user is signed in saty here
+
+        } else {
+// user not signed in , go to main activity
+            updateUI();
+        }
+
+    }
+
 }

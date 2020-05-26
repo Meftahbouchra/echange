@@ -1,4 +1,4 @@
-package com.bouchra.myapplicationechange;
+package com.bouchra.myapplicationechange.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -22,7 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.bouchra.myapplicationechange.activities.MyProfil;
+import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.adapters.BootomSheetDialogCamGall;
 import com.bouchra.myapplicationechange.fragments.editPassword;
 import com.bouchra.myapplicationechange.models.Membre;
