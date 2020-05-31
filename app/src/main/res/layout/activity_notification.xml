@@ -5,20 +5,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.Notification">
+
+    <LinearLayout
+        android:id="@+id/tolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="25dp"
+        android:background="@color/gris"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/retour"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:drawableStart="@drawable/ic_keyboard_backspace_"
+            android:drawableTint="@color/orange" />
+
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/information"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/tolbar"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:textSize="25sp"
 
-       />
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/Notifications"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/tolbar"
         android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
+
 
 </RelativeLayout>

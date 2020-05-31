@@ -5,22 +5,17 @@
     android:elevation="5dp"
     android:layout_marginTop="8dp"
     android:id="@+id/layout_annonce"
-
     android:background="@drawable/card_items"
     android:layout_marginHorizontal="8dp"
     android:layout_width="match_parent"
-    android:layout_height="200dp">
+    android:layout_height="250dp">
 
-    <!--   <ImageView
-        android:background="@drawable/card_items"
-        android:id="@+id/img_article"
-        android:layout_width="match_parent"
-        android:src="#ffffff"
-        android:layout_height="match_parent"/> -->
+
     <com.synnapps.carouselview.CarouselView
         android:background="@drawable/card_items"
         android:id="@+id/img_article"
         android:layout_width="match_parent"
+        android:scaleType="fitCenter"
         android:src="#ffffff"
         android:layout_height="match_parent"/>
 

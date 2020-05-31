@@ -1,6 +1,7 @@
 package com.bouchra.myapplicationechange.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
+import com.bouchra.myapplicationechange.activities.profilUser;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bumptech.glide.Glide;
@@ -28,12 +30,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder> {
 
     private Context context;
-    // private ArrayList<Offre> offresdemande = new ArrayList<>();
     private ArrayList<Offre> mesDemandeDoffres;
     private ArrayList<Membre> membres;
     private String nomAnnonce;
-    // private  ArrayList<Annonce>annonces;/////////////////////////////////////////////mna njbd id offre li selecterd
-    private String annonce;
+    private String annonce;// id offre selected
 
     public demandesoffre(Context context, ArrayList<Offre> mesDemandeDoffres, ArrayList<Membre> membres, String nomAnnonce, String annonce) {
         this.context = context;
@@ -46,7 +46,7 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
     }
 
 
-    public void setAnnonce(String annonce){
+    public void setAnnonce(String annonce) {
         this.annonce = annonce;
         notifyDataSetChanged();
     }
@@ -64,24 +64,20 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
         //////////********************************************************  offre
         Offre offre = mesDemandeDoffres.get(position);
         holder.titreOffre.setText(offre.getNomOffre());
-        //Loading image from Glide library.
-        // la tof mazal mndirha
-
         Glide.with(context)
                 .load(offre.getImage())
                 .centerCrop()
                 .into(holder.imageOffre);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  kk:mm ");
         String str = simpleDateFormat.format(offre.getDateOffre());
         holder.timeOffre.setText(str);
         holder.descriptionOffre.setText(offre.getDescriptionOffre());
         holder.villeOffre.setText(offre.getWilaya() + ",");
         holder.communeOffre.setText(offre.getCommune());
-/////////////**************************membre
+/////////////*****************************************************membre
         Membre membre = membres.get(position);
         holder.nameUser.setText(membre.getNomMembre());
         Picasso.get().load(membre.getPhotoUser()).into(holder.imageUser);
-// hadi nrmlm sayi psq 3mrnha f lwl drnaha vide wla nkado ndiroha f win ytjibha m fire base
         if (annonce != null) {
 
         } else {
@@ -96,37 +92,21 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
             holder.itemView.setBackgroundResource(R.drawable.card_offre_refuse);
         }
 
-       /*if (!annonce.equals(null)) {
-
-
-           holder.itemView.setBackgroundResource(R.drawable.card_offre_accepted);
-
-        } else {
-
-           holder.itemView.setBackgroundResource(R.drawable.card_offre_refuse);
-
-        }*/
-        Log.e("eeeeeeeed offre is", offre.getIdOffre());
-
-
-
-       /* Glide.with(context)
-                .load(membre.getPhotoUser())
-                .centerCrop()
-                .into(holder.imageUser);*/
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ConfirmeOffre confirmeOffre = new ConfirmeOffre();
-                Bundle b2 = new Bundle();
-                b2.putSerializable("offre",offre);
-                b2.putString("nomAnnonce", nomAnnonce);
-                confirmeOffre.setArguments(b2);
-                confirmeOffre.show(((AppCompatActivity) context).getSupportFragmentManager(), "fragment");
-
-            }
+        holder.relative_profie.setOnClickListener(v -> {
+            Intent profil = new Intent(context, profilUser.class);
+            profil.putExtra("user", membre.getIdMembre());
+            context.startActivity(profil);
         });
-//holder.relativeLayout.setBackgroundResource(R.drawable.card_offre_accepted);
+        holder.itemView.setOnClickListener(v -> {
+            ConfirmeOffre confirmeOffre = new ConfirmeOffre();
+            Bundle b2 = new Bundle();
+            b2.putSerializable("offre", offre);
+            b2.putString("nomAnnonce", nomAnnonce);
+            confirmeOffre.setArguments(b2);
+            confirmeOffre.show(((AppCompatActivity) context).getSupportFragmentManager(), "fragment");
+
+        });
+
 
     }
 
@@ -137,15 +117,15 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView titreOffre;////////
+        private TextView titreOffre;
         private TextView descriptionOffre;
         private TextView villeOffre;
         private TextView communeOffre;
-        private TextView timeOffre;////////////
-        private ImageView imageOffre;///////////
-        private CircleImageView imageUser;//img_user
-        private TextView nameUser;//nom_user
-        private RelativeLayout relativeLayout;
+        private TextView timeOffre;
+        private ImageView imageOffre;
+        private CircleImageView imageUser;
+        private TextView nameUser;
+        private RelativeLayout relative_profie;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -159,7 +139,7 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
             imageOffre = itemView.findViewById(R.id.img_offre);
             imageUser = itemView.findViewById(R.id.img_user);
             nameUser = itemView.findViewById(R.id.nom_user);
-            relativeLayout = itemView.findViewById(R.id.layout_offre);
+            relative_profie = itemView.findViewById(R.id.relative_profie);
 
 
         }

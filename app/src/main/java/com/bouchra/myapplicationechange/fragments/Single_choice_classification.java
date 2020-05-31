@@ -21,8 +21,8 @@ import java.util.ArrayList;
 
 
 public class Single_choice_classification extends DialogFragment {
-    int position = 0; // default selected posotion
-    String name;
+    private int position = 0; // default selected posotion
+
 
     public Single_choice_classification() {
     }
@@ -63,7 +63,7 @@ public class Single_choice_classification extends DialogFragment {
             }
             builder.setTitle("Selectionnez une Wilaya :")
                     .setSingleChoiceItems(wilayaname, position, (dialog, which) -> position = which)
-                    .setPositiveButton("Ok", (dialog, which) -> {////////////////////////////////////////////////////////////
+                    .setPositiveButton("Ok", (dialog, which) -> {
                         mListener.onPositiveButtononCliked(wilaya.get(position).getName());
                         dismiss();
                     }).setNegativeButton("annuler", (dialog, which) -> dismiss());

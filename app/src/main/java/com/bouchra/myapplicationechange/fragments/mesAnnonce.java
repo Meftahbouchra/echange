@@ -25,19 +25,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListener {
 
 
     private myannonce myannonce;
-    private ArrayList<Annonce> annonces;//////////////hadi li rna njobi fiha m fire base
+    private ArrayList<Annonce> annonces;
     private RecyclerView recyclerView;
-    SearchView editsearch;
+    private SearchView editsearch;
     private TextView information;
-
-    Date date = new Date();
     private String offre;
+    PreferenceUtils preferenceUtils;
 
     public mesAnnonce() {
     }
@@ -46,15 +44,15 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
         this.offre = offre;
     }
 
-    ///////////////////////////// kiykliki ykad ymodifier lannonce ta3ah
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_mesannonces, container, false);
 
         recyclerView = view.findViewById(R.id.recyle_mesannonces);
-        information=view.findViewById(R.id.information);
+        information = view.findViewById(R.id.information);
         annonces = new ArrayList<>();
+        preferenceUtils = new PreferenceUtils(getContext());
         if (offre == null) {
             myannonce = new myannonce(getContext(), annonces);
         } else {
@@ -63,12 +61,10 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(myannonce);
-        ////
 
+        // get mes annonceqs
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Annonce");
-        PreferenceUtils preferenceUtils;
-        preferenceUtils = new PreferenceUtils(getContext());
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -88,13 +84,12 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
                     information.setText("Vous n'avez pas d'annonces");
 
 
-                }else {
+                } else {
                     information.setVisibility(View.GONE);
 
                 }
 
             }
-
 
 
             @Override

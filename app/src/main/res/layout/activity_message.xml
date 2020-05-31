@@ -58,11 +58,14 @@
             android:layout_toEndOf="@id/btn_send_location"
             android:background="@drawable/ic_image_black"
             android:layout_marginTop="2dp"
+            android:layout_centerVertical="true"
             android:backgroundTint="@color/orange" />
         <ImageButton
             android:id="@+id/btn_send_location"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginTop="2dp"
+            android:layout_centerVertical="true"
             android:background="@drawable/ic_location"
             android:backgroundTint="@color/orange" />
 
@@ -74,8 +77,11 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/btn_send"
             android:layout_toRightOf="@id/btn_send_image"
+            android:paddingBottom="5dp"
+            android:paddingTop="2dp"
+            android:paddingLeft="5dp"
             android:background="@android:color/transparent"
-            android:hint="typre a message...." />
+            android:hint="Saisir un message..." />
 
         <ImageButton
             android:id="@+id/btn_send"

@@ -9,31 +9,19 @@
     tools:context=".activities.AjoutOffre">
 
     <LinearLayout
+        android:id="@+id/txtv1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"
+        android:layout_height="50dp"
+        android:background="@color/gris"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/annuler"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/back"
-            android:backgroundTint="@color/orange" />
-
         <TextView
-            android:id="@+id/intro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
-            android:paddingStart="5dp"
-            android:text="Donner quelque chose en retour "
-            android:textColor="@color/orange"
-            android:textSize="20sp" />
-
+            android:id="@+id/annuler"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:drawableStart="@drawable/ic_keyboard_backspace_"
+            android:drawableTint="@color/orange" />
     </LinearLayout>
 
     <LinearLayout
@@ -47,32 +35,17 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:background="@drawable/ajouter_des_photos" />
-<!--<ImageView
-            android:id="@+id/img_offre"
-            android:layout_width="200dp"
-            android:layout_height="150dp" />
-
-        <ImageButton
-            android:id="@+id/suppImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/circle_button"
-            android:src="@drawable/ic_cancel_black_24dp"
-
-            /> -->
-
 
         <RelativeLayout
             android:layout_width="200dp"
             android:layout_height="160dp"
-           android:layout_marginStart="20dp">
+            android:layout_marginStart="20dp">
 
             <ImageView
                 android:id="@+id/img_offre"
                 android:layout_width="200dp"
-                android:scaleType="fitCenter"
-                android:layout_height="160dp" />
+                android:layout_height="160dp"
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/suppImage"
@@ -86,7 +59,7 @@
 
 
         </RelativeLayout>
-  </LinearLayout>
+    </LinearLayout>
 
     <EditText
         android:id="@+id/nom_objet"
@@ -136,7 +109,7 @@
             android:layout_below="@+id/spinner_cat"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@drawable/card_items" />
+            android:background="@drawable/bg_spinner" />
 
         <Spinner
             android:id="@+id/spinner_villeobj"
@@ -144,7 +117,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:background="@drawable/card_items" />
+            android:background="@drawable/bg_spinner" />
     </LinearLayout>
 
 

@@ -9,8 +9,8 @@
     android:background="@drawable/card_offre_refuse"
     android:elevation="5dp"
     android:orientation="vertical">
-    <!--heid 260dp-->
-n
+
+
     <RelativeLayout
         android:id="@+id/relative_profie"
         android:layout_width="match_parent"
@@ -19,7 +19,8 @@ n
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/img_user"
             android:layout_width="60dp"
-            android:layout_height="90dp"
+            android:layout_marginTop="5dp"
+            android:layout_height="70dp"
             android:layout_marginLeft="15dp"
             android:src="@drawable/user"></de.hdodenhof.circleimageview.CircleImageView>
 
@@ -45,7 +46,6 @@ n
             android:textSize="12sp" />
 
 
-
     </RelativeLayout>
 
 
@@ -53,8 +53,8 @@ n
         android:id="@+id/titte_offre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="3dp"
         android:layout_below="@id/relative_profie"
+        android:elevation="3dp"
         android:gravity="center"
         android:text="Hello world"
         android:textColor="@color/orange"
@@ -64,13 +64,12 @@ n
     <ImageView
         android:id="@+id/img_offre"
         android:layout_width="match_parent"
-android:layout_marginLeft="6dp"
+        android:layout_height="180dp"
+        android:layout_below="@+id/titte_offre"
+        android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
-        android:layout_height="150dp"
-        android:layout_below="@+id/titte_annonce"
-        android:layout_marginTop="130dp"
         android:background="@drawable/card_items"
-        android:src="#ffffff" /><!--app:srcCompat="#ffffff"-->
+        android:src="#ffffff" />
 
     <TextView
         android:id="@+id/desc_offre"

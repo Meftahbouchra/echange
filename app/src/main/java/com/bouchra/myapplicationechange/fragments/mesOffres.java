@@ -28,12 +28,13 @@ import java.util.ArrayList;
 public class mesOffres extends Fragment {
 
     private myoffre myoffre;
-    private ArrayList<Offre> offres;//////////////hadi li rna njobi fiha m fire base
-    private String idannoncE;// hadi mnshakhach psq jabtah direcht mlifogha  ArrayList<Offre> offres 
+    private ArrayList<Offre> offres;
+    private String idannoncE;
     private RecyclerView recyclerView;
     // SearchView editsearch;
-    private String offre;
+    private String offre;// id annonce
     private TextView information;
+    PreferenceUtils preferenceUtils;
 
 
     public mesOffres() {
@@ -50,6 +51,7 @@ public class mesOffres extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyle_mesoffres);
         information = view.findViewById(R.id.information);
+        preferenceUtils = new PreferenceUtils(getContext());
         offres = new ArrayList<>();
         if (offre == null) {
             myoffre = new myoffre(getContext(), offres, idannoncE);
@@ -60,11 +62,9 @@ public class mesOffres extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(myoffre);
 
-
+// get mes offres
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Offre");
-        PreferenceUtils preferenceUtils;
-        preferenceUtils = new PreferenceUtils(getContext());
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -73,8 +73,8 @@ public class mesOffres extends Fragment {
                     for (DataSnapshot off : postSnapshot.getChildren()) {
                         String user = off.child("idUser").getValue().toString();
                         String idnonce = off.child("annonceId").getValue().toString();
-                        Log.e("userli dar lofre howa: ", user);
-                        Log.e("userli dar annon howa: ", idnonce);
+                        Log.e("user poste offre ", user);
+                        Log.e("usr poste annonce-offre", idnonce);
                         if (user.equals(preferenceUtils.getMember().getIdMembre())) {
                             offres.add(off.getValue(Offre.class));
                             myoffre.notifyDataSetChanged();

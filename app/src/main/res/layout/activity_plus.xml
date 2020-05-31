@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:clickable="true"
+    android:background="#efefef"
     android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/Profil"
@@ -10,12 +12,7 @@
         android:orientation="vertical" >
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_pic"
-            android:background="@drawable/circle"
-            android:backgroundTint="#cccccc"
-            android:text="MB"
             android:gravity="center"
-            android:textSize="54sp"
-            android:textColor="#B9FFFFFF"
             android:layout_marginTop="45dp"
             android:layout_gravity="center_horizontal"
             android:layout_width="150dp"
@@ -53,7 +50,7 @@
             android:layout_height="wrap_content"
             android:text=" Messages"
             android:id="@+id/message"
-            android:drawableTint="@color/bleuk"
+            android:drawableTint="@color/orange"
             android:drawablePadding="9dp"
             android:textColor="@color/black"
             android:drawableStart="@drawable/ic_message" />
@@ -70,7 +67,7 @@
             android:layout_height="wrap_content"
             android:text=" Notifications"
             android:id="@+id/notification"
-            android:drawableTint="@color/bleuk"
+            android:drawableTint="@color/orange"
             android:drawablePadding="9dp"
             android:textColor="@color/black"
             android:drawableStart="@drawable/ic_notifications"
@@ -89,25 +86,11 @@
             android:text="Historiques"
             android:id="@+id/historique"
             android:textColor="@color/black"
-            android:drawableTint="@color/bleuk"
+            android:drawableTint="@color/orange"
             android:drawablePadding="9dp"
             android:drawableStart="@drawable/ic_history" />
 
-        <ImageView
-            android:layout_marginVertical="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/grey"/>
-        <TextView
-            android:layout_marginStart="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Paramètres"
-            android:id="@+id/parametre"
-            android:drawableTint="@color/bleuk"
-            android:drawablePadding="9dp"
-            android:textColor="@color/black"
-            android:drawableStart="@drawable/ic_settings" />
+
 
         <ImageView
             android:layout_marginVertical="10dp"
@@ -121,7 +104,7 @@
             android:layout_height="wrap_content"
             android:text=" Partager"
             android:id="@+id/parteger"
-            android:drawableTint="@color/bleuk"
+            android:drawableTint="@color/orange"
             android:textColor="@color/black"
             android:drawablePadding="9dp"
             android:drawableStart="@drawable/ic_share" />
@@ -137,7 +120,7 @@
             android:layout_height="wrap_content"
             android:text=" Se dèconnecter"
             android:id="@+id/lougout"
-            android:drawableTint="@color/bleuk"
+            android:drawableTint="@color/orange"
             android:drawablePadding="9dp"
             android:drawableStart="@drawable/ic_input"
             android:textColor="@color/black" />

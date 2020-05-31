@@ -23,22 +23,25 @@ import java.util.Date;
 
 public class ConfirmeOffre extends AppCompatDialogFragment {
 
+    private Offre offre;
+    private String titreAnnonce;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        Offre offre = (Offre) this.getArguments().getSerializable("offre");
-        String titreAnnonce = this.getArguments().getString("nomAnnonce");
+        offre = (Offre) this.getArguments().getSerializable("offre");
+        titreAnnonce = this.getArguments().getString("nomAnnonce");
         builder.setTitle("Echanger votre object")
                 .setMessage("Etes vous sure de bien vouloir accepter cette demande de troc pour echanger votre " + titreAnnonce + " avec " + offre.getNomOffre() + " ?")
                 .setPositiveButton("Accepter", (dialog, which) -> {
                     addNotification(offre);
-
+                    //selectionne un offre
                     ((DemandesOffre) getActivity()).selectedoffre(offre.getIdOffre());
+                    dismiss();
                 })
                 .setNegativeButton("Annuler", (dialog, which) -> {
-
+                    dismiss();
 
                 });
         return builder.create();
@@ -52,8 +55,7 @@ public class ConfirmeOffre extends AppCompatDialogFragment {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
-                Annonce annonce=snapshot.getValue(Annonce.class);
+                Annonce annonce = snapshot.getValue(Annonce.class);
                 DatabaseReference data = FirebaseDatabase.getInstance().getReference("Notification").child(offre.getIdUser());
                 Notification notification = new Notification();
                 notification.setIdsender(annonce.getUserId());

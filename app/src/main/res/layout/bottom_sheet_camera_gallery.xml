@@ -24,37 +24,5 @@
         android:text="Gallery"></Button>
 
 
-    <!--  <MaterialTextView
-
-          android:layout_height="wrap_content"
-          android:layout_width="wrap_content"
-          android:text="cameera"
-          android:id="@+id/btn_camera" />
-
-  <MaterialTextView
-
-      android:layout_height="wrap_content"
-      android:layout_width="wrap_content"
-      android:layout_marginTop="20dp"
-      android:text="Gallery"
-      android:id="@+id/btn_gallery"/>-->
-
-
-    <!-- <com.google.android.material.button.MaterialButton
-             android:text="cameera"
-             android:id="@+id/btn_camera"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-  android:drawableLeft="@drawable/ic_photo_camera_black"
-     />
-     <com.google.android.material.button.MaterialButton
-             android:layout_marginTop="20dp"
-             android:text="Gallery"
-             android:id="@+id/btn_gallery"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:drawableLeft="@drawable/ic_image_black"
-             />-->
-
 
 </LinearLayout>

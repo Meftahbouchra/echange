@@ -19,9 +19,11 @@ import androidx.fragment.app.Fragment;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.DetailAnnonce;
 import com.bouchra.myapplicationechange.activities.ReviewUser;
+import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.activities.profilUser;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Offre;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -31,6 +33,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
+import com.synnapps.carouselview.ImageListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -41,14 +50,14 @@ public class confirmEchangeOffre extends Fragment {
     private ImageView img_offre;
     private RelativeLayout relative_profie;
     private TextView titte_annonce;
-    private ImageView img_annonc;
     private LinearLayout layout_annonce;
     private Button Annuler;
     private Button Confirmer;
     private CircleImageView img_user;
     private TextView nom_user;
     private LinearLayout layoyt_button;
-    String fromREview ;
+    private String fromREview;
+    private CarouselView images;
 
 
     public confirmEchangeOffre() {
@@ -65,64 +74,70 @@ public class confirmEchangeOffre extends Fragment {
         //user da aanonce
         img_user = view.findViewById(R.id.img_user);
         nom_user = view.findViewById(R.id.nom_user);
-        relative_profie = view.findViewById(R.id.relative_profie);//ta3 win troh l profil ta3 user
+        relative_profie = view.findViewById(R.id.relative_profie);//go profil user
         // annonce
         titte_annonce = view.findViewById(R.id.titte_annonce);
-        img_annonc = view.findViewById(R.id.img_annonc);
-        layout_annonce = view.findViewById(R.id.layout_annonce);//troh l aanoince detaill t3ha
+        images = view.findViewById(R.id.img_annonc);
+        layout_annonce = view.findViewById(R.id.layout_annonce);//go detail annonce
 
         Annuler = view.findViewById(R.id.Annuler);
         Confirmer = view.findViewById(R.id.Confirmer);
         layoyt_button = view.findViewById(R.id.layoyt_button);
 
-        fromREview = this.getArguments().getString("fromReview","");
+        fromREview = this.getArguments().getString("fromReview", "");
         if (!fromREview.equals("")) {
+            // show echange from review , pas de btn confirm ou annuler ,pas detaill annoncec
             layoyt_button.setVisibility(View.GONE);
         } else {
             layout_annonce.setOnClickListener(v -> {
-                Intent ajou = new Intent(getContext(), DetailAnnonce.class);
-                ajou.putExtra("annonce", annonce);
-                startActivity(ajou);
-                getActivity().finish();
+                gotoDetail();
+            });
+            images.setImageClickListener(new ImageClickListener() {
+                @Override
+                public void onClick(int position) {
+                    gotoDetail();
+                }
             });
         }
         offre = (Offre) getArguments().getSerializable("offre");
-        // nomAnnonce.setText(annonce.getTitreAnnonce());
         titte_offre.setText(offre.getNomOffre());
-        // hadi mzal mndirha la foto ta3 offre
-       /* Glide.with(this)
+        Glide.with(this)
                 .asBitmap()
-                .load(offre.getImages())
-                .into(img_offre);*/
+                .load(offre.getImage())
+                .into(img_offre);
 
-
+// get annonce
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Annonce").child(offre.getAnnonceId());
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
                 if (snapshot.getValue() != null) {
-                    String TitreAnnonce = snapshot.child("titreAnnonce").getValue().toString();
-                    String ImageAnnoce = snapshot.child("images").child("0").getValue().toString();
-                    String UserAnnonce = snapshot.child("userId").getValue().toString();
+
                     annonce = snapshot.getValue(Annonce.class);
+                    titte_annonce.setText(annonce.getTitreAnnonce());
+                    ArrayList<String> Images = new ArrayList<>();
+                    for (String image : annonce.getImages()) {
+                        Images.add(image);
+                    }
+                    images.setImageListener(new ImageListener() {
+                        @Override
+                        public void setImageForPosition(int position, ImageView imageView) {
 
-                    titte_annonce.setText(TitreAnnonce);
-                   /* Glide.with(getActivity())
-                            .asBitmap()
-                            .load(ImageAnnoce)
-                            .into(img_annonc);*/
-                    Picasso.get().load(ImageAnnoce).into(img_annonc);
-                    recupererUser(UserAnnonce);
-                    Log.e("user li dar aanonce is", UserAnnonce);
+                            Glide.with(getActivity())
+                                    .load(Images.get(position))
+                                    .centerCrop()
+                                    .into(imageView);
 
+
+                        }
+                    });
+                    images.setPageCount(Images.size());
+
+                    recupererUser(annonce.getUserId());
                 } else {
                     Log.e("TAG", " it's null.");
-
-
                 }
-
             }
 
             @Override
@@ -130,7 +145,6 @@ public class confirmEchangeOffre extends Fragment {
 
             }
         });
-
 
         Confirmer.setOnClickListener(v -> {
             //ila kanat assined
@@ -147,11 +161,9 @@ public class confirmEchangeOffre extends Fragment {
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     Intent review = new Intent(getActivity(), ReviewUser.class);
-                                                    review.putExtra("Statu", "wait");
-                                                    review.putExtra("offre", offre);//offre
+                                                    review.putExtra("Statu", "wait");// signifier att de autrre commenter
+                                                    review.putExtra("offre", offre);
                                                     getActivity().startActivity(review);
-// hna mn3tihch win ydir review psq  moul annonce mzal mdrtch confirme , ndirha mlfog
-
                                                 }
                                             }
 
@@ -176,38 +188,62 @@ public class confirmEchangeOffre extends Fragment {
                         }
                     });
         });
+        Annuler.setOnClickListener(v -> {
+            final FirebaseDatabase data = FirebaseDatabase.getInstance();
+            DatabaseReference refere = data.getReference("Offre").child(annonce.getIdAnnonce()).child(annonce.getIdOffreSelected());
+            refere.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+
+                    if (snapshot.getValue() != null) {
+                        Offre offre = snapshot.getValue(Offre.class);
+                        deletOffre(offre);
+                        updateEtatAnnonce();
+                        Intent intent = new Intent(getActivity(), debut.class);
+                        getActivity().startActivity(intent);
 
 
+                    } else {
+                        Log.e("TAG", " it's null.");
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        });
         return view;
 
     }
 
 
+    private void gotoDetail() {
+        Intent ajou = new Intent(getContext(), DetailAnnonce.class);
+        ajou.putExtra("annonce", annonce);
+        startActivity(ajou);
+        getActivity().finish();
+    }
+
+    // gezt user
     private void recupererUser(String userAnnonce) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Membre").child(userAnnonce);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
                 if (snapshot.getValue() != null) {
                     String NameUser = snapshot.child("nomMembre").getValue().toString();
                     String PicUSer = snapshot.child("photoUser").getValue().toString();
-
-
                     nom_user.setText(NameUser);
-                   /* Glide.with(getActivity())
-                            .asBitmap()
-                            .load(PicUSer)
-                            .into(img_user);*/
                     Picasso.get().load(PicUSer).into(img_user);
-                    relative_profie.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent profil = new Intent(getContext(), profilUser.class);
-                            profil.putExtra("user", userAnnonce);
-                            startActivity(profil);
-                        }
+                    relative_profie.setOnClickListener(v -> {
+                        Intent profil = new Intent(getContext(), profilUser.class);
+                        profil.putExtra("user", userAnnonce);
+                        startActivity(profil);
                     });
 
                 } else {
@@ -224,5 +260,77 @@ public class confirmEchangeOffre extends Fragment {
         });
     }
 
+    private void deletOffre(Offre offre) {
+        DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(offre.getIdUser()).child(offre.getIdOffre());
+        Map<String, Object> OFFRE = new HashMap<>();
+        OFFRE.put("nomOffre", offre.getNomOffre());
+        OFFRE.put("idOffre", offre.getIdOffre());
+        OFFRE.put("annonceId", offre.getAnnonceId());
+        OFFRE.put("commune", offre.getCommune());
+        OFFRE.put("dateOffre", offre.getDateOffre());
+        OFFRE.put("descriptionOffre", offre.getDescriptionOffre());
+        OFFRE.put("idUser", offre.getIdUser());
+        OFFRE.put("image", offre.getImage());
+        OFFRE.put("wilaya", offre.getWilaya());
+        OFFRE.put("statu", "CANCEL");
+        mDbRef.updateChildren(OFFRE);
+        DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre());
+        dOffre.removeValue();
+    }
 
+    private void updateEtatAnnonce() {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Offre").child(annonce.getIdAnnonce());
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                if (snapshot.exists()) {
+                    // il y a des offre
+                    Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce()).child("statu")
+                            .setValue("ATTEND_DE_CONFIRMATION_D_OFFRE")
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                    }
+                                }
+
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                } else {
+                    // pas d offre
+                    Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce()).child("statu")
+                            .setValue("CREATED")
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                    }
+                                }
+
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }
+
+
+

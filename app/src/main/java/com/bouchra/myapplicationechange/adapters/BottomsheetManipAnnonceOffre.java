@@ -18,7 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BottomsheetManipAnnonceOffre extends BottomSheetDialogFragment {
 
-    String Offre = null;
+
     Annonce annonce;
     com.bouchra.myapplicationechange.models.Offre offreObject;
 
@@ -26,39 +26,37 @@ public class BottomsheetManipAnnonceOffre extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bottom_sheet_manip_annonce, container, false);
-        Offre = this.getArguments().getString("fromOffre");
+
         annonce = (Annonce) this.getArguments().getSerializable("fromAnnonce");
         offreObject = (com.bouchra.myapplicationechange.models.Offre) this.getArguments().getSerializable("objectOffre");
         Button btnModifier = v.findViewById(R.id.btn_modifier);
         Button btnSupprimer = v.findViewById(R.id.btn_supprimer);
 
         btnSupprimer.setOnClickListener(v12 -> {
-            openDialog(Offre, annonce, offreObject);
+            openDialog(annonce, offreObject);
+            dismiss();
         });
         btnModifier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Offre != null) {
-
+                if (offreObject != null) {
                     goToFragmentModifier();
+                    dismiss();
 
 
                 }
                 if (annonce != null) {
-                    // intint fo fragment
                     ((DetailMesannonce) getActivity()).goToFragmentModifier();
+                    dismiss();
                 }
-
-
             }
-
 
         });
         return v;
     }
 
 
-    private void openDialog(String offre, Annonce annonce, com.bouchra.myapplicationechange.models.Offre offreObject) {
+    private void openDialog(Annonce annonce, com.bouchra.myapplicationechange.models.Offre offreObject) {
 
         confirmeSuppAnnonceOffre confirmeSuppAnnonce = new confirmeSuppAnnonceOffre();
         Bundle b2 = new Bundle();

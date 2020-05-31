@@ -1,104 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_offre"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
     android:layout_marginTop="8dp"
     android:background="@drawable/card_items"
     android:elevation="5dp"
-    >
-    <!--heid 260dp-->
+    android:orientation="vertical">
 
 
+    <TextView
+        android:id="@+id/titte"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/select_manipulation"
+        android:elevation="3dp"
+        android:gravity="center"
+        android:text="Hello world"
+        android:textColor="@color/orange"
+        android:textSize="22dp" />
+
+    <com.synnapps.carouselview.CarouselView
+        android:id="@+id/img_article"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_marginTop="13dp"
+        android:background="@drawable/card_items"
+        android:scaleType="fitCenter"
+        android:src="#ffffff" />
+
+    <ImageView
+        android:id="@+id/imge"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_marginTop="13dp"
+        android:background="@drawable/card_items"
+        android:scaleType="fitCenter"
+        android:src="#ffffff" />
+
+
+    <TextView
+        android:id="@+id/desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25sp"
+        android:elevation="3dp"
+        android:text="description"
+        android:textColor="@color/black"
+        android:textSize="18dp" />
+
+
+    <LinearLayout
+        android:id="@+id/position_date"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/titte"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/select_manipulation"
-            android:elevation="3dp"
+            android:id="@+id/ville"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="25dp"
+            android:drawableStart="@drawable/ic_location"
+            android:drawableTint="@color/rouge"
             android:gravity="center"
-            android:text="Hello world"
-            android:textColor="@color/orange"
-            android:textSize="22dp" />
-
-
-        <ImageView
-            android:id="@+id/img"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_below="@+id/titte"
-            android:layout_marginLeft="6dp"
-            android:layout_marginTop="13dp"
-            android:layout_marginRight="6dp"
-            android:background="@drawable/card_items"
-            android:src="#ffffff" /><!--app:srcCompat="#ffffff"-->
+            android:text="Ville,"
+            android:textColor="@color/black" />
 
         <TextView
-            android:id="@+id/desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/img"
-            android:layout_marginLeft="25sp"
-            android:elevation="3dp"
-            android:text="description"
-            android:textColor="@color/black"
-            android:textSize="18dp" />
-
-
-        <LinearLayout
-            android:id="@+id/position_date"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@id/desc"
-
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/ville"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="25dp"
-                android:drawableStart="@drawable/ic_location"
-                android:drawableTint="@color/rouge"
-                android:gravity="center"
-                android:text="Ville,"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:id="@+id/commune"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:gravity="center"
-                android:text="Commune"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:id="@+id/datH"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="100dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="date heure"
-                android:textSize="12sp" />
-
-        </LinearLayout>
+            android:id="@+id/commune"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:text="Commune"
+            android:textColor="@color/black" />
 
         <TextView
-            android:id="@+id/statu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/position_date"
-            android:paddingLeft="30sp"
-            android:text="Statu"
-            android:textSize="15sp" />
+            android:id="@+id/datH"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="date heure"
+            android:textSize="12sp" />
 
-    </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/statu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="30sp"
+        android:text="Statu"
+        android:textSize="15sp" />
+
+</LinearLayout>
 
 
 

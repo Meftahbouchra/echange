@@ -23,9 +23,10 @@ import java.util.ArrayList;
 public class Notification extends AppCompatActivity {
     private mynotification mynotification;
     private ArrayList<com.bouchra.myapplicationechange.models.Notification> notifications;
-    PreferenceUtils preferenceUtils;
+    private PreferenceUtils preferenceUtils;
     private RecyclerView recyclerView;
     private TextView information;
+    private TextView retour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +34,18 @@ public class Notification extends AppCompatActivity {
         setContentView(R.layout.activity_notification);
         recyclerView = findViewById(R.id.Notifications);
         information = findViewById(R.id.information);
+        retour = findViewById(R.id.retour);
+        preferenceUtils = new PreferenceUtils(this);
         notifications = new ArrayList<>();
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mynotification = new mynotification(Notification.this, notifications);
+        retour.setOnClickListener(v -> {
+            finish();
+        });
 
-
-        preferenceUtils = new PreferenceUtils(this);
-
+        // get my nitifications
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Notification").child(preferenceUtils.getMember().getIdMembre());
-
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {

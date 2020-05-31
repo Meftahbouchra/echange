@@ -1,6 +1,7 @@
 package com.bouchra.myapplicationechange.adapters;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.bouchra.myapplicationechange.activities.DetailMesannonce;
+import com.bouchra.myapplicationechange.activities.debut;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -17,10 +19,9 @@ import java.util.Map;
 
 public class confirmeSuppAnnonceOffre extends AppCompatDialogFragment {
     String name = null;
-    String Offre = null;
     com.bouchra.myapplicationechange.models.Annonce Annonce;
     com.bouchra.myapplicationechange.models.Offre offre;
-    String nn = "";
+
 
     @NonNull
     @Override
@@ -33,31 +34,29 @@ public class confirmeSuppAnnonceOffre extends AppCompatDialogFragment {
         if (offre != null) {
             name = offre.getNomOffre();
             builder.setTitle("Supprimer")
-                    .setMessage("Souhaitez-vous vraiment supprimer  cette " + name + "?")
+                    .setMessage("Souhaitez-vous vraiment supprimer  cette " + name + " ?")
                     .setPositiveButton("Oui", (dialog, which) -> {
-// mansuprimich datat f info; ndiha l historique
+                        // replace a table  historique
                         deleteOffre(offre);
-                        // Toast.makeText(getContext(), " cellte offre va delete", Toast.LENGTH_SHORT).show();
+                        dismiss();
+
 
                     })
                     .setNegativeButton("Non", (dialog, which) -> {
-
+                        dismiss();
                     });
-            //return builder.create();
+
         }
         if (Annonce != null) {
             name = Annonce.getTitreAnnonce();
             builder.setTitle("Supprimer")
                     .setMessage("Souhaitez-vous vraiment supprimer cette " + name + "?")
                     .setPositiveButton("Oui", (dialog, which) -> {
-// mansuprimich datat f info; ndiha l historique
-                        String shox;
-
-
-                       ((DetailMesannonce) getActivity()).deleteAnnonce();
+                        ((DetailMesannonce) getActivity()).deleteAnnonce();
+                        dismiss();
                     })
                     .setNegativeButton("Non", (dialog, which) -> {
-
+                        dismiss();
                     });
 
         }
@@ -65,11 +64,9 @@ public class confirmeSuppAnnonceOffre extends AppCompatDialogFragment {
         return builder.create();
     }
 
-    private void view(String nomCategorie) {
-        //  Toast.makeText(getContext(), "" + nomCategorie, Toast.LENGTH_SHORT).show();
-    }
 
     private void deleteOffre(com.bouchra.myapplicationechange.models.Offre offre) {
+        // add to table historique
         DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(offre.getIdUser()).child(offre.getIdOffre());
         Map<String, Object> OFFRE = new HashMap<>();
         OFFRE.put("nomOffre", offre.getNomOffre());
@@ -79,12 +76,15 @@ public class confirmeSuppAnnonceOffre extends AppCompatDialogFragment {
         OFFRE.put("dateOffre", offre.getDateOffre());
         OFFRE.put("descriptionOffre", offre.getDescriptionOffre());
         OFFRE.put("idUser", offre.getIdUser());
-        OFFRE.put("images", offre.getImage());
+        OFFRE.put("image", offre.getImage());
         OFFRE.put("wilaya", offre.getWilaya());
         OFFRE.put("statu", "DELETEOFFRE");
         mDbRef.updateChildren(OFFRE);
+        // delete from tabvle offre
         DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre());
         dOffre.removeValue();
-
+        Intent intent = new Intent(getContext(), debut.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 }

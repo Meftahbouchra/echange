@@ -7,11 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,14 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
-import com.bouchra.myapplicationechange.activities.GoogleMaps;
-import com.bouchra.myapplicationechange.activities.MainActivity;
 import com.bouchra.myapplicationechange.activities.annonce.AnnonceActivity;
 import com.bouchra.myapplicationechange.adapters.publicationannonceadapt;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,17 +36,14 @@ import java.util.ArrayList;
 
 public class Acceuil extends Fragment implements Single_choice_classification.SingleChoiceListener, SearchView.OnQueryTextListener {
     private FirebaseAuth firebaseAuth;
-    private LinearLayout linearLayout2;
-    private TextView textView1, textView2;
+    private LinearLayout selectWilaya;
     private TextView nom_wilaya;
-    private Button google;
     private RelativeLayout addAnnonce;
     private publicationannonceadapt publicAdapter;
     private ArrayList<Annonce> annonces = new ArrayList<>();
     private RecyclerView recyclerView;
     private SearchView editsearch;
     private String categorie;
-    private String WilayaName;
     private TextView informationDafault;
     private TextView informationRecherche;
     private String wilaya = "", searchText = "";
@@ -68,12 +60,9 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         View view = inflater.inflate(R.layout.activity_acceuil, container, false);
         informationDafault = view.findViewById(R.id.informationDafault);
         informationRecherche = view.findViewById(R.id.informationRecherche);
-        linearLayout2 = view.findViewById(R.id.layout1);
+        selectWilaya = view.findViewById(R.id.layout1);
         nom_wilaya = view.findViewById(R.id.nom_wilaya);
-        // textView2 = view.findViewById(R.id.txt22);
         recyclerView = view.findViewById(R.id.recyle_public);
-        google = view.findViewById(R.id.button5);
-
         tout = view.findViewById(R.id.tout);
         vehicules = view.findViewById(R.id.vehicules);
         telephones = view.findViewById(R.id.telephones);
@@ -88,23 +77,17 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         maison_et_fournitures = view.findViewById(R.id.maison_et_fournitures);
         loisirs_et_devertissements = view.findViewById(R.id.loisirs_et_devertissements);
         matiriaux_et_equipements = view.findViewById(R.id.matiriaux_et_equipements);
-
-
         addAnnonce = view.findViewById(R.id.ajou_annonce);
+        firebaseAuth = FirebaseAuth.getInstance();
+
         addAnnonce.setOnClickListener(v -> {
             Intent loaddimage = new Intent(getActivity(), AnnonceActivity.class);
             startActivity(loaddimage);
         });
 
-        google.setOnClickListener(v -> {
-            Intent googlemap = new Intent(getActivity(), GoogleMaps.class);
-            startActivity(googlemap);
-        });
-        // init
-        firebaseAuth = FirebaseAuth.getInstance();
 
-        linearLayout2.setOnClickListener(v -> {
-
+//selectionner wilaya pour rechercher des publication
+        selectWilaya.setOnClickListener(v -> {
             DialogFragment singleChoiceDialog = new Single_choice_classification(this);
             singleChoiceDialog.setCancelable(false);
             singleChoiceDialog.show(getActivity().getSupportFragmentManager(), "Single Choice Dialog");
@@ -115,8 +98,9 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         publicAdapter = new publicationannonceadapt(getContext(), new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(publicAdapter);
-        //affichageParDefaut();
-        //hna njibha par defaolt
+// dafault affichage
+        affichageParDefaut();
+        // add text to btn categorie
         String[] Choix = getResources().getStringArray(R.array.choix_categorie);
         tout.setText(Choix[0]);
         vehicules.setText(Choix[1]);
@@ -132,7 +116,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         maison_et_fournitures.setText(Choix[11]);
         loisirs_et_devertissements.setText(Choix[12]);
         matiriaux_et_equipements.setText(Choix[13]);
-        affichageParDefaut();
+
         //click
         tout.setOnClickListener(v -> {
             affichageParDefaut();
@@ -204,32 +188,16 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
         });
 
-        // hadi jcp fach khrabt **********************************************************************
-      /*editsearch = view.findViewById(R.id.search);////////////////////////////////////////////////////
+
+      /*editsearch = view.findViewById(R.id.search);
         editsearch.setOnQueryTextListener(this);*/
         return view;
     }
 
-    private void checkUserStatus() {
-        // get current user
-        FirebaseUser us = firebaseAuth.getCurrentUser();
-        if (us != null) {
-        } else {
-            startActivity(new Intent(getActivity(), MainActivity.class));
-            getActivity().finish();
-        }
-    }
-
-    @Override
-    public void onStart() {
-        //check on start of app
-        checkUserStatus();
-        super.onStart();
-    }
 
     @Override
     public void onPositiveButtononCliked(String name) {
-        Toast.makeText(getContext(), "Selected item = " + name, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getContext(), "Selected item = " + name, Toast.LENGTH_SHORT).show();
         nom_wilaya.setText(name);
         wilaya = name;
         Recherche(searchText, wilaya);
@@ -237,9 +205,10 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
     @Override
     public void onNegativeButtononCliked() {
-        Toast.makeText(getContext(), "Dialog cancel", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getContext(), "Dialog cancel", Toast.LENGTH_SHORT).show();
     }
 
+    //apeler lorsque user soumet la requete
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
@@ -247,6 +216,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        //appzle lorsque le text de lan requete est modifier
         searchText = newText;
         Recherche(searchText, wilaya);
         return false;
@@ -283,6 +253,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     public void affichageParDefaut() {
         annonces.clear();
         PreferenceUtils preferenceUtils = new PreferenceUtils(getContext());
+        // get all annonces
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Annonce");
 
@@ -334,9 +305,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         Log.e("nom categorie ", categ);
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Categorie").child(categ);
-
         Log.e("root", databaseReference.getRoot().toString());
-
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -346,10 +315,9 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                         String IDannonce = id.getKey();
                         Log.e("Data here", IDannonce);
 
-                        //annonce
+                        //annonces par categorie
                         PreferenceUtils preferenceUtils = new PreferenceUtils(getContext());
                         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                        // DatabaseReference ref = database.getReference("Annonce").child(IDannonce);
                         DatabaseReference ref = database.getReference("Annonce").child(IDannonce);
 
                         ref.addValueEventListener(new ValueEventListener() {
@@ -366,15 +334,11 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                                     informationDafault.setVisibility(View.GONE);
                                     publicAdapter.setMesannonce(annonces);
                                     publicAdapter.notifyDataSetChanged();
-                                }else {
+                                } else {
                                     informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
                                     informationDafault.setVisibility(View.GONE);
                                     recyclerView.setVisibility(View.GONE);
-
-                                    Toast.makeText(getContext(), "kayan ghir ta3ak", Toast.LENGTH_SHORT).show();
                                 }
-
-
 
 
                             }
@@ -394,20 +358,9 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                     informationDafault.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
 
-                    Toast.makeText(getContext(), "mknch f had l categ", Toast.LENGTH_SHORT).show();
                 }
 
 
-                // }
-                /*else {mkanch f had l categoreri informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
-                    informationDafault.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.GONE);*/
-
-                   /* publicAdapter.setMesannonce(annonces);
-                    publicAdapter.notifyDataSetChanged();
-                    Log.e("nbrdeannoncepourlesvide", (String.valueOf(annonces.size())));*/
-
-                // }
             }
 
             @Override

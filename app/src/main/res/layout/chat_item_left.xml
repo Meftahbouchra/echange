@@ -37,7 +37,6 @@
             android:layout_marginLeft="5dp"
             android:adjustViewBounds="true"
             android:background="@drawable/backgroung_left_massage"
-            android:padding="15dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_image_black" />
     </RelativeLayout>

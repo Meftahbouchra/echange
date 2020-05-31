@@ -278,37 +278,7 @@
             </LinearLayout>
 
 
-            <!--   <LinearLayout
-                   android:id="@+id/layout2"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_marginLeft="70dp">
 
-                   <TextView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_marginTop="15dp"
-
-                       android:background="@drawable/ic_shuffle"
-                       android:textSize="20dp" />
-
-                   <LinearLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:orientation="vertical">
-
-                       <TextView
-                           android:id="@+id/txt22"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:layout_marginTop="10dp"
-                           android:paddingLeft="10dp"
-                           android:text="Choisissiez  le classement des articles "
-                           android:textColor="@color/black"
-                           android:textSize="15sp" />
-
-                   </LinearLayout>
-               </LinearLayout>-->
         </LinearLayout>
 
         <View
@@ -318,22 +288,13 @@
             android:layout_below="@+id/bhh"
             android:background="@color/black" />
 
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="263dp"
-            android:layout_marginBottom="414dp"
-            android:text="Maps" />
+
         <TextView
             android:id="@+id/informationDafault"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="informationDafault"
             android:textSize="25sp"
             android:layout_below="@+id/viw2"
 
@@ -344,7 +305,6 @@
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="informationRecherche"
             android:textSize="25sp"
             android:layout_below="@+id/viw2"
 
@@ -356,7 +316,6 @@
             android:layout_below="@+id/viw2"
 
             android:layout_marginTop="16dp"
-
             android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
 
 

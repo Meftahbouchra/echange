@@ -32,6 +32,7 @@ public class CommentaireAdapter extends RecyclerView.Adapter<CommentaireAdapter.
     private String idUSer;
     private DatabaseReference reference;
 
+    // seet idUser sender
     public void setIdUSer(String idUSer) {
         this.idUSer = idUSer;
         notifyDataSetChanged();
@@ -47,10 +48,10 @@ public class CommentaireAdapter extends RecyclerView.Adapter<CommentaireAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //   return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.commentaire_layout, parent));
-        View vi = LayoutInflater.from(context).inflate(R.layout.commentaire_layout, parent, false);
+        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.commentaire_layout, parent));
+       /* View vi = LayoutInflater.from(context).inflate(R.layout.commentaire_layout, parent, false);
         CommentaireAdapter.ViewHolder h = new CommentaireAdapter.ViewHolder(vi);
-        return h;
+        return h;*/
     }
 
     @Override
@@ -60,10 +61,10 @@ public class CommentaireAdapter extends RecyclerView.Adapter<CommentaireAdapter.
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         holder.date.setText(simpleDateFormat.format(commentaire.getDateCommentaire()));
         holder.commentaire.setText(commentaire.getContenuCommentaire());
-        holder.etoiles.setRating(commentaire.getRepos());// hna mazal nchof f net
-        // mazali njbad user
-        Log.e("id user is", idUSer);
+        holder.etoiles.setRating(commentaire.getRepos());
 
+        Log.e("id user is", idUSer);
+        // get user sender
         reference = FirebaseDatabase.getInstance().getReference("Membre").child(idUSer);
         reference.addValueEventListener(new ValueEventListener() {
             @Override

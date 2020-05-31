@@ -37,7 +37,6 @@ public class BootomSheetDialogCamGall extends BottomSheetDialogFragment {
         btnCamera = v.findViewById(R.id.btn_camera);
         btnGallery = v.findViewById(R.id.btn_gallery);
         btnCamera.setOnClickListener(v1 -> {
-
             if (Offre != null) {
                 ((AjoutOffre) getActivity()).takePhotoFromCamera();
             }

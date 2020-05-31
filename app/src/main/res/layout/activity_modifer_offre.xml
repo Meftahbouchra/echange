@@ -56,6 +56,7 @@
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/card_items"
+        android:scaleType="fitCenter"
         app:srcCompat="@drawable/user" />
 
     <EditText
@@ -87,7 +88,7 @@
             android:layout_below="@+id/spinner_cat"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@drawable/card_items" />
+            android:background="@drawable/bg_spinner"/>
 
         <Spinner
             android:id="@+id/spinner_ville"
@@ -95,7 +96,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:background="@drawable/card_items" />
+            android:background="@drawable/bg_spinner" />
     </LinearLayout>
 
 </RelativeLayout>

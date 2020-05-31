@@ -25,11 +25,10 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class plus extends Fragment {
-    private TextView annonce;
+
     private TextView message;
     private TextView notification;
     private TextView historique;
-    private TextView parametre;
     private TextView parteger;
     private TextView lougout;
     private LinearLayout Profil;
@@ -48,50 +47,45 @@ public class plus extends Fragment {
         View view = inflater.inflate(R.layout.activity_plus, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        //  annonce=view.findViewById(R.id.annonce);
         message = view.findViewById(R.id.message);
         profile_pic = view.findViewById(R.id.profile_pic);
         nomUser = view.findViewById(R.id.nomUser);
         notification = view.findViewById(R.id.notification);
         historique = view.findViewById(R.id.historique);
-        parametre = view.findViewById(R.id.parametre);
         parteger = view.findViewById(R.id.parteger);
         lougout = view.findViewById(R.id.lougout);
         Profil = view.findViewById(R.id.Profil);
-
         preferenceUtils = new PreferenceUtils(getActivity());
+
+        // show  user information   ²
         nomUser.setText(preferenceUtils.getMember().getNomMembre());
         Picasso.get().load(preferenceUtils.getMember().getPhotoUser()).into(profile_pic);
+        // go to my profile
         Profil.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), MyProfil.class));
-            getActivity().finish();
         });
         //loug out
         lougout.setOnClickListener(v -> {
-
             firebaseAuth = FirebaseAuth.getInstance();
-
             firebaseAuth.signOut();
-            // firebaseAuth.signOut();
             preferenceUtils.Clear();
             updateUI();
-
-
         });
+        //goto notiifcation
         notification.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), Notification.class));
-            getActivity().finish();
+            // getActivity().finish(); nn bacg mnshkoch ndiro frame layout f notification pour backvv
         });
+        //goto historique
         historique.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), Historique.class);
             startActivity(intent);
-            getActivity().finish();
         });
         //goto message
         message.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), MessageList.class);
             startActivity(intent);
-            getActivity().finish();
+
         });
         //partager un message
         parteger.setOnClickListener(v -> {
@@ -105,7 +99,7 @@ public class plus extends Fragment {
             String shareSub = "APP NAMe";//the datails of sharing content
             myIntent.putExtra(Intent.EXTRA_SUBJECT, shareSub);
             myIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-            startActivity(Intent.createChooser(myIntent, "share using"));// ce le msg
+            startActivity(Intent.createChooser(myIntent, "Parteger avec"));
 
         });
 
@@ -113,13 +107,10 @@ public class plus extends Fragment {
         return view;
     }
 
-    //logout
+    //go to activity principal
     private void updateUI() {
         startActivity(new Intent(getActivity(), MainActivity.class));
         getActivity().finish();
-       /* Intent intent=new Intent(getContext(),MainActivity.class);
-        startActivity(intent);
-        getActivity().finish();*/
 
     }
 }

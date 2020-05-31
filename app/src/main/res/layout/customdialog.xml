@@ -2,40 +2,36 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="350dp"
+    android:layout_width="360dp"
     android:layout_height="wrap_content"
-    android:background="@color/orange"
+    android:background="#efefef"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="300dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/orange"
         android:paddingLeft="50dp"
-        android:orientation="horizontal">
+      >
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-
-
         android:text="Un offre d'echange"
-        android:textColor="@android:color/white"
+        android:textColor="@color/black"
         android:textSize="20sp" />
     <TextView
         android:id="@+id/close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentEnd="true"
        android:drawableStart="@drawable/ic_close_black_24dp"
         android:drawableTint="@color/rouge"
-
-        android:textColor="@android:color/white"
         android:textSize="20sp" />
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -45,19 +41,23 @@
 
         <Button
             android:id="@+id/ajout"
-            android:layout_width="130dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center|left"
             android:layout_margin="5dp"
+            android:textColor="@color/white"
+            android:background="@color/orange"
             android:text="Ajouter un nouveaux offre"
             android:textAllCaps="false"
              />
 
         <Button
             android:id="@+id/selec"
-            android:layout_width="130dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center|right"
+            android:background="@color/orange"
+            android:textColor="@color/white"
             android:layout_margin="5dp"
             android:text="Selectionner un offre"
           android:textAllCaps="false"/>

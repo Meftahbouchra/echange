@@ -6,7 +6,7 @@ public class Commentaire {
     private String idCommentaire;
     private Date dateCommentaire;
     private String contenuCommentaire;
-    private float repos;// nbr * yad y3amar b nos ykad ykon 3.4
+    private float repos;
     private String IdSender;
     private String IDResiver;
 
@@ -71,9 +71,6 @@ public class Commentaire {
         this.repos = repos;
     }
 
-    public int Calcul_Score() {// score des commentaie
-        float score = 0;
-        return (int) score;
-    }
+
 }
 

@@ -17,6 +17,8 @@ import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Historique;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bumptech.glide.Glide;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,18 +45,22 @@ public class myhistorique extends RecyclerView.Adapter<myhistorique.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull myhistorique.ViewHolder holder, int position) {
         if (historiques.get(position) instanceof Offre) {
+            holder.imageView.setVisibility(View.GONE);
             // offre
-
             Offre offre = (Offre) historiques.get(position);
             holder.titte.setText(offre.getNomOffre());
             holder.desc.setText(offre.getDescriptionOffre());
-            holder.ville.setText(offre.getWilaya());
+            holder.ville.setText(offre.getWilaya() + ", ");
             holder.commune.setText(offre.getCommune());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
             String str = simpleDateFormat.format(offre.getDateOffre());
             holder.datH.setText(str);
             holder.statu.setText(offre.getStatu());
 
+            Glide.with(context)
+                    .load(offre.getImage())
+                    .centerCrop()
+                    .into(holder.imge);
 
             switch (offre.getStatu()) {
                 case "DELETEOFFRE":
@@ -66,25 +72,41 @@ public class myhistorique extends RecyclerView.Adapter<myhistorique.ViewHolder> 
                 case "COMPLETEDOFFRE":
                     holder.statu.setText("Elle a été échangé");
                     break;
+                case "CANCEL":
+                    holder.statu.setText("l'échange a été annuler");
+                    break;
             }
 
 
         }
         if (historiques.get(position) instanceof Annonce) {
             //annonce
-
+            holder.imge.setVisibility(View.GONE);
             Annonce annonce = (Annonce) historiques.get(position);
             holder.titte.setText(annonce.getTitreAnnonce());
             holder.desc.setText(annonce.getDescriptionAnnonce());
-            holder.ville.setText(annonce.getWilaya());
+            holder.ville.setText(annonce.getWilaya() + ", ");
             holder.commune.setText(annonce.getCommune());
-            Glide.with(context)
-                    .load(annonce.getImages().get(0))
-                    .centerCrop()
-                    .into(holder.img);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
             String str = simpleDateFormat.format(annonce.getDateAnnonce());
             holder.datH.setText(str);
+
+            // get images
+            ArrayList<String> images = new ArrayList<>();
+            for (String image : annonce.getImages()) {
+                images.add(image);
+            }
+            holder.imageView.setPageCount(images.size());
+            holder.imageView.setImageListener(new ImageListener() {
+                @Override
+                public void setImageForPosition(int position, ImageView imageView) {
+                    //imageView.setImageURI(images.get(position));
+                    Glide.with(context)
+                            .load(images.get(position))
+                            .centerCrop()
+                            .into(imageView);
+                }
+            });
 
             switch (annonce.getStatu()) {
                 //statu
@@ -96,10 +118,9 @@ public class myhistorique extends RecyclerView.Adapter<myhistorique.ViewHolder> 
                     break;
             }
             holder.itemView.setOnClickListener(v -> {
+                // if combleted  pass intent to review activity (on start ila lktha kayan direct tfwtha), li tniryha troh l echange b string li mybynch les btn
                 if (annonce.getStatu().equals("COMPLETEDANNONCE")) {
                     Intent intent = new Intent(context, ReviewUser.class);
-                    intent.putExtra("annonce", annonce);//offre
-                    // intent.putSerializable("annonce", annonce);
                     intent.putExtra("annonce", annonce);
                     intent.putExtra("send", "khod3a");
                     context.startActivity(intent);
@@ -121,23 +142,25 @@ public class myhistorique extends RecyclerView.Adapter<myhistorique.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView titte;
-        private ImageView img;
+        private CarouselView imageView;
         private TextView desc;
         private TextView ville;
         private TextView commune;
         private TextView datH;
         private TextView statu;
+        private ImageView imge;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             titte = itemView.findViewById(R.id.titte);
-            img = itemView.findViewById(R.id.img);
+            imageView = itemView.findViewById(R.id.img_article);
             desc = itemView.findViewById(R.id.desc);
             ville = itemView.findViewById(R.id.ville);
             commune = itemView.findViewById(R.id.commune);
             datH = itemView.findViewById(R.id.datH);
             statu = itemView.findViewById(R.id.statu);
+            imge = itemView.findViewById(R.id.imge);
 
 
         }

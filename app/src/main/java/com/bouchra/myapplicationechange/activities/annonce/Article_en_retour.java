@@ -2,6 +2,7 @@ package com.bouchra.myapplicationechange.activities.annonce;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,36 +22,46 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class
-Article_en_retour extends AppCompatActivity {
+public class Article_en_retour extends AppCompatActivity {
+
     private RecyclerView recyclerView;
     private RecycleViewArticleRetour postAdapter;
-
+    private TextView annuler;
     private String selectedCateg;
     private EditText editText;
     private TextView textView;
     private Annonce annonce;
-    ArrayList<String> posts = new ArrayList<>();
+    private ArrayList<String> posts = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_en_retour);
+
         editText = findViewById(R.id.edittxt_article);
         textView = findViewById(R.id.ajout_article);
         recyclerView = findViewById(R.id.rec_retour);
+        annuler=findViewById(R.id.annuler);
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
         selectedCateg = getIntent().getStringExtra("Categ");
 
-        //isEmpty ewt vide    isEmpty()
+        annuler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent annul = new Intent(Article_en_retour.this, ImagesStorage.class);
+                startActivity(annul);
+                finish();
 
+            }
+        });
         textView.setOnClickListener(v -> {
             ajoutArticle();
         });
 
 
         findViewById(R.id.ok).setOnClickListener(v -> {
+            // add aannonce to database
             annonce.getArticleEnRetour().addAll(posts);
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Annonce");
             databaseReference.child(annonce.getIdAnnonce()).setValue(annonce).addOnCompleteListener(task2 -> {
@@ -62,14 +73,12 @@ Article_en_retour extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
                 }
             });
-            // add catrgori
+            // add catrgori to databse
             DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Categorie").child(selectedCateg);
             //Writing Hashmap
             Map<String, Object> idANNONCE = new HashMap<>();
             idANNONCE.put(annonce.getIdAnnonce(), annonce.getIdAnnonce());
-          //  idANNONCE.put(selectedCateg + "/" + annonce.getIdAnnonce(), annonce.getIdAnnonce());
-
-
+            //  idANNONCE.put(selectedCateg + "/" + annonce.getIdAnnonce(), annonce.getIdAnnonce());
             mDbRef.updateChildren(idANNONCE);
 
 
@@ -96,7 +105,7 @@ Article_en_retour extends AppCompatActivity {
 
 
             } else {
-                Toast.makeText(this, "remplir le champs", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "remplir le champ ", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -107,28 +116,5 @@ Article_en_retour extends AppCompatActivity {
         }// vous avez atteint la limite des postes possible
 
 
-
-
-          /*  if( !x.isEmpty()){
-                if (posts.size() < 10) {
-                    posts.add(x);
-                    editText.setText("");
-                    postAdapter = new RecycleViewArticleRetour(this, posts);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                    recyclerView.setAdapter(postAdapter);
-
-                } else {
-                    editText.setEnabled(false);
-                    editText.setText("");
-                    Toast.makeText(this, "Dèsolè, il n'ya pas pour ajouter plus d'article", Toast.LENGTH_SHORT).show();
-
-
-                }// vous avez atteint la limite des postes possible
-
-
-            }else{
-                Toast.makeText(this, "remplir le champs", Toast.LENGTH_SHORT).show();
-            }
-*/
     }
 }

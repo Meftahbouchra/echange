@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,28 +59,33 @@ public class AjoutOffre extends AppCompatActivity {
     private EditText descObjet;
     private ImageView pic;
     private Button suiv;
+    private TextView annuler;
+    private ImageButton suppImage;
+    private Spinner wilayaSpinner, villeSpinner;
     private String titre = "";
     private String desc = "";
     private String idAnnonce = "";
-    private Spinner wilayaSpinner, villeSpinner;
+    private String selectedWilaya, selectedVille;
     private ArrayList<Wilaya> wilaya = new ArrayList<Wilaya>();
     private ArrayList<Commune> communes = new ArrayList<Commune>();
     private String[] wilayaname;
     private DatabaseReference databaseReference, databasereference, data;
-    private String selectedWilaya, selectedVille;
     private Annonce annonce;
-    private Button annuler;
-    private ImageButton suppImage;
-    StorageReference mStorageRef;
+    private StorageReference mStorageRef;
     public Uri imguri;
-    String path;
+    private static final int GALLERY = 1;
+    private static final int CAMERA = 2;
+    private static final int CAMERA_PERMISSION = 3;
+    private static final int WRITE_EXTERNAL_STORAGE = 4;
+    private static final int READ_EXTERNAL_STORAGE = 5;
+    private PreferenceUtils preferenceUtils;
 
-    private int GALLERY = 1, CAMERA = 3, CAMERA_PERMISSION = 2, WRITE_EXTERNAL_STORAGE = 4, READ_EXTERNAL_STORAGE = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ajout_offre);
+
         buttonChoosePic = findViewById(R.id.selectbtn);
         titleObjet = findViewById(R.id.nom_objet);
         descObjet = findViewById(R.id.desci_object);
@@ -88,21 +94,20 @@ public class AjoutOffre extends AppCompatActivity {
         villeSpinner = findViewById(R.id.spinner_villeobj);
         annuler = findViewById(R.id.annuler);
         suppImage = findViewById(R.id.suppImage);
-
-        //StorageReference Firebase
-        mStorageRef = FirebaseStorage.getInstance().getReference("Images offre");
-        annuler.setOnClickListener(v -> {
-            Intent an = new Intent(AjoutOffre.this, debut.class);
-            startActivity(an);
-            finish();
-           /* Intent annul = new Intent(AjoutOffre.this, Acceuil.class);
-            startActivity(annul);
-            finish();*/
-        });
         suiv = findViewById(R.id.suiv);
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        buttonChoosePic.setOnClickListener(v -> {
+        //StorageReference Firebase
+        mStorageRef = FirebaseStorage.getInstance().getReference("Images offre");
+        preferenceUtils = new PreferenceUtils(this);
 
+        annuler.setOnClickListener(v -> {
+            startActivity(new Intent(AjoutOffre.this, debut.class));
+            finish();
+
+        });
+
+
+        buttonChoosePic.setOnClickListener(v -> {
             BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
             Bundle bundle = new Bundle();
             bundle.putString("linkOffre", "fromOffre");
@@ -112,10 +117,9 @@ public class AjoutOffre extends AppCompatActivity {
         });
 
 
-        //njib data
+        //get data
         Intent ajou = getIntent();
         if (ajou != null) {
-
             if (ajou.hasExtra("Annonce")) {
                 annonce = (Annonce) getIntent().getSerializableExtra("Annonce");
                 idAnnonce = annonce.getIdAnnonce();
@@ -135,7 +139,6 @@ public class AjoutOffre extends AppCompatActivity {
                 Fileuploader();
                 titre = titleObjet.getText().toString();
                 desc = descObjet.getText().toString();
-                PreferenceUtils preferenceUtils = new PreferenceUtils(this);
                 if (!titre.isEmpty() && !desc.isEmpty()) {
                     databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(idAnnonce);
                     Offre offre = new Offre();
@@ -149,8 +152,6 @@ public class AjoutOffre extends AppCompatActivity {
                     offre.setIdUser(preferenceUtils.getMember().getIdMembre());
                     offre.setStatu("CREATED");
                     offre.setImage(imguri.toString());
-                    // khasni id user li dar l offre
-
                     databaseReference.child(String.valueOf(offre.getDateOffre().hashCode()) + offre.getAnnonceId().hashCode()).setValue(offre).addOnCompleteListener(task2 -> {/*
                 setValue () -  Cette méthode prendra un objet de classe java modèle qui contiendra toutes les variables
                  à stocker dans la référence. La même méthode sera utilisée pour mettre à jour les valeurs car elle écrase
@@ -158,6 +159,7 @@ public class AjoutOffre extends AppCompatActivity {
 
                 */
                         if (task2.isSuccessful()) {
+                            // modifier le statu et envoyer notific
                             setStatuAnnonce();
                             addNotification(annonce, offre);
                             Toast.makeText(this, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
@@ -266,7 +268,6 @@ public class AjoutOffre extends AppCompatActivity {
     }
 
     private void setStatuAnnonce() {
-//statu majuc avec _ w gsira
         // ndiro kima hka wla kim ta3 yselectionne
         databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(idAnnonce);//child(statu).setvaleu.set aaces lisnter ta3 mchat w kayan whdkhra ta3 mamchtch
         Annonce annonce1 = new Annonce();
@@ -342,28 +343,20 @@ public class AjoutOffre extends AppCompatActivity {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
                     imguri = Uri.parse(saveImage(bitmap));
 
-                    Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
-                    //*******************
+
                     pic.setImageBitmap(bitmap);
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
         } else if (requestCode == CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            //******************
             pic.setImageBitmap(thumbnail);
             imguri = Uri.parse(saveImage(thumbnail));
-            Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
-        } else if (requestCode == CAMERA_PERMISSION) {
-            //takePhotoFromCamera();
-        } else if (requestCode == WRITE_EXTERNAL_STORAGE) {
-            //takePhotoFromCamera();
-        } else if (requestCode == READ_EXTERNAL_STORAGE) {
-            //takePhotoFromCamera();
+
         }
     }
 
@@ -404,20 +397,15 @@ public class AjoutOffre extends AppCompatActivity {
         Log.e("img here", imguri.toString());
         try {
             InputStream stream = new FileInputStream(String.valueOf(imguri));
-            //StorageReference ref = mStorageRef.child("images/" + UUID.randomUUID().toString());
             StorageReference ref = mStorageRef.child(UUID.randomUUID().toString());
             ref.putStream(stream)
                     .addOnSuccessListener(taskSnapshot -> {
-                        Toast.makeText(AjoutOffre.this, "Uploaded", Toast.LENGTH_SHORT).show();
                         taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
-                                    // offre.getImages().add(String.valueOf(task));
-                                    path = String.valueOf(task);
-
 
                                 }
                         );
                     })
-                    .addOnFailureListener(e -> Toast.makeText(AjoutOffre.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(AjoutOffre.this, " " + e.getMessage(), Toast.LENGTH_SHORT).show())
                     .addOnProgressListener(taskSnapshot -> {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
                                 .getTotalByteCount());

@@ -1,10 +1,8 @@
 package com.bouchra.myapplicationechange.activities;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,8 +23,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.fragments.Posts;
 import com.bouchra.myapplicationechange.models.Annonce;
-import com.bouchra.myapplicationechange.models.Membre;
-import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,58 +30,59 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
+import com.synnapps.carouselview.ImageListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DetailAnnonce extends AppCompatActivity {
-    private RelativeLayout relativeLayout;//////////////////////////////////////profil
+    private RelativeLayout profileUser;
     private TextView tite;
     private TextView desc;
     private Annonce annonce;
-    private ImageView img;
+    private CarouselView images;
     private TextView retour;
     private TextView time;
     private DatabaseReference ref;
     private TextView txtRetout;
     private TextView name_user;
-    private CircleImageView imgUser;//img_user
-    private Context cont;
-    private PreferenceUtils preferenceUtils;
-    private Membre membre;
+    private TextView ville;
+    private TextView commune;
+
+    private CircleImageView imgUser;
     private Button offre;
     private Dialog MyDialog;
-    private TextView sendMsg; //send_Msg
+    private TextView sendMsg;
     private TextView shar_publication;
     private TextView etoiles_user;
-    private int nbrComm=0;
+    private int nbrComm = 0;
     private float totalRepos = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_annonce);
-        relativeLayout = findViewById(R.id.relative_profie);
-        imgUser = findViewById(R.id.img_user);
-        etoiles_user = findViewById(R.id.etoiles_user);
+        initViews();
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
-        String id = annonce.getUserId();
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Commentaire").child(id);
+        //RECEIVE detaill data of annonce
+        getIncomingIntent();
 
+        //get user  avis moyen ( moyenn etoiles)
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Commentaire").child(annonce.getUserId());
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     String etoile = postSnapshot.child("repos").getValue().toString();
-
                     nbrComm++;
                     totalRepos = totalRepos + Float.valueOf(etoile);
-
                 }
                 if (nbrComm == 0) {
                     etoiles_user.setText("0");
@@ -93,8 +90,6 @@ public class DetailAnnonce extends AppCompatActivity {
                     float resultat = totalRepos / nbrComm;
                     etoiles_user.setText(String.valueOf(resultat));
                 }
-
-
             }
 
             @Override
@@ -102,33 +97,22 @@ public class DetailAnnonce extends AppCompatActivity {
                 // Getting model failed, log a message
             }
         });
-        offre = findViewById(R.id.offre);
+        // ajouter un offre
         offre.setOnClickListener(v -> {
             MyDialog();
         });
-        // go to prifil
-        relativeLayout.setOnClickListener(v -> {
-          /*  startActivity(new Intent(DetailAnnonce.this, profilUser.class));
-            finish();*/
+        // go to profil user
+        profileUser.setOnClickListener(v -> {
             Intent profil = new Intent(DetailAnnonce.this, profilUser.class);
             profil.putExtra("user", annonce.getUserId());
             startActivity(profil);
         });
-
-        initViews();
-
+        //retour
         txtRetout.setOnClickListener(v -> {
             finish();
         });
-        //RECEIVE OUR DATA
-        getIncomingIntent();
-        img.setOnClickListener(v -> {
-            //image clicable
-            showImage();
-            //Toast.makeText(getApplicationContext(), "image clicable", Toast.LENGTH_SHORT).show();
 
-        });
-        sendMsg = findViewById(R.id.send_Msg);
+        // envoyer i=un messag
         sendMsg.setOnClickListener(v -> {
             Intent intent = new Intent(DetailAnnonce.this, MessageActivity.class);
             intent.putExtra("user", annonce.getUserId());
@@ -136,18 +120,24 @@ public class DetailAnnonce extends AppCompatActivity {
 
         });
         //share Post *FileProvider*
-        shar_publication.setOnClickListener(v -> {
+       /*shar_publication.setOnClickListener(v -> {
             String nom = tite.getText().toString().trim();
             String description = desc.getText().toString().trim();
-            //get image from image View
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) img.getDrawable();
-            //convert image to bitmap
-            Bitmap bitmap = bitmapDrawable.getBitmap();
+            ArrayList<Uri> im=new ArrayList<>();
+            for(int i=0;i<images.getPageCount();i++){
+                int k=images.getDrawableState()[i];
+                im.add(Uri.parse(String.valueOf(k)));
+            }
+            get image from image coa
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) images.getDrawable();
+         BitmapDrawable bitmapDrawable = (BitmapDrawable) images.getDrawableState();
 
-            share(nom, description, bitmap);
+           convert image to bitmap
+          Bitmap bitmap = bitmapDrawable.getBitmap();
+           share(nom, description, bitmap);
 
 
-        });
+        });*/
 
     }
 
@@ -218,28 +208,23 @@ public class DetailAnnonce extends AppCompatActivity {
     }
 
 
-    private void showImage() {
-
+    private void showImage(String position) {
         View view = getLayoutInflater().inflate(R.layout.showimage, null);
         ImageView imageView = view.findViewById(R.id.imgclik_annonce);
-
         Glide.with(this)
                 .asBitmap()
-                .load(annonce.getImages().get(0))
+                .load(position)
                 .into(imageView);
-
 
         TextView close = view.findViewById(R.id.retour);
         close.setOnClickListener(v -> {
             MyDialog.cancel();
 
         });
-
         //full screen
         MyDialog = new Dialog(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
-
         MyDialog.setContentView(view);
-        MyDialog.show();// hadi nkd ndirha ghir f fct
+        MyDialog.show();
 
     }
 
@@ -259,24 +244,18 @@ public class DetailAnnonce extends AppCompatActivity {
         close.setOnClickListener(v -> {
             MyDialog.cancel();
         });
+        // ajouter un nov offre
         ajout.setOnClickListener(v -> {
-            // String anonceId = annonce.getIdAnnonce().toString();
-            //   Toast.makeText(this, ""+a, Toast.LENGTH_SHORT).show();
             Intent ajou = new Intent(DetailAnnonce.this, AjoutOffre.class);
-            //ajou.putExtra("anonceId", anonceId); //key* value
             ajou.putExtra("Annonce", annonce);
             startActivity(ajou);
             finish();
+            MyDialog.dismiss();
 
 
         });
-
-      /*  ajout.setOnClickListener(v ->
-                startActivity(new Intent(DetailAnnonce.this, AjoutOffre.class));
-        finish();
-        Toast.makeText(getApplicationContext(), " aller a nouv", Toast.LENGTH_LONG).show());*/
+        // selectonne depuis mes posts
         selec.setOnClickListener(v -> {
-
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction t = manager.beginTransaction();
             final Posts m4 = new Posts();
@@ -285,35 +264,11 @@ public class DetailAnnonce extends AppCompatActivity {
             m4.setArguments(b2);
             t.add(R.id.fragmentposts, m4);
             t.commit();
-
-             /*getSupportFragmentManager().beginTransaction().add(R.id.fragmentposts, new Posts(), "Posts").commit();
-
-            Toast.makeText(getApplicationContext(), "selection bottom navigation", Toast.LENGTH_LONG).show();*/
+            MyDialog.dismiss();
 
         });
 
         MyDialog.show();
-    }
-
-///////////// fin de dalog offre
-
-    public interface affichage {
-
-        void getIncomingIntent();
-        // void  setImage(String imageUrl, String imageName);
-
-    }
-
-    private void setImage(String imageUrl, String imageName) {
-
-
-        tite.setText(imageName);
-
-
-        Glide.with(this)
-                .asBitmap()
-                .load(imageUrl)
-                .into(img);
     }
 
     private void initViews() {
@@ -322,17 +277,22 @@ public class DetailAnnonce extends AppCompatActivity {
         time = findViewById(R.id.date_h);
         tite = findViewById(R.id.titte_annonce);
         desc = findViewById(R.id.desc);
-        img = findViewById(R.id.img_annonc);
+        images = findViewById(R.id.img_annonc);
         retour = findViewById(R.id.article_retour);
         name_user = findViewById(R.id.nom_user);
         imgUser = findViewById(R.id.img_user);
         shar_publication = findViewById(R.id.shar_publication);
+        profileUser = findViewById(R.id.relative_profie);
+        imgUser = findViewById(R.id.img_user);
+        etoiles_user = findViewById(R.id.etoiles_user);
+        offre = findViewById(R.id.offre);
+        sendMsg = findViewById(R.id.send_Msg);
+        ville=findViewById(R.id.ville);
+        commune=findViewById(R.id.commune);
 
     }
 
     public void getIncomingIntent() {
-        //obtenir la référence de la base de données
-        annonce = (Annonce) getIntent().getSerializableExtra("annonce");
         Log.e("User is :", FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).toString());
         FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -341,14 +301,8 @@ public class DetailAnnonce extends AppCompatActivity {
                     if (dataSnapshot.getValue() != null) {
                         try {
                             name_user.setText(dataSnapshot.child("nomMembre").getValue().toString());
-                            //imgUser.setImageURI(dataSnapshot.child("photoUser").);
                             String photouser = dataSnapshot.child("photoUser").getValue().toString();
                             Picasso.get().load(photouser).into(imgUser);
-
-                           /* Glide.with(DetailAnnonce.this)
-                                    .asBitmap()
-                                    .load(photouser)
-                                    .into(imgUser);*/
                             Log.e("User is :", dataSnapshot.getValue().toString());
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -368,20 +322,39 @@ public class DetailAnnonce extends AppCompatActivity {
         });
         tite.setText(annonce.getTitreAnnonce());
         desc.setText(annonce.getDescriptionAnnonce());
-
-
-        Date d = new Date(new Date().getTime() + 28800000);
-      /*  String s=new SimpleDateFormat("dd/MM/yyyy kk:mm:ss").format(d);
-         String str = s.format(annonce.getDateAnnonce());*/
-        //  SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy"); // +heur
-        // String str = simpleDateFormat.format(annonce.getDateAnnonce());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
         String str = simpleDateFormat.format(annonce.getDateAnnonce());
         time.setText(str);
-        setImage(annonce.getImages().get(0), annonce.getTitreAnnonce());
+        ville.setText(annonce.getWilaya()+", ");
+        commune.setText(annonce.getCommune());
+        ArrayList<String> Images = new ArrayList<>();
+        for (String image : annonce.getImages()) {
+            Images.add(image);
+        }
+        images.setPageCount(Images.size());
+        images.setImageListener(new ImageListener() {
+            @Override
+            public void setImageForPosition(int position, ImageView imageView) {
+
+                Glide.with(DetailAnnonce.this)
+                        .load(Images.get(position))
+                        .centerCrop()
+                        .into(imageView);
+
+
+            }
+        });
         for (int i = 0; i < annonce.getArticleEnRetour().size(); i++) {
             retour.setText(retour.getText() + "\n" + annonce.getArticleEnRetour().get(i));
         }
+        images.setImageClickListener(new ImageClickListener() {
+            @Override
+            public void onClick(int position) {
+                //image clicable
+                showImage(Images.get(position));
+
+            }
+        });
 
     }
 

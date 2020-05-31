@@ -3,12 +3,10 @@ package com.bouchra.myapplicationechange.adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,19 +33,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
+import com.synnapps.carouselview.ImageListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
-    // hna jcp 3lah rahaa khtrat ttblokali
 
     private Context context;
     private ArrayList<Annonce> mesannonce;
-    private ArrayList<Annonce> annonces = new ArrayList<>();
     private String offre;
-    Task<Void> databasereference;
+    private Task<Void> databasereference;
     private DatabaseReference databaseReference;
 
 
@@ -74,17 +73,30 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Annonce annonce = mesannonce.get(position);
         holder.titreAnnonce.setText(annonce.getTitreAnnonce());
-        //  holder.imageView.setImageBitmap(a.getImages());
-        //Loading image from Glide library.
-        Log.e("Url", annonce.getImages().get(0));
-        Glide.with(context)
-                .load(annonce.getImages().get(0))
-                .centerCrop()
-                .into(holder.imgAnnonce);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  kk:mm ");
         String str = simpleDateFormat.format(annonce.getDateAnnonce());
         holder.dateh.setText(str);
+
+        ArrayList<String> images = new ArrayList<>();
+        for (String image : annonce.getImages()) {
+            images.add(image);
+        }
+        holder.images.setPageCount(images.size());
+        holder.images.setImageListener(new ImageListener() {
+            @Override
+            public void setImageForPosition(int position, ImageView imageView) {
+                //imageView.setImageURI(images.get(position));
+                Glide.with(context)
+                        .load(images.get(position))
+                        .centerCrop()
+                        .into(imageView);
+
+
+            }
+        });
+
+
         switch (annonce.getStatu()) {
             case "CREATED":
                 holder.statu.setText("Nouvaux");
@@ -101,9 +113,6 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
             case "NEED_To_Be_CONFIRM":
                 holder.statu.setText("attend de confirmation d 'change");
                 holder.statu.setTextColor(ContextCompat.getColor(context, R.color.rouge));
-                //hadi hata mola offre ydir confirm  ndirlah had statu  w hta les 2 ydiro confirm ndirlhom ykado ydiro commentaire
-                //ila dar haka w madarch comeniare ndirlha need review
-                //+w ila darah ndirlah direct completed
                 break;
             case "NEED_REVIEW":
                 holder.statu.setText("attend de commentaire");
@@ -119,105 +128,115 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                 break;
         }
 
+        holder.images.setImageClickListener(new ImageClickListener() {
+            @Override
+            public void onClick(int position) {
+                onclick(annonce);
+
+            }
+        });
+
 
         holder.itemView.setOnClickListener(v -> {
-            if (offre == null) {
-                switch (annonce.getStatu()) {
-                    case "NEED_To_Be_CONFIRM":
-                        Intent affichee = new Intent(context, ConfirmEchange.class);
-                        affichee.putExtra("annonce", annonce);//offre
-                        context.startActivity(affichee);
-                        break;
-                    case "NEED_REVIEW":
-                        Intent review = new Intent(context, ReviewUser.class);
-                        review.putExtra("annonce", annonce);//offre
-                        context.startActivity(review);
-                        break;
-                    // bghit ndir kiykon mnmad  ydih l detial mais mykdrch ymodifier annonce
 
-                    case "COMPLETED":// ndir khod3a nrslha l review w mntamak f onresume nrslahl voir echange psq mnkdrvh n3ayatalh l frgm direct psq hada adapter
-                        Intent intent = new Intent(context, ReviewUser.class);
-                        intent.putExtra("annonce", annonce);//offre
-                        // intent.putSerializable("annonce", annonce);
-                        intent.putExtra("annonce", annonce);
-                        intent.putExtra("send", "khod3a");
-                        context.startActivity(intent);
-
-                        break;
-                    default:
-                        //NEED_To_Be_CONFIRM ,NEED_REVIEW , COMPLETED non
-                        Intent affiche = new Intent(context, DetailMesannonce.class);
-                        affiche.putExtra("annonce", annonce);
-                        context.startActivity(affiche);
-                        break;
-
-                }
+            onclick(annonce);
+        });
 
 
-            } else {
-                if (annonce.getStatu().equals("NEED_To_Be_CONFIRM")) {
-                    Toast.makeText(context, "Vous ne peux pas attribuée cette annonce,elle attend d'etre confirme !", Toast.LENGTH_SHORT).show();
+    }
 
+    private void onclick(Annonce annonce) {
+        if (offre == null) {
+            //non select comme offre
+            switch (annonce.getStatu()) {
+                case "NEED_To_Be_CONFIRM":
+                    Intent affichee = new Intent(context, ConfirmEchange.class);
+                    affichee.putExtra("annonce", annonce);
+                    context.startActivity(affichee);
+                    break;
+                case "NEED_REVIEW":
+                    Intent review = new Intent(context, ReviewUser.class);
+                    review.putExtra("annonce", annonce);
+                    context.startActivity(review);
+                    break;
 
-                } else {
-                    if (annonce.getStatu().equals("NEED_REVIEW")) {
-                        Toast.makeText(context, "Vous ne peux pas attribuée cette annonce ,elle a été déja échngé !", Toast.LENGTH_SHORT).show();
+                case "COMPLETED":// ndir khod3a nrslha l review w mntamak f onresume nrslahl voir echange psq mnkdrvh n3ayatalh l frgm direct psq hada adapter
+                    Intent intent = new Intent(context, ReviewUser.class);
+                    intent.putExtra("annonce", annonce);
+                    intent.putExtra("send", "khod3a");
+                    context.startActivity(intent);
 
-
-                    } else {
-
-                        new AlertDialog.Builder(context)
-                                .setTitle("Echanger votre object")
-                                .setMessage("Souhaitez vous vraiment envoyer cette" + annonce.getTitreAnnonce() + "comme un offre ?")
-                                // Specifying a listener allows you to take an action before dismissing the dialog.
-                                // The dialog is automatically dismissed when a dialog button is clicked.
-                                .setPositiveButton("Envoyer", new DialogInterface.OnClickListener() {//android.R.string.yes
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        PreferenceUtils preferenceUtils = new PreferenceUtils(context);
-                                        databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(offre);
-                                        Offre offrre = new Offre();
-                                        offrre.setAnnonceId(offre);
-                                        offrre.setDateOffre(new Date());// jc ila ndirah f date ta3 annonce wl    ndir   h bali jdidi
-                                        offrre.setDescriptionOffre(annonce.getDescriptionAnnonce());
-                                        offrre.setIdOffre(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode());
-                                        offrre.setNomOffre(annonce.getTitreAnnonce());
-                                        offrre.setWilaya(annonce.getWilaya());
-                                        offrre.setCommune(annonce.getCommune());
-                                        offrre.setIdUser(preferenceUtils.getMember().getIdMembre());
-                                        offrre.setStatu("CREATED");
-                                        offrre.setImage(annonce.getImages().get(0));
-
-                                        databaseReference.child(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode()).setValue(offrre).addOnCompleteListener(task2 -> {
-
-                                            if (task2.isSuccessful()) {
-                                                setStatuAnnonce();
-                                                addNotification(offre, offrre);
-                                                Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
-                                                Intent an = new Intent(context, debut.class);
-                                                context.startActivity(an);
-
-                                            } else {
-                                                Toast.makeText(context, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
-                                            }
-                                        });
-
-                                    }
-                                })
-                                // A null listener allows the button to dismiss the dialog and take no further action.
-                                .setNegativeButton("Annuler", null)
-                                //  .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
-
-                    }
-
-                }
-
+                    break;
+                default:
+                    //NEED_To_Be_CONFIRM ,NEED_REVIEW , COMPLETED non
+                    Intent affiche = new Intent(context, DetailMesannonce.class);
+                    affiche.putExtra("annonce", annonce);
+                    context.startActivity(affiche);
+                    break;
 
             }
 
-        });
 
+        } else {
+            if (annonce.getStatu().equals("NEED_To_Be_CONFIRM")) {
+                Toast.makeText(context, "Vous ne peux pas attribuée cette annonce,elle attend d'etre confirme !", Toast.LENGTH_SHORT).show();
+
+
+            } else {
+                if (annonce.getStatu().equals("NEED_REVIEW")) {
+                    Toast.makeText(context, "Vous ne peux pas attribuée cette annonce ,elle a été déja échngé !", Toast.LENGTH_SHORT).show();
+
+
+                } else {
+
+                    new AlertDialog.Builder(context)
+                            .setTitle("Echanger votre object")
+                            .setMessage("Souhaitez vous vraiment envoyer cette " + annonce.getTitreAnnonce() + " comme un offre ?")
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("Envoyer", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    PreferenceUtils preferenceUtils = new PreferenceUtils(context);
+                                    databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(offre);
+                                    Offre offrre = new Offre();
+                                    offrre.setAnnonceId(offre);
+                                    offrre.setDateOffre(new Date());
+                                    offrre.setDescriptionOffre(annonce.getDescriptionAnnonce());
+                                    offrre.setIdOffre(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode());
+                                    offrre.setNomOffre(annonce.getTitreAnnonce());
+                                    offrre.setWilaya(annonce.getWilaya());
+                                    offrre.setCommune(annonce.getCommune());
+                                    offrre.setIdUser(preferenceUtils.getMember().getIdMembre());
+                                    offrre.setStatu("CREATED");
+                                    offrre.setImage(annonce.getImages().get(0));
+
+                                    databaseReference.child(String.valueOf(offrre.getDateOffre().hashCode()) + offrre.getAnnonceId().hashCode()).setValue(offrre).addOnCompleteListener(task2 -> {
+
+                                        if (task2.isSuccessful()) {
+                                            setStatuAnnonce();
+                                            addNotification(offre, offrre);
+                                            Toast.makeText(context, "Votre offre a été soumise auec succès ", Toast.LENGTH_LONG).show();
+                                            Intent an = new Intent(context, debut.class);
+                                            context.startActivity(an);
+
+                                        } else {
+                                            Toast.makeText(context, "les donnees n'ont pas crées correctement", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+
+                                }
+                            })
+
+                            .setNegativeButton("Annuler", null)
+                            //  .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+
+                }
+
+            }
+
+
+        }
 
     }
 
@@ -263,18 +282,14 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            //// Toast.makeText(context, "Un email a ètè envoyè, veuillez consulter votre boite email", Toast.LENGTH_SHORT).show();
 
-
-                        } else {
-                            // Toast.makeText(context, "Échec de l'envoi", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-// get and show proper error message
+                        // get and show proper error message
                         Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
 
                     }
@@ -297,19 +312,18 @@ public class myannonce extends RecyclerView.Adapter<myannonce.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imgAnnonce;
+        private CarouselView images;
         private TextView titreAnnonce;
         private TextView statu;
         private TextView dateh;
-        private RelativeLayout relativeLayout;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imgAnnonce = itemView.findViewById(R.id.img_article);
+            images = itemView.findViewById(R.id.img_article);
             titreAnnonce = itemView.findViewById(R.id.titte_annonce);
             statu = itemView.findViewById(R.id.statu);
             dateh = itemView.findViewById(R.id.datH);
-            relativeLayout = itemView.findViewById(R.id.layout_annonce);
 
         }
     }

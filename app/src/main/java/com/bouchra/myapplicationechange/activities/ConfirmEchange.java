@@ -24,7 +24,6 @@ public class ConfirmEchange extends AppCompatActivity {
 
         Intent ajou = getIntent();
         if (ajou != null) {
-
             if (ajou.hasExtra("annonce")) {
                 annonce = (Annonce) getIntent().getSerializableExtra("annonce");
                 FragmentManager manager = getSupportFragmentManager();
@@ -33,7 +32,7 @@ public class ConfirmEchange extends AppCompatActivity {
                 Bundle b2 = new Bundle();
                 b2.putSerializable("annonce", annonce);
                 m4.setArguments(b2);
-                t.add(R.id.fragment, m4);
+                t.add(R.id.fragment, m4,"Annonce");
                 t.commit();
 
             } else {
@@ -44,7 +43,7 @@ public class ConfirmEchange extends AppCompatActivity {
                 Bundle b2 = new Bundle();
                 b2.putSerializable("offre", offre);
                 m4.setArguments(b2);
-                t.add(R.id.fragment, m4);
+                t.add(R.id.fragment, m4,"Offre");
                 t.commit();
 
 
@@ -53,5 +52,16 @@ public class ConfirmEchange extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().findFragmentByTag("Annonce") != null) {
+            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("Annonce")).commit();
+        } else if (getSupportFragmentManager().findFragmentByTag("Offre") != null) {
+            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("Offre")).commit();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

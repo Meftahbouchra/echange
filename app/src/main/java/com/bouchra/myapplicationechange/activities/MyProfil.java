@@ -52,50 +52,44 @@ public class MyProfil extends AppCompatActivity {
         setContentView(R.layout.activity_my_profil);
 
 
-        //Picasso.get().load(preferenceUtils.getMember().getPhotoUser()).into(profile_img);
-
         image_user = findViewById(R.id.image_user);
         nom_user = findViewById(R.id.nom_user);
-
         avis = findViewById(R.id.avis);
         nbrCommentaire = findViewById(R.id.nbrCommentaire);
         recyle_commentaire = findViewById(R.id.recyle_commentaire);
         information = findViewById(R.id.information);
         mail_user = findViewById(R.id.mail_user);
         tel_user = findViewById(R.id.tel_user);
-        adress_user = findViewById(R.id.adress_user);
-
-        editProfil = findViewById(R.id.editProfil);
         back = findViewById(R.id.back);
+        adress_user = findViewById(R.id.adress_user);
+        editProfil = findViewById(R.id.editProfil);
         commentaires = new ArrayList<>();
         commentaireAdapter = new CommentaireAdapter(this, commentaires, idUSer);
         preferenceUtils = new PreferenceUtils(this);
 
-        // user
+        // user information
         Picasso.get().load(preferenceUtils.getMember().getPhotoUser()).into(image_user);
         nom_user.setText(preferenceUtils.getMember().getNomMembre());
         mail_user.setText(preferenceUtils.getMember().getEmail());
-        String number=String.valueOf(preferenceUtils.getMember().getNumTel() );
-        if(number.equals("0")){
+        String number = String.valueOf(preferenceUtils.getMember().getNumTel());
+        if (number.equals("0")) {
             tel_user.setText("+123...");
-        }else {
+        } else {
             tel_user.setText(String.valueOf(preferenceUtils.getMember().getNumTel()));
         }
         adress_user.setText(preferenceUtils.getMember().getAdresseMembre());
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("nom tel :",String.valueOf(preferenceUtils.getMember().getNumTel() ));
+                finish();
             }
         });
-        editProfil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               startActivity(new Intent(MyProfil.this, editMyProfil.class));
-               finish();
-            }
+        editProfil.setOnClickListener(v -> {
+            startActivity(new Intent(MyProfil.this, editMyProfil.class));
+            finish();
         });
-
+// les commentaire
         recyle_commentaire.setLayoutManager(new LinearLayoutManager(this));
         recyle_commentaire.setAdapter(commentaireAdapter);
 
@@ -109,6 +103,7 @@ public class MyProfil extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
 
                     Log.e("data here", postSnapshot.getValue().toString());
+                    // id de user qui a commenter ce user
                     String idUserSender = postSnapshot.child("idSender").getValue().toString();
                     String etoile = postSnapshot.child("repos").getValue().toString();
                     //user
@@ -120,14 +115,7 @@ public class MyProfil extends AppCompatActivity {
                     totalRepos = totalRepos + Float.valueOf(etoile);
 
                 }
-             /*   if (nbrComm == 0) {
-                    avis.setText("0");
-                    nbrCommentaire.setText("0");
-                } else {
-                    float resultat = totalRepos / nbrComm;
-                    avis.setText(String.valueOf(resultat));
-                    nbrCommentaire.setText(String.valueOf(nbrComm));
-                }*/
+
                 if (commentaires.size() == 0) {
                     avis.setText("0");
                     nbrCommentaire.setText("0");

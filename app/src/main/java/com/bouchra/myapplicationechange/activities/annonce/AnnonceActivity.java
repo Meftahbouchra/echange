@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +31,7 @@ import java.util.Date;
 
 public class AnnonceActivity extends AppCompatActivity {
     private Button next;
-    private Button annuler;
+    private TextView annuler;
     private EditText titreAnnonce;
     private EditText descAnnonce;
     private String titre_Annonce = "";

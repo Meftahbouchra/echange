@@ -24,31 +24,33 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class Historique extends AppCompatActivity {
-    PreferenceUtils preferenceUtils;
-
+    private PreferenceUtils preferenceUtils;
     private ArrayList<com.bouchra.myapplicationechange.models.Historique> historiques = new ArrayList<>();
-
     private RecyclerView recyclerView;
     private TextView information;
     private myhistorique myhistorique;
+    private TextView retour;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historique);
+
         preferenceUtils = new PreferenceUtils(this);
-
         recyclerView = findViewById(R.id.recyle_historique);
-        myhistorique = new myhistorique(this, historiques);
         information = findViewById(R.id.information);
-
-
+        retour = findViewById(R.id.retour);
+        myhistorique = new myhistorique(this, historiques);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //recyclerView.setAdapter(myhistorique);
-
-
+        retour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        //get my historique (my offre annonce  deleted, my offre rejected,mes echanges)
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Historique").child(preferenceUtils.getMember().getIdMembre());
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -60,8 +62,7 @@ public class Historique extends AppCompatActivity {
                         Offre offre = new Offre();
                         Annonce annonce = new Annonce();
                         String statu = postSnapshot.child("statu").getValue().toString();
-                        if (statu.equals("DELETEOFFRE") || statu.equals("REJECTED") || statu.equals("COMPLETEDOFFRE")) {
-                            //  offres.add(postSnapshot.getValue(Offre.class));
+                        if (statu.equals("DELETEOFFRE") || statu.equals("REJECTED") || statu.equals("COMPLETEDOFFRE") || statu.equals("CANCEL")) {
                             offre = postSnapshot.getValue(Offre.class);
                             historiques.add(offre);
 
@@ -69,7 +70,6 @@ public class Historique extends AppCompatActivity {
                         }
 
                         if (statu.equals("COMPLETEDANNONCE") || statu.equals("DELETEDANNONCE")) {
-                            //annonces.add(postSnapshot.getValue(Annonce.class));
                             annonce = postSnapshot.getValue(Annonce.class);
                             historiques.add(annonce);
 
@@ -103,8 +103,3 @@ public class Historique extends AppCompatActivity {
 
 
 }
-//                      DELETEOFFRE offre suprimer
-//                                                                    DELETEDANNONCE annonce suprimer
-//            REJECTED annonce suprimer, REJECTED annonce non select cette offre
-//      COMPLETEDOFFRE achange terminer offre
-//                                                                COMPLETEDANNONCE echange terminer anonce

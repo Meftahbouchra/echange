@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,14 +40,14 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
     public class ViewHolder extends RecyclerView.ViewHolder {
         private CarouselView imageView;
         private TextView textView;
-        private RelativeLayout relativeLayout;
+      ;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.img_article);
             textView = itemView.findViewById(R.id.titte_annonce);
-            relativeLayout = itemView.findViewById(R.id.layout_annonce);
+
 
 
         }
@@ -68,13 +67,11 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Log.e("nbr des annonce ", (String.valueOf(annonce_publ.size())));
-        Annonce a = annonce_publ.get(position);
-        holder.textView.setText(a.getTitreAnnonce());
-        //  holder.imageView.setImageBitmap(a.getImages());
-        //Loading image from Glide library.
-        Log.e("Url", a.getImages().get(0));
+        Annonce annonce = annonce_publ.get(position);
+        holder.textView.setText(annonce.getTitreAnnonce());
+        Log.e("Url", annonce.getImages().get(0));
         ArrayList<String> images = new ArrayList<>();
-        for (String image : a.getImages()) {
+        for (String image : annonce.getImages()) {
             images.add(image);
         }
         holder.imageView.setPageCount(images.size());
@@ -94,19 +91,11 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
             @Override
             public void onClick(int position) {
                 Intent affiche = new Intent(context, DetailAnnonce.class);
-                affiche.putExtra("annonce", a);
+                affiche.putExtra("annonce", annonce);
                 context.startActivity(affiche);
 
             }
         });
-     /*  holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent affiche = new Intent(context, DetailAnnonce.class);
-                //  affiche.putExtra("annonce", onBindViewHolder.a);
-                context.startActivity(affiche);
-            }
-        });*/
 
     }
 

@@ -44,7 +44,6 @@ public class mynotification extends RecyclerView.Adapter<mynotification.ViewHold
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View vi = LayoutInflater.from(context).inflate(R.layout.mynotification_layout, parent, false);
         mynotification.ViewHolder h = new mynotification.ViewHolder(vi);
-
         return h;
     }
 
@@ -59,10 +58,9 @@ public class mynotification extends RecyclerView.Adapter<mynotification.ViewHold
 
         holder.itemView.setOnClickListener(v -> {
             if (notification.getContenuNotification().equals("acceptOffre")) {
-                //get offre
+                //get offre accepted, go to cinfirm ecghng
                 final FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference ref = database.getReference("Offre");
-
                 ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
@@ -76,11 +74,9 @@ public class mynotification extends RecyclerView.Adapter<mynotification.ViewHold
                                         affiche.putExtra("offre", offre);
                                         context.startActivity(affiche);
                                     }
-
                                 }
                             }
                         }
-
                     }
 
                     @Override
@@ -88,10 +84,9 @@ public class mynotification extends RecyclerView.Adapter<mynotification.ViewHold
 
                     }
                 });
-
-
             } else {
                 if (notification.getContenuNotification().equals("updateAnnonce")) {
+                    // notofocation l annonce a ete modifier, go to this anonce
                     final FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference ref = database.getReference("Annonce");
 
@@ -123,26 +118,47 @@ public class mynotification extends RecyclerView.Adapter<mynotification.ViewHold
 
 
                 } else {
+                    // si offre exist(!supp)
                     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference ref = database.getReference("Annonce");
-
+                    DatabaseReference ref = database.getReference("Offre");
                     ref.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                for (DataSnapshot offre : dataSnapshot.getChildren()) {
 
-                                String userId = dataSnapshot.child("userId").getValue().toString();
-                                if (notification.getIdreceiver().equals(userId)) {
-                                    Annonce annonce = dataSnapshot.getValue(Annonce.class);
-                                    if (annonce.getStatu().equals("ATTEND_DE_CONFIRMATION_D_OFFRE") || annonce.getStatu().equals("ASSINED")) {
-                                        Intent ajou = new Intent(context, DemandesOffre.class);
-                                        ajou.putExtra("annonce", annonce);
-                                        context.startActivity(ajou);
+                                    String userIdSender = offre.child("idUser").getValue().toString();
+                                    if (notification.getIdsender().equals(userIdSender)) {
+                                        final FirebaseDatabase data = FirebaseDatabase.getInstance();
+                                        DatabaseReference refdrec = data.getReference("Annonce");
+// nov orfre , go to accept offre
+                                        refdrec.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot snapshot) {
+                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                                                    String userId = dataSnapshot.child("userId").getValue().toString();
+                                                    if (notification.getIdreceiver().equals(userId)) {
+                                                        Annonce annonce = dataSnapshot.getValue(Annonce.class);
+                                                        if (annonce.getStatu().equals("ATTEND_DE_CONFIRMATION_D_OFFRE") || annonce.getStatu().equals("ASSINED")) {
+                                                            Intent ajou = new Intent(context, DemandesOffre.class);
+                                                            ajou.putExtra("annonce", annonce);
+                                                            context.startActivity(ajou);
+                                                        }
+
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+
                                     }
-
                                 }
                             }
-
 
                         }
 
@@ -156,7 +172,7 @@ public class mynotification extends RecyclerView.Adapter<mynotification.ViewHold
                 }
             }
         });
-
+// informatios sender
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Membre").child(notification.getIdsender());
         ref.addValueEventListener(new ValueEventListener() {
@@ -165,6 +181,7 @@ public class mynotification extends RecyclerView.Adapter<mynotification.ViewHold
                 String nameUser = snapshot.child("nomMembre").getValue().toString();
                 String PicUser = snapshot.child("photoUser").getValue().toString();
                 Picasso.get().load(PicUser).into(holder.profile_image);
+                // contenu of notification
                 String contenu = notification.getContenuNotification();
                 String smgaccept = " a accepté votre offre.";
                 String msgenvoyer = " a envoyer une offre pour votre annonce.";

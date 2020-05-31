@@ -25,13 +25,11 @@ public class BottomSheetPhoneNumber extends BottomSheetDialogFragment {
         sms=v.findViewById(R.id.btn_sms);
 
         call.setOnClickListener(v1 -> {
-
             ((profilUser) getActivity()).Call();
             dismiss();
 
         });
         sms.setOnClickListener(v12 -> {
-
             ((profilUser) getActivity()).sendSms();
             dismiss();
         });

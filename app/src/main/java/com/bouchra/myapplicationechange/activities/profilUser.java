@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,7 +23,6 @@ import com.bouchra.myapplicationechange.adapters.BottomSheetPhoneNumber;
 import com.bouchra.myapplicationechange.adapters.CommentaireAdapter;
 import com.bouchra.myapplicationechange.models.Commentaire;
 import com.bouchra.myapplicationechange.models.Membre;
-import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -50,16 +49,15 @@ public class profilUser extends AppCompatActivity {
     private TextView adressUser;
     private LinearLayout zoneEmail;
     private LinearLayout zonePhone;
-    private static final int CALL_REQUEST_CODE = 100;
-    private static final int SMS_REQUEST_CODE = 200;
-    String[] callPermission;
-    String[] smsPermission;
-    Date date = new Date();
-    private PreferenceUtils preferenceUtils;
-    private DatabaseReference l;
+    private String[] callPermission;
+    private String[] smsPermission;
     private float totalRepos = 0;
     private int nbrComm = 0;
+    private TextView cmntr;
     private TextView avis;
+    private TextView information;
+    private static final int CALL_REQUEST_CODE = 100;
+    private static final int SMS_REQUEST_CODE = 200;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -76,11 +74,12 @@ public class profilUser extends AppCompatActivity {
         adressUser = findViewById(R.id.adress_user);
         zoneEmail = findViewById(R.id.zone_email);
         zonePhone = findViewById(R.id.zone_phone);
+        cmntr=findViewById(R.id.cmntr);
         avis = findViewById(R.id.avis);
+        information=findViewById(R.id.information);
         //init permission arrys
         callPermission = new String[]{Manifest.permission.CALL_PHONE};
         smsPermission = new String[]{Manifest.permission.SEND_SMS};
-        preferenceUtils = new PreferenceUtils(this);
         // recycle view with out base da donne
         recyclerView = findViewById(R.id.recyle_commentaire);
         commentaires = new ArrayList<>();
@@ -88,7 +87,7 @@ public class profilUser extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(commentaireAdapter);
-
+// get les commentaire de ce user
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Commentaire").child(userid);
 
@@ -108,16 +107,20 @@ public class profilUser extends AppCompatActivity {
                     commentaireAdapter.notifyDataSetChanged();
                     nbrComm++;
                     totalRepos = totalRepos + Float.valueOf(etoile);
-
                 }
                 if (nbrComm == 0) {
                     avis.setText("0");
+                    cmntr.setText("0");
+                    recyclerView.setVisibility(View.GONE);
+                    information.setText(" Pas de commentaires ");
                 } else {
                     float resultat = totalRepos / nbrComm;
                     avis.setText(String.valueOf(resultat));
+                    cmntr.setText(String.valueOf(nbrComm));
+                    information.setVisibility(View.GONE);
+                    commentaireAdapter.notifyDataSetChanged();
+
                 }
-
-
             }
 
             @Override
@@ -135,15 +138,14 @@ public class profilUser extends AppCompatActivity {
                 Picasso.get().load(membre.getPhotoUser()).into(imageUser);
                 nomUser.setText(membre.getNomMembre());
                 mailUser.setText(membre.getEmail());
+                try{telUser.setText(membre.getNumTel());
+                    adressUser.setText(membre.getAdresseMembre());
 
 
-                try {
-                    telUser.setText(membre.getNumTel());//jcp min njibh
-                    adressUser.setText(membre.getAdresseMembre());///
+                }catch (Exception e){
+                    telUser.setText("+213..");
+                    adressUser.setText("");
 
-                } catch (Exception e) {
-                    telUser.setText("0123456789");
-                    adressUser.setText("Es senia ,Oran,Algerie");
                 }
 
 
@@ -165,7 +167,7 @@ public class profilUser extends AppCompatActivity {
             String email = mailUser.getText().toString();// email address here
             String subject = "";// subject here
             String body = ""; // body here
-            String chooserTitle = "title";// chooser title here
+            String chooserTitle = "Envoyer avec";// chooser title here
 
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + email));
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
@@ -192,17 +194,12 @@ public class profilUser extends AppCompatActivity {
 
     public void Call() {
         //ACTION_DIAL :start a phonr dialer and use preset numbers in the data to dial
-
         if (checkCallPermissions()) {
-
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse("tel:" + telUser.getText().toString()));
             startActivity(intent);
-
-
         } else {
             requestCallPermissions();
-
 
         }
 

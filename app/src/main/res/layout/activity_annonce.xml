@@ -10,31 +10,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"
+        android:layout_height="50dp"
+        android:background="@color/gris"
+        android:id="@+id/txtv1"
+        android:layout_marginBottom="30dp"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/annuler"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/back"
-            android:backgroundTint="@color/orange" />
-
         <TextView
-            android:id="@+id/intro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
-            android:paddingStart="5dp"
-            android:text="Ajouter votre annonce"
-            android:textColor="@color/orange"
-            android:textSize="20sp" />
-
+            android:id="@+id/annuler"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:drawableStart="@drawable/ic_keyboard_backspace_"
+            android:drawableTint="@color/orange" />
     </LinearLayout>
+
 
 
     <EditText
@@ -47,7 +37,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="55dp"
         android:background="@drawable/card_items"
         android:gravity="center_vertical"
         android:hint=" Nom d'article "

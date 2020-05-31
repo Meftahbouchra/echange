@@ -3,6 +3,8 @@ package com.bouchra.myapplicationechange.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,8 +35,8 @@ public class DemandesOffre extends AppCompatActivity {
     private ArrayList<Offre> offres;
     private RecyclerView recyclerView;
     private ArrayList<Membre> membres;
-    //  private ArrayList<Annonce>annonces;
-    private String annonce;//if offre
+    private String annonce;
+    private TextView information;
 
 
     public DemandesOffre() {
@@ -45,8 +47,9 @@ public class DemandesOffre extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demandes_offre);
-        recyclerView = findViewById(R.id.recyle_demandesoffres);
 
+        recyclerView = findViewById(R.id.recyle_demandesoffres);
+        information=findViewById(R.id.information);
         offres = new ArrayList<>();
         membres = new ArrayList<>();
 
@@ -58,58 +61,61 @@ public class DemandesOffre extends AppCompatActivity {
         demandesoffre = new demandesoffre(this, offres, membres, annonce1.getTitreAnnonce(), annonce);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(demandesoffre);
-
+// get annonce offres && user offre
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Offre").child(annonce1.getIdAnnonce());
         ref.addValueEventListener(new ValueEventListener() {//Nous attacherons un ValueEventListener à la référence pour lire les données.
             @Override
-            public void onDataChange(DataSnapshot snapshot) {/*
+            public void onDataChange(DataSnapshot snapshot) {
+                        /*
             Chaque fois que vous changez quelque chose dans la base de données,
             la méthode onDataChange () sera exécutée. Il contient toutes les données
             à l'intérieur du chemin spécifié dans la référence. Nous pouvons utiliser l' objet
              DataSnapshot pour lire toutes les données à l'intérieur de la référence
             */
-                Log.e("Count ", "" + snapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    Log.e("Data here", postSnapshot.toString());
-                    String iduser = postSnapshot.child("idUser").getValue().toString();// id user f offre
-                    DatabaseReference refe = FirebaseDatabase.getInstance().getReference("Membre");
-                    refe.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot postSnapshott : dataSnapshot.getChildren()) {
-                                String iduserMembre = postSnapshott.child("idMembre").getValue().toString(); //ism att ta3 id membre
-                                if (iduser.equals(iduserMembre)) {
+                if(snapshot.exists()){
+                    information.setVisibility(View.GONE);
+                    Log.e("Count ", "" + snapshot.getChildrenCount());
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        Log.e("Data here", postSnapshot.toString());
+                        String iduser = postSnapshot.child("idUser").getValue().toString();
+                        DatabaseReference refe = FirebaseDatabase.getInstance().getReference("Membre");
+                        refe.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot postSnapshott : dataSnapshot.getChildren()) {
+                                    String iduserMembre = postSnapshott.child("idMembre").getValue().toString();
+                                    if (iduser.equals(iduserMembre)) {
 
-                                    membres.add(postSnapshott.getValue(Membre.class));
-                                    offres.add(postSnapshot.getValue(Offre.class));
-                                    demandesoffre.notifyDataSetChanged();
+                                        membres.add(postSnapshott.getValue(Membre.class));
+                                        offres.add(postSnapshot.getValue(Offre.class));
+                                        demandesoffre.notifyDataSetChanged();
+                                    }
                                 }
-
 
                             }
 
-                        }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                //Si une erreur se produit, la méthode onCancelled () sera appelée.
+                            }
+                        });
+                    }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//Si une erreur se produit, la méthode onCancelled () sera appelée.
-                        }
-                    });
-
-
+                }else {
+                    recyclerView.setVisibility(View.GONE);
+                    information.setText("Vous n'avez pas des offres pour cette annonce ");
                 }
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-// Getting model failed, log a message
-
+                // Getting model failed, log a message
             }
-
         });
 
-
+// knt kdra ga3 mndirch had l requete psq deja raha andi
         FirebaseDatabase databasee = FirebaseDatabase.getInstance();
         DatabaseReference reff = databasee.getReference("Annonce").child(annonce1.getIdAnnonce());
         reff.addValueEventListener(new ValueEventListener() {
@@ -141,10 +147,8 @@ public class DemandesOffre extends AppCompatActivity {
     public void selectedoffre(String idOffre) {
         Intent ajou = getIntent();
         Annonce annonce1 = (Annonce) ajou.getSerializableExtra("annonce");
-
-
         DatabaseReference databaseReference;
-        databaseReference = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce1.getIdAnnonce()); // nkharaj id ta3 annonce
+        databaseReference = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce1.getIdAnnonce());
         Annonce annonce = new Annonce();
         annonce.setArticleEnRetour(annonce1.getArticleEnRetour());
         annonce.setImages(annonce1.getImages());
@@ -155,9 +159,8 @@ public class DemandesOffre extends AppCompatActivity {
         annonce.setStatu("ASSINED");
         annonce.setTitreAnnonce(annonce1.getTitreAnnonce());
         annonce.setDescriptionAnnonce(annonce1.getDescriptionAnnonce());
+        annonce.setDateAnnonce(new Date());
 
-        annonce.setDateAnnonce(new Date());////////////////////////////////////////////////////***************************************
-// hda  li zdnah
         annonce.setIdOffreSelected(idOffre);
 
         databaseReference.setValue(annonce).addOnCompleteListener(task2 -> {
@@ -179,11 +182,7 @@ public class DemandesOffre extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            //// Toast.makeText(context, "Un email a ètè envoyè, veuillez consulter votre boite email", Toast.LENGTH_SHORT).show();
 
-
-                        } else {
-                            // Toast.makeText(context, "Échec de l'envoi", Toast.LENGTH_SHORT).show();
                         }
                     }
 

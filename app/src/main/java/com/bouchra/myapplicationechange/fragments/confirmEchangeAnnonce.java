@@ -20,6 +20,7 @@ import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.DemandesOffre;
 import com.bouchra.myapplicationechange.activities.DetailMesannonce;
 import com.bouchra.myapplicationechange.activities.ReviewUser;
+import com.bouchra.myapplicationechange.activities.debut;
 import com.bouchra.myapplicationechange.activities.profilUser;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Offre;
@@ -33,8 +34,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
+import com.synnapps.carouselview.ImageListener;
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,18 +47,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class confirmEchangeAnnonce extends Fragment {
     private LinearLayout layout_annonce;
     private TextView titte_annonce;
-    private ImageView img_annonc;
+    private CarouselView images;
     private RelativeLayout relative_profie;
     private CircleImageView img_user;
     private TextView nom_user;
-    private LinearLayout layout_offre;// hadi tadiha l win kayan les offre gaa3 w hada offre b vert bacground
+    private LinearLayout layout_offre;//les offres de cette annonce et ce offre de bacground  vert
     private TextView titte_offre;
     private ImageView img_offre;
     private Annonce annonce;
     private Button Annuler;
     private Button Confirmer;
     private LinearLayout layoyt_button;
-    String fromREview;
+    private String fromREview;
 
 
     public confirmEchangeAnnonce() {
@@ -65,10 +69,10 @@ public class confirmEchangeAnnonce extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.activity_confirmechangeannonce, container, false);
-        // ta3 aanonce ta3i
+        // annonce
         layout_annonce = view.findViewById(R.id.layout_annonce);
         titte_annonce = view.findViewById(R.id.titte_annonce);
-        img_annonc = view.findViewById(R.id.img_annonc);
+        images = view.findViewById(R.id.img_annonc);
         //user de oofre
         relative_profie = view.findViewById(R.id.relative_profie);
         img_user = view.findViewById(R.id.img_user);
@@ -79,35 +83,28 @@ public class confirmEchangeAnnonce extends Fragment {
         Annuler = view.findViewById(R.id.Annuler);
         Confirmer = view.findViewById(R.id.Confirmer);
         layoyt_button = view.findViewById(R.id.layoyt_button);
-
         img_offre = view.findViewById(R.id.img_offre);
+
         fromREview = this.getArguments().getString("fromReview", "");
         if (!fromREview.equals("")) {
             layoyt_button.setVisibility(View.GONE);
         } else {
             layout_annonce.setOnClickListener(v -> {
-                Intent affiche = new Intent(getContext(), DetailMesannonce.class);
-                affiche.putExtra("annonce", annonce);
-                getActivity().startActivity(affiche);
-                getActivity().finish();
+                gotoDetail();
+            });
+            images.setImageClickListener(new ImageClickListener() {
+                @Override
+                public void onClick(int position) {
+                    gotoDetail();
+
+                }
             });
             layout_offre.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // hadi ta3 aghbiyaa khasni nrsal ga3 l object ta3 annonce
+
                     Intent ajou = new Intent(getContext(), DemandesOffre.class);
-                    ajou.putExtra("nomAnnonce", annonce.getTitreAnnonce()); //key* value
-                    ajou.putExtra("idAnnonce", annonce.getIdAnnonce());
-                    ajou.putExtra("descp", annonce.getDescriptionAnnonce());
-                    ajou.putExtra("statu", annonce.getStatu());
-                    ajou.putExtra("userid", annonce.getUserId());
-                    ajou.putExtra("commune", annonce.getCommune());
-                    ajou.putExtra("wilaya", annonce.getWilaya());
-                    ajou.putStringArrayListExtra("articleret", annonce.getArticleEnRetour());
-                    ajou.putStringArrayListExtra("images", annonce.getImages());
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
-                    String str = simpleDateFormat.format(annonce.getDateAnnonce());
-                    ajou.putExtra("date", str);
+                    ajou.putExtra("annonce", annonce);
                     startActivity(ajou);
                     getActivity().finish();
                 }
@@ -116,11 +113,23 @@ public class confirmEchangeAnnonce extends Fragment {
         annonce = (Annonce) getArguments().getSerializable("annonce");
         Log.e("annonce is ", annonce.getTitreAnnonce());
         titte_annonce.setText(annonce.getTitreAnnonce());
-        Glide.with(this)
-                .asBitmap()
-                .load(annonce.getImages().get(0))
-                .into(img_annonc);
+        ArrayList<String> Images = new ArrayList<>();
+        for (String image : annonce.getImages()) {
+            Images.add(image);
+        }
+        images.setPageCount(Images.size());
+        images.setImageListener(new ImageListener() {
+            @Override
+            public void setImageForPosition(int position, ImageView imageView) {
 
+                Glide.with(getActivity())
+                        .load(Images.get(position))
+                        .centerCrop()
+                        .into(imageView);
+
+
+            }
+        });
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Offre").child(annonce.getIdAnnonce()).child(annonce.getIdOffreSelected());
@@ -129,12 +138,15 @@ public class confirmEchangeAnnonce extends Fragment {
             public void onDataChange(DataSnapshot snapshot) {
 
                 if (snapshot.getValue() != null) {
-                    String TitleOffre = snapshot.child("nomOffre").getValue().toString();
-                    // String ImageOffre = snapshot.child("photoUser").getValue().toString();
-                    String IDUser = snapshot.child("idUser").getValue().toString();
-                    titte_offre.setText(TitleOffre);
-                    recupererUser(IDUser);
-                    Log.e("UserOFFreIs", IDUser);
+                    Offre offre = snapshot.getValue(Offre.class);
+                    titte_offre.setText(offre.getNomOffre());
+                    Glide.with(getContext())
+                            .asBitmap()
+                            .load(offre.getImage())
+                            .into(img_offre);
+
+                    recupererUser(offre.getIdUser());
+
                 } else {
                     Log.e("TAG", " it's null.");
 
@@ -154,9 +166,8 @@ public class confirmEchangeAnnonce extends Fragment {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                // yanuler ga3 les offre lokhrin
+                                // yanuler les autres offres
                                 rejectedOffres(annonce.getIdAnnonce(), annonce.getIdOffreSelected());
-// hna wi ndir win ydir review psq deja lakhor dar confirm w rah ykara3
                                 Intent review = new Intent(getActivity(), ReviewUser.class);
                                 review.putExtra("annonce", annonce);//offre
                                 getActivity().startActivity(review);
@@ -172,8 +183,99 @@ public class confirmEchangeAnnonce extends Fragment {
                         }
                     });
         });
+
+        Annuler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference ref = database.getReference("Offre").child(annonce.getIdAnnonce()).child(annonce.getIdOffreSelected());
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+
+                        if (snapshot.getValue() != null) {
+                            Offre offre = snapshot.getValue(Offre.class);
+                            deletOffre(offre);
+                            updateEtatAnnonce();
+                            Intent intent = new Intent(getActivity(), debut.class);
+                            getActivity().startActivity(intent);
+
+
+                        } else {
+                            Log.e("TAG", " it's null.");
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
         return view;
 
+    }
+
+    private void updateEtatAnnonce() {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Offre").child(annonce.getIdAnnonce());
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                if (snapshot.exists()) {
+                    // il y a des offre
+                    Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce()).child("statu")
+                            .setValue("ATTEND_DE_CONFIRMATION_D_OFFRE")
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                    }
+                                }
+
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                } else {
+                    // pas d offre
+                    Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce()).child("statu")
+                            .setValue("CREATED")
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                    }
+                                }
+
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void gotoDetail() {
+        Intent affiche = new Intent(getContext(), DetailMesannonce.class);
+        affiche.putExtra("annonce", annonce);
+        getActivity().startActivity(affiche);
+        getActivity().finish();
     }
 
     private void recupererUser(String userAnnonce) {
@@ -189,10 +291,6 @@ public class confirmEchangeAnnonce extends Fragment {
 
 
                     nom_user.setText(NameUser);
-                   /* Glide.with(getContext())
-                            .asBitmap()
-                            .load(PicUSer)
-                            .into(img_user);*/
                     Picasso.get().load(PicUSer).into(img_user);
                     relative_profie.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -224,7 +322,6 @@ public class confirmEchangeAnnonce extends Fragment {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    // njib l object w ndirah fi methode w hadik l methode nsuprimi fiha
                     String idOffre = postSnapshot.child("idOffre").getValue().toString();
                     Log.e("id offre", idOffre);
                     Log.e("id Selected", idOFfreSelected);
@@ -256,7 +353,7 @@ public class confirmEchangeAnnonce extends Fragment {
         OFFRE.put("dateOffre", offre.getDateOffre());
         OFFRE.put("descriptionOffre", offre.getDescriptionOffre());
         OFFRE.put("idUser", offre.getIdUser());
-        OFFRE.put("images", offre.getImage());
+        OFFRE.put("image", offre.getImage());
         OFFRE.put("wilaya", offre.getWilaya());
         OFFRE.put("statu", "REJECTED");
         mDbRef.updateChildren(OFFRE);

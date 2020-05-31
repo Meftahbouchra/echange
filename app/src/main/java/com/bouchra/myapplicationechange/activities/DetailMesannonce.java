@@ -1,8 +1,10 @@
 package com.bouchra.myapplicationechange.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,9 +22,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
+import com.synnapps.carouselview.ImageListener;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,10 +36,15 @@ public class DetailMesannonce extends AppCompatActivity {
     private Annonce annonce;
     private TextView tite;
     private TextView desc;
-    private ImageView img;
     private TextView retour;
+    private TextView back;
     private TextView menu;
-    String nameCategorie;
+    private String nameCategorie;
+    private TextView ville;
+    private TextView commune;
+    private CarouselView images;
+    private TextView date_h;
+    private Dialog MyDialog;
 
 
     @Override
@@ -43,9 +53,20 @@ public class DetailMesannonce extends AppCompatActivity {
         setContentView(R.layout.activity_detail_mesannonce);
         tite = findViewById(R.id.titte_annonce);
         desc = findViewById(R.id.desc);
-        img = findViewById(R.id.img_annonc);
+        images = findViewById(R.id.img_annonc);
         retour = findViewById(R.id.article_retour);
+        back=findViewById(R.id.retour);
         menu = findViewById(R.id.menu);
+        ville = findViewById(R.id.ville);
+        commune = findViewById(R.id.commune);
+        voirOffres = findViewById(R.id.voir);
+        date_h = findViewById(R.id.date_h);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         menu.setOnClickListener(v -> {
             BottomsheetManipAnnonceOffre bottomsheet = new BottomsheetManipAnnonceOffre();
             Bundle b2 = new Bundle();
@@ -54,21 +75,15 @@ public class DetailMesannonce extends AppCompatActivity {
             bottomsheet.show(getSupportFragmentManager(), "manipAnnonce");
 
 //get name categorie
-
             FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
             DatabaseReference databaseReference = firebaseDatabase.getReference("Categorie");
             databaseReference.addValueEventListener(new ValueEventListener() {
-
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-
-
                         for (DataSnapshot key : postSnapshot.getChildren()) {
 
                             String IDannonce = key.getKey();
-                            // Log.e("Data here", IDannonce);
                             if (IDannonce.equals(annonce.getIdAnnonce())) {
                                 String nom = postSnapshot.getKey();
                                 nameCategorie = nom;
@@ -77,25 +92,16 @@ public class DetailMesannonce extends AppCompatActivity {
 
                             }
                         }
-
-
                     }
-
                 }
-
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
             });
-
-
-
-           /* BottomsheetManipAnnonceOffre bottomsheet = new BottomsheetManipAnnonceOffre();
-            bottomsheet.show(getSupportFragmentManager(), "manipAnnonce");*/
         });
-        voirOffres = findViewById(R.id.voir);
+
         voirOffres.setOnClickListener(v -> {
             Intent ajou = new Intent(DetailMesannonce.this, DemandesOffre.class);
             ajou.putExtra("annonce", annonce);
@@ -103,94 +109,67 @@ public class DetailMesannonce extends AppCompatActivity {
             finish();
 
         });
-        // setImage(imageUrl,imageName);
-        //  tite.setText("abcd");
-        // getIncomingIntent();
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
-        Log.e("User is :", FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).toString());
-        FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try {
-                    if (dataSnapshot.getValue() != null) {
-                        try {
-                            // name_user.setText(dataSnapshot.child("nomMembre").getValue().toString());
-                            String nomUser = dataSnapshot.child("nomMembre").getValue().toString();
-                            Log.e("User is :", nomUser);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        Log.e("TAG", " it's null.");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
         tite.setText(annonce.getTitreAnnonce());
         desc.setText(annonce.getDescriptionAnnonce());
+        ville.setText(annonce.getWilaya() + ", ");
+        commune.setText(annonce.getCommune());
 
-        Date d = new Date(new Date().getTime() + 28800000);
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm "); // +heur
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  kk:mm ");
         String str = simpleDateFormat.format(annonce.getDateAnnonce());
-        //   time.setText(str);
-        setImage(annonce.getImages().get(0), annonce.getTitreAnnonce());
+        date_h.setText(str);
+
+        ArrayList<String> Images = new ArrayList<>();
+        for (String image : annonce.getImages()) {
+            Images.add(image);
+        }
+        images.setPageCount(Images.size());
+        images.setImageListener(new ImageListener() {
+            @Override
+            public void setImageForPosition(int position, ImageView imageView) {
+
+                Glide.with(DetailMesannonce.this)
+                        .load(Images.get(position))
+                        .centerCrop()
+                        .into(imageView);
+            }
+        });
         for (int i = 0; i < annonce.getArticleEnRetour().size(); i++) {
             retour.setText(retour.getText() + "\n" + annonce.getArticleEnRetour().get(i));
         }
+        images.setImageClickListener(new ImageClickListener() {
+            @Override
+            public void onClick(int position) {
+                //image clicable
+                showImage(Images.get(position));
+
+            }
+        });
 
 
-   /* @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        //inflater menu
-        inflater.inflate(R.menu.setting_annonce,menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //handel menu item clicks
-        int id= item.getItemId();
-        if(id == R.id.modifier){
-            Toast.makeText(getActivity(), "modifier", Toast.LENGTH_SHORT).show();
-        }
-        if(id == R.id.Supprimer){
-            Toast.makeText(getActivity(), "Supprimer", Toast.LENGTH_SHORT).show();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
     }
 
 
-    /*  @Override
-      public void getIncomingIntent() {
-
-      }*/
-    private void setImage(String imageUrl, String imageName) {
-
-
-        tite.setText(imageName);
-
-
+    private void showImage(String position) {
+        View view = getLayoutInflater().inflate(R.layout.showimage, null);
+        ImageView imageView = view.findViewById(R.id.imgclik_annonce);
         Glide.with(this)
                 .asBitmap()
-                .load(imageUrl)
-                .into(img);
+                .load(position)
+                .into(imageView);
+
+        TextView close = view.findViewById(R.id.retour);
+        close.setOnClickListener(v -> {
+            MyDialog.cancel();
+
+        });
+        //full screen
+        MyDialog = new Dialog(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
+        MyDialog.setContentView(view);
+        MyDialog.show();
+
     }
+
 
     public void deleteAnnonce() {
 
@@ -209,6 +188,7 @@ public class DetailMesannonce extends AppCompatActivity {
         ANNONCE.put("categorie", nameCategorie);
         mDbRef.updateChildren(ANNONCE);
         if (annonce.getStatu().equals("CREATED")) {
+            // ya pas d offre
             DatabaseReference dCategorie = FirebaseDatabase.getInstance().getReference("Categorie").child(nameCategorie).child(annonce.getIdAnnonce());
             dCategorie.removeValue();
             DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
@@ -220,17 +200,9 @@ public class DetailMesannonce extends AppCompatActivity {
             DatabaseReference dCategorie = FirebaseDatabase.getInstance().getReference("Categorie").child(nameCategorie).child(annonce.getIdAnnonce());
             dCategorie.removeValue();
         }
-
-
-
-
-        /*
-        DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(annonce.getIdAnnonce());
-       //removeValue ()  : utilisé pour supprimer les données.
-        dOffre.removeValue();*/
+        finish();
 
     }
-
 
     private void getOffres(String idAnnonce) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -242,7 +214,6 @@ public class DetailMesannonce extends AppCompatActivity {
                     // njib l object w ndirah fi methode w hadik l methode nsuprimi fiha
                     Offre offre = postSnapshot.getValue(Offre.class);
                     deletOffre(offre);
-
                 }
             }
 
@@ -274,8 +245,6 @@ public class DetailMesannonce extends AppCompatActivity {
     }
 
     public void goToFragmentModifier() {
-        // getSupportFragmentManager().beginTransaction().add(R.id.fragment,new ModifierAnnonce(),"ModifierAnnonce").commit();
-        //PACK DATA IN A BUNDLE
 
         Intent intent = new Intent(DetailMesannonce.this, ModifierAnnonce.class);
         intent.putExtra("annonce", annonce);

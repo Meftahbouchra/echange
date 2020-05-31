@@ -11,7 +11,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,13 +45,18 @@ public class ImagesStorage extends AppCompatActivity {
 
     private StorageReference mStorageRef;
     public Uri imguri;
-    private int GALLERY = 1, CAMERA = 3, CAMERA_PERMISSION = 2, WRITE_EXTERNAL_STORAGE = 4, READ_EXTERNAL_STORAGE = 5;
     private Annonce annonce;
     private String selectedCateg;
     private ArrayList<Uri> listImages;
     private com.bouchra.myapplicationechange.adapters.myImage myImage;
     private RecyclerView recyclerView;
-    private   Button buttonOpenBottomSheet ;
+    private TextView annuler;
+    private Button buttonOpenBottomSheet;
+    private static final int GALLERY = 1;
+    private static final int CAMERA = 2;
+    private static final int CAMERA_PERMISSION = 3;
+    private static final int WRITE_EXTERNAL_STORAGE = 4;
+    private static final int READ_EXTERNAL_STORAGE = 5;
 
 
     @Override
@@ -61,6 +68,7 @@ public class ImagesStorage extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference("Images Annonce");
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
         selectedCateg = getIntent().getStringExtra("categorie");
+        annuler = findViewById(R.id.annuler);
         recyclerView = findViewById(R.id.recycleImages);
         listImages = new ArrayList<>();
         myImage = new myImage(this, listImages);
@@ -71,7 +79,7 @@ public class ImagesStorage extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(myImage);
         // bottom sheet
-         buttonOpenBottomSheet = findViewById(R.id.button_sheet);
+        buttonOpenBottomSheet = findViewById(R.id.button_sheet);
         buttonOpenBottomSheet.setOnClickListener(v -> {
             if (listImages.size() <= 5) {
                 BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
@@ -89,6 +97,16 @@ public class ImagesStorage extends AppCompatActivity {
                 Fileuploader();
             } else {
                 Toast.makeText(this, "Ajouter des images a votre annonce ", Toast.LENGTH_SHORT).show();
+            }
+        });
+        annuler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent ajou = new Intent(ImagesStorage.this, AnnonceActivity.class);
+
+                startActivity(ajou);
+                finish();
             }
         });
     }
@@ -133,12 +151,11 @@ public class ImagesStorage extends AppCompatActivity {
         if (requestCode == GALLERY) {
             if (data != null) {
                 if (data.getClipData() != null) {
+                    // multiple imagfes from gallery
                     ClipData mClipData = data.getClipData();
                     for (int i = 0; i < mClipData.getItemCount(); i++) {
                         ClipData.Item item = mClipData.getItemAt(i);
                         Uri uri = item.getUri();
-                        // display your images
-
                         Bitmap bitmap = null;
                         try {
                             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
@@ -156,8 +173,8 @@ public class ImagesStorage extends AppCompatActivity {
 
                     }
                 } else if (data.getData() != null) {
+                    // single image fromp gallery
                     Uri uri = data.getData();
-                    // display your image
 
                     Bitmap bitmap = null;
                     try {
@@ -176,25 +193,19 @@ public class ImagesStorage extends AppCompatActivity {
 
         } else if (requestCode == CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            //******************
-            // imageview.setImageBitmap(thumbnail);
-            // imguri = Uri.parse(saveImage(thumbnail));
-
             listImages.add(Uri.parse(saveImage(thumbnail)));
             myImage.notifyDataSetChanged();
 
-
-            Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
-        } else if (requestCode == CAMERA_PERMISSION) {
+        } /*else if (requestCode == CAMERA_PERMISSION) {
             //takePhotoFromCamera();
         } else if (requestCode == WRITE_EXTERNAL_STORAGE) {
             //takePhotoFromCamera();
         } else if (requestCode == READ_EXTERNAL_STORAGE) {
             //takePhotoFromCamera();
-        }
+        }*/
     }
 
-
+    //prblm bsabat android 10 wla mykhlinich ndir f les fichiers ta app
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
@@ -232,15 +243,12 @@ public class ImagesStorage extends AppCompatActivity {
         ArrayList<Uri> LIST = new ArrayList<>();
         for (Uri uri : listImages) {
             imguri = uri;
-
             Log.e("img here", imguri.toString());
             try {
                 InputStream stream = new FileInputStream(String.valueOf(imguri));
-                //StorageReference ref = mStorageRef.child("images/" + UUID.randomUUID().toString());
                 StorageReference ref = mStorageRef.child(annonce.getIdAnnonce() + UUID.randomUUID().toString());
                 ref.putStream(stream)
                         .addOnSuccessListener(taskSnapshot -> {
-                            Toast.makeText(ImagesStorage.this, "Uploaded", Toast.LENGTH_SHORT).show();
                             taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
 
                                         annonce.getImages().add(String.valueOf(task));
@@ -253,15 +261,10 @@ public class ImagesStorage extends AppCompatActivity {
                                             startActivity(ajou);
                                             finish();
                                         }
-                                     /* Intent ajou = new Intent(ImagesStorage.this, Article_en_retour.class);
-                                        ajou.putExtra("annonce", annonce); //key* value
-                                        ajou.putExtra("Categ", selectedCateg);
-                                        startActivity(ajou);
-                                        finish();*/
                                     }
                             );
                         })
-                        .addOnFailureListener(e -> Toast.makeText(ImagesStorage.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(ImagesStorage.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show())
                         .addOnProgressListener(taskSnapshot -> {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
                                     .getTotalByteCount());
@@ -275,7 +278,7 @@ public class ImagesStorage extends AppCompatActivity {
     }
 
 
-    //permission
+    //permissions
     private boolean checkCameraPermission() {
         //check if camera permission is enabel or not
         boolean result = ContextCompat.checkSelfPermission(this,

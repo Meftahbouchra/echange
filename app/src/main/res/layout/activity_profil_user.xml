@@ -110,6 +110,7 @@
                             android:textSize="20sp" />
 
                         <TextView
+                            android:id="@+id/cmntr"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="10dp"
@@ -224,7 +225,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
+        <TextView
+            android:id="@+id/information"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:gravity="center"
+            android:textSize="25sp"
 
+            />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

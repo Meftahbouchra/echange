@@ -14,22 +14,23 @@
         android:layout_marginStart="5dp"
         android:drawableStart="@drawable/ic_keyboard_backspace_"
         android:drawableTint="@color/orange" />
+
     <TextView
         android:id="@+id/information"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/retour"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="mazal mol annonce madarch confirme echange mtkdrch dir commentaire 3lih"
-        />
+        android:layout_below="@id/retour"
+        android:layout_marginTop="20dp"
+        android:text="Vous attendez qu'apres votre partenaire confirmer l'echange" />
+
     <RelativeLayout
         android:id="@+id/view_review"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp"
-        android:layout_below="@id/retour"
         android:layout_above="@id/showEchange"
-        >
+        android:layout_below="@id/retour"
+        android:layout_margin="16dp">
+
         <TextView
             android:id="@+id/txt1"
             android:layout_width="wrap_content"
@@ -38,26 +39,29 @@
             android:text="Comment s'est passè l'echange ?"
             android:textColor="@color/black"
             android:textSize="30sp" />
+
         <TextView
-            android:layout_below="@id/txt1"
             android:id="@+id/txt2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/txt1"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:text="Vous pouvez donner votre avis sur votre partenaire d'echange "
             android:textSize="19sp" />
+
         <RatingBar
             android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:numStars="5"
             android:layout_below="@id/txt2"
-            android:stepSize="0.5"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
+            android:numStars="5"
             android:progressTint="@color/gold"
-            android:rating="0.0" />
+            android:rating="0.0"
+            android:stepSize="0.5" />
+
         <EditText
             android:id="@+id/review"
             android:layout_width="match_parent"

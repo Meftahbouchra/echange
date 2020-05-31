@@ -35,19 +35,29 @@ public class MessageList extends AppCompatActivity {
     private DatabaseReference l;
     private String lastmsg = "";
     private TextView information;
+    private TextView back;
+    private DatabaseReference reference;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.masaagelist);
+
         recyclerView = findViewById(R.id.recycle_view);
         information = findViewById(R.id.information);
+        back = findViewById(R.id.retour);
+        preferenceUtils = new PreferenceUtils(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        preferenceUtils = new PreferenceUtils(this);
-        //user
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Membre");
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        //get all users
+        reference = FirebaseDatabase.getInstance().getReference("Membre");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -72,15 +82,15 @@ public class MessageList extends AppCompatActivity {
                     String hash = String.valueOf(user.getIdMembre().hashCode() + preferenceUtils.getMember().getIdMembre().hashCode());
                     if (dataSnapshot2.hasChild(hash)) {
                         //last msg
-
                         l = FirebaseDatabase.getInstance().getReference("Message").child(hash);
+                        // get last child
                         Query query = l.orderByKey().limitToLast(1);
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                                     lastmsg = child.child("textMessage").getValue().toString();
-                                    String idUser = child.child("idsender").getValue().toString();//lirsal
+                                    String idUser = child.child("idsender").getValue().toString();
                                     String datee = child.child("idMessage").getValue().toString();
 // drna id machi date psq rana dyrinha f fire base in id w psq kon drna date njiboha khlt njobo arbre ta3 les d, wla kon jbnha attribut par attribut
                                     Date date = new Date(Long.parseLong(datee));
@@ -149,7 +159,7 @@ public class MessageList extends AppCompatActivity {
 
     }
 
-
+    //String is url!
     private boolean isUrl(String urlString) {
         // URL url =new URL(urlString);
         if (URLUtil.isValidUrl(urlString) && Patterns.WEB_URL.matcher(urlString).matches()) {

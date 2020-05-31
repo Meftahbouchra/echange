@@ -40,9 +40,10 @@ public class ReviewUser extends AppCompatActivity {
 
     private Button showEchange;
     private Intent ajou;
-    private TextView information;// ta3 bali mknch
+    private TextView information;
     private RelativeLayout view_review;
     private RatingBar ratingBar;
+    private TextView retour;
     private EditText review;
     private Button sumbit;
     private String textREview;
@@ -50,8 +51,8 @@ public class ReviewUser extends AppCompatActivity {
     private String IdSender;
     private String IDResiver;
     private DatabaseReference databaseReference;
-    PreferenceUtils preferences;
-    String nameCategorie;
+    private PreferenceUtils preferences;
+    private String nameCategorie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,37 +64,35 @@ public class ReviewUser extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         review = findViewById(R.id.review);
         sumbit = findViewById(R.id.sumbit);
+        retour = findViewById(R.id.retour);
         preferences = new PreferenceUtils(ReviewUser.this);
 
-
+        retour.setOnClickListener(v -> finish());
         ajou = getIntent();
         if (ajou != null) {
-
             if (ajou.hasExtra("Statu")) {
+                // show echange apr la confirmation de change
                 information.setVisibility(View.VISIBLE);
                 view_review.setVisibility(View.GONE);
 
             } else {
+                // get sender and reciver review(from offre, annonce)
                 information.setVisibility(View.GONE);
                 view_review.setVisibility(View.VISIBLE);
                 if (ajou.hasExtra("annonce")) {
+                    // add review from annonce
                     Annonce annonce = (Annonce) getIntent().getSerializableExtra("annonce");
-                    IdSender = annonce.getUserId();// wla shared prefe
+                    IdSender = annonce.getUserId();
                     final FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference ref = database.getReference("Offre").child(annonce.getIdAnnonce()).child(annonce.getIdOffreSelected());
                     ref.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
-
                             if (snapshot.getValue() != null) {
-
                                 IDResiver = snapshot.child("idUser").getValue().toString();
-
                             } else {
                                 Log.e("TAG", " it's null.");
-
                             }
-
                         }
 
                         @Override
@@ -105,8 +104,9 @@ public class ReviewUser extends AppCompatActivity {
 
                 }
                 if (ajou.hasExtra("offre")) {
+                    // add review from offre
                     Offre offre = (Offre) getIntent().getSerializableExtra("offre");
-                    IdSender = offre.getIdUser();// hada li dar offre
+                    IdSender = offre.getIdUser();
                     final FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference ref = database.getReference("Annonce").child(offre.getAnnonceId());
                     ref.addValueEventListener(new ValueEventListener() {
@@ -134,143 +134,120 @@ public class ReviewUser extends AppCompatActivity {
 
 
         }
-        sumbit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textREview = review.getText().toString();
-                nbrEtoiles = ratingBar.getRating();
-                if (textREview.isEmpty() && nbrEtoiles == 0.0) {
-                    Toast.makeText(ReviewUser.this, textREview + "+" + nbrEtoiles, Toast.LENGTH_SHORT).show();
-                }
-                if (nbrEtoiles == 0.0) {
-                    Toast.makeText(ReviewUser.this, "Toucher une étoile pour noter", Toast.LENGTH_SHORT).show();
+        sumbit.setOnClickListener(v -> {
+            textREview = review.getText().toString();
+            nbrEtoiles = ratingBar.getRating();
 
+            if (nbrEtoiles == 0.0) {
+                Toast.makeText(ReviewUser.this, "Toucher une étoile pour noter", Toast.LENGTH_SHORT).show();
+
+            } else {
+                if (textREview.isEmpty()) {
+                    Toast.makeText(ReviewUser.this, "Ajouter votre commaintaire", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (textREview.isEmpty()) {
-                        Toast.makeText(ReviewUser.this, "Ajouter votre commaintaire", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // kindir commnt w f in srec ncgof mn win rah jay b intent w nbadal statu t3ha
-                        Log.e(" lidar commentaire howa", IdSender);
-                        Log.e(" lidar commentaire howa", IDResiver);
-                        databaseReference = FirebaseDatabase.getInstance().getReference("Commentaire").child(IDResiver);
-                        Commentaire commentaire = new Commentaire();
-                        commentaire.setIDResiver(IDResiver);
-                        commentaire.setIdSender(IdSender);
-                        commentaire.setRepos(nbrEtoiles);
-                        commentaire.setDateCommentaire(new Date());
-                        commentaire.setContenuCommentaire(textREview);
-                        commentaire.setIdCommentaire(String.valueOf(commentaire.getDateCommentaire().hashCode()) + commentaire.getIdSender().hashCode());
-                        databaseReference.child(String.valueOf(commentaire.getDateCommentaire().hashCode()) + commentaire.getIdSender().hashCode()).setValue(commentaire).addOnCompleteListener(task2 -> {
-
-
-                            if (task2.isSuccessful()) {
-                                Intent an = new Intent(ReviewUser.this, debut.class);
-                                startActivity(an);
-                                finish();
-                                if (ajou.hasExtra("annonce")) {
-                                    Annonce annonce = (Annonce) getIntent().getSerializableExtra("annonce");
-                                    Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce()).child("statu")
-                                            .setValue("COMPLETED")
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-
-
-                                                    }
+                    databaseReference = FirebaseDatabase.getInstance().getReference("Commentaire").child(IDResiver);
+                    Commentaire commentaire = new Commentaire();
+                    commentaire.setIDResiver(IDResiver);
+                    commentaire.setIdSender(IdSender);
+                    commentaire.setRepos(nbrEtoiles);
+                    commentaire.setDateCommentaire(new Date());
+                    commentaire.setContenuCommentaire(textREview);
+                    commentaire.setIdCommentaire(String.valueOf(commentaire.getDateCommentaire().hashCode()) + commentaire.getIdSender().hashCode());
+                    databaseReference.child(String.valueOf(commentaire.getDateCommentaire().hashCode()) + commentaire.getIdSender().hashCode()).setValue(commentaire).addOnCompleteListener(task2 -> {
+                        if (task2.isSuccessful()) {
+                            Intent an = new Intent(ReviewUser.this, debut.class);
+                            startActivity(an);
+                            finish();
+                            if (ajou.hasExtra("annonce")) {
+                                // review from annonce,modifier statu annonce to completed
+                                Annonce annonce = (Annonce) getIntent().getSerializableExtra("annonce");
+                                Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce()).child("statu")
+                                        .setValue("COMPLETED")
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
                                                 }
-
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-
-                                                    Toast.makeText(ReviewUser.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                                                }
-                                            });
-
-                                }
-                                if (ajou.hasExtra("offre")) {
-                                    Offre offre = (Offre) getIntent().getSerializableExtra("offre");
-                                    //get name categorie
-
-                                    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                                    DatabaseReference databaseReference = firebaseDatabase.getReference("Categorie");
-                                    databaseReference.addValueEventListener(new ValueEventListener() {
-
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-
-
-                                                for (DataSnapshot key : postSnapshot.getChildren()) {
-
-                                                    String IDannonce = key.getKey();
-                                                    // Log.e("Data here", IDannonce);
-                                                    if (IDannonce.equals(offre.getAnnonceId())) {
-                                                        String nom = postSnapshot.getKey();
-                                                        nameCategorie = nom;
-                                                        Log.e("catego", nameCategorie);
-
-
-                                                    }
-                                                }
-
-
                                             }
 
-                                        }
-
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-                                    Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre()).child("statu")
-                                            .setValue("COMPLETED")
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(preferences.getMember().getIdMembre()).child(offre.getIdOffre());
-                                                        Map<String, Object> OFFRE = new HashMap<>();
-                                                        OFFRE.put("nomOffre", offre.getNomOffre());
-                                                        OFFRE.put("idOffre", offre.getIdOffre());
-                                                        OFFRE.put("annonceId", offre.getAnnonceId());
-                                                        OFFRE.put("commune", offre.getCommune());
-                                                        OFFRE.put("dateOffre", offre.getDateOffre());
-                                                        OFFRE.put("descriptionOffre", offre.getDescriptionOffre());
-                                                        OFFRE.put("idUser", offre.getIdUser());
-                                                        OFFRE.put("images", offre.getImage());
-                                                        OFFRE.put("wilaya", offre.getWilaya());
-                                                        OFFRE.put("statu", "COMPLETEDOFFRE");
-                                                        mDbRef.updateChildren(OFFRE);
-                                                        DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre());
-                                                        dOffre.removeValue();
-                                                        deplaceAnnoncewithOffre(offre.getAnnonceId());
-                                                    }
-                                                }
-
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-
-                                                    Toast.makeText(ReviewUser.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                                                }
-                                            });
-                                }
-
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(ReviewUser.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                             }
-                        });
+                            if (ajou.hasExtra("offre")) {
+                                Offre offre = (Offre) getIntent().getSerializableExtra("offre");
+                                //get name categorie
+                                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                                DatabaseReference databaseReference = firebaseDatabase.getReference("Categorie");
+                                databaseReference.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                            for (DataSnapshot key : postSnapshot.getChildren()) {
+                                                String IDannonce = key.getKey();
+                                                if (IDannonce.equals(offre.getAnnonceId())) {
+                                                    String nom = postSnapshot.getKey();
+                                                    nameCategorie = nom;
+                                                    Log.e("catego", nameCategorie);
+                                                }
+                                            }
 
-                    }
+
+                                        }
+
+                                    }
+
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                                // daplace offre in historique ey delete in offre,annonce aussi
+                                Task<Void> databasereference = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre()).child("statu")
+                                        .setValue("COMPLETED")
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(preferences.getMember().getIdMembre()).child(offre.getIdOffre());
+                                                    Map<String, Object> OFFRE = new HashMap<>();
+                                                    OFFRE.put("nomOffre", offre.getNomOffre());
+                                                    OFFRE.put("idOffre", offre.getIdOffre());
+                                                    OFFRE.put("annonceId", offre.getAnnonceId());
+                                                    OFFRE.put("commune", offre.getCommune());
+                                                    OFFRE.put("dateOffre", offre.getDateOffre());
+                                                    OFFRE.put("descriptionOffre", offre.getDescriptionOffre());
+                                                    OFFRE.put("idUser", offre.getIdUser());
+                                                    OFFRE.put("images", offre.getImage());
+                                                    OFFRE.put("wilaya", offre.getWilaya());
+                                                    OFFRE.put("statu", "COMPLETEDOFFRE");
+                                                    mDbRef.updateChildren(OFFRE);
+                                                    DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre());
+                                                    dOffre.removeValue();
+                                                    deplaceAnnoncewithOffre(offre.getAnnonceId());
+                                                }
+                                            }
+
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                                Toast.makeText(ReviewUser.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });
+                            }
+
+                        }
+                    });
+
                 }
-
             }
+
         });
         showEchange.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -312,7 +289,7 @@ public class ReviewUser extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                // Membre membre = snapshot.getValue(Membre.class);
+
                 Annonce annonce = snapshot.getValue(Annonce.class);
                 deplaceAnnonce(annonce);
             }
@@ -347,6 +324,7 @@ public class ReviewUser extends AppCompatActivity {
         dCategorie.removeValue();
     }
 
+    // offre ne depose pas review pour terminer le cycle
     @Override
     protected void onResume() {
         super.onResume();

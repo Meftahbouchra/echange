@@ -72,11 +72,6 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
     }
 
 
-  /*  public void setAnnonces(ArrayList<Annonce> annonces) {
-        this.annonces = annonces;
-        notifyDataSetChanged();
-    }*/
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -91,27 +86,18 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
         Offre offre = mesoffre.get(position);
         holder.titte_offre.setText(offre.getNomOffre());
         holder.desc_offre.setText(offre.getDescriptionOffre());
-        holder.ville.setText(offre.getWilaya());
+        holder.ville.setText(offre.getWilaya() + ", ");
         holder.commune.setText(offre.getCommune());
 
-        // hadi ta3 photo mzal mndirha
-       Glide.with(context)
+        Glide.with(context)
                 .load(offre.getImage())
                 .centerCrop()
                 .into(holder.img_offre);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  kk:mm ");
         String str = simpleDateFormat.format(offre.getDateOffre());
         holder.dateh.setText(str);
-       /* int i;
-        for( i=0; i<=annonces.size();i++){
-            Log.e("Data  of annonce here", String.valueOf(annonces.get(i)));
-        }*/// hadi drtha bch ntest mkhdmtlich
 
-        // Log.e("statu oofre ", statuOffre);
-        // hna njib annonce
-        //Log.e("ID annonce here", offre.getAnnonceId());
-        // Log.e("statu oofre ", statuOffre);
         switch (offre.getStatu()) {
             case "CREATED":
                 holder.statu.setText("Nouvaux");
@@ -122,7 +108,6 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                     public void onClick(View v) {
                         BottomsheetManipAnnonceOffre bottomsheet = new BottomsheetManipAnnonceOffre();
                         Bundle b2 = new Bundle();
-                        b2.putString("fromOffre", offre.getNomOffre());
                         b2.putSerializable("objectOffre", offre);
                         bottomsheet.setArguments(b2);
                         bottomsheet.show(((FragmentActivity) context).getSupportFragmentManager(), bottomsheet.getTag());
@@ -141,21 +126,13 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
             default:
 
         }
-//NEED_REVIEW
-     /*   if (offre.getStatu().equals("CREATED")) {
-            holder.statu.setText("Nouvaux");
-            holder.statu.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
-        } else {
-            holder.statu.setText("attend de confirmation d 'change");
-            holder.statu.setTextColor(ContextCompat.getColor(context, R.color.rouge));
-        }*/
+
 
         holder.itemView.setOnClickListener(v -> {
             if (Offre == null) {
 
                 switch (offre.getStatu()) {
                     case "CREATED":
-
                         annonce = new Annonce();
                         final FirebaseDatabase databas = FirebaseDatabase.getInstance();
                         DatabaseReference df = databas.getReference("Annonce").child(offre.getAnnonceId());
@@ -176,13 +153,6 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
                             }
                         });
-
-               /* Annonce ann = dataSnapshot3.getValue(Annonce.class);
-                annonces.add(ann);
-                setAnnonces(annonces);
-                annonce.add(dataSnapshot3.getValue(Annonce.class));
-
-                setAnnonces(annonces);*/
                         break;
                     case "NEED_To_Be_CONFIRM":
                         Intent affiche = new Intent(context, ConfirmEchange.class);
@@ -202,12 +172,12 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                                     String StatuAnnoncE = snapshot.child("statu").getValue().toString();
                                     if (StatuAnnoncE.equals("NEED_To_Be_CONFIRM")) {
                                         Intent review = new Intent(context, ReviewUser.class);
-                                        review.putExtra("Statu", "wait");
-                                        review.putExtra("offre", offre);//offre
+                                        review.putExtra("Statu", "wait");// wait annonce confirm echange andr post review
+                                        review.putExtra("offre", offre);
                                         context.startActivity(review);
                                     } else {
                                         Intent review = new Intent(context, ReviewUser.class);
-                                        review.putExtra("offre", offre);//offre
+                                        review.putExtra("offre", offre);
                                         context.startActivity(review);
                                     }
 
@@ -244,18 +214,15 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
                         new AlertDialog.Builder(context)
                                 .setTitle("Echanger votre object")
-                                .setMessage("Souhaitez vous vraiment envoyer cette" + offre.getNomOffre() + "comme un offre ?")
-                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                .setMessage("Souhaitez vous vraiment envoyer cette " + offre.getNomOffre() + " comme un offre ?")
                                 // The dialog is automatically dismissed when a dialog button is clicked.
                                 .setPositiveButton("Envoyer", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        // Continue with send operation
-
                                         PreferenceUtils preferenceUtils = new PreferenceUtils(context);
                                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Offre").child(Offre);// khasni nadi id ta3 aanonce machi ta3 id ta3 offre
                                         Offre offree = new Offre();
                                         offree.setAnnonceId(Offre);
-                                        offree.setDateOffre(new Date());// jc ila ndirah f date ta3 annonce wl    ndir   h bali jdidi
+                                        offree.setDateOffre(new Date());
                                         offree.setDescriptionOffre(offre.getDescriptionOffre());
                                         offree.setIdOffre(String.valueOf(offree.getDateOffre().hashCode()) + offree.getAnnonceId().hashCode());
                                         offree.setNomOffre(offre.getNomOffre());
@@ -263,11 +230,8 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                                         offree.setCommune(offre.getCommune());
                                         offree.setIdUser(preferenceUtils.getMember().getIdMembre());
                                         offree.setStatu("CREATED");
-                                        // offre.setImages();
-                                        // khasni id user li dar l offre
-
+                                        offree.setImage(offre.getImage());
                                         databaseReference.child(String.valueOf(offree.getDateOffre().hashCode()) + offree.getAnnonceId().hashCode()).setValue(offree).addOnCompleteListener(task2 -> {
-
                                             if (task2.isSuccessful()) {
                                                 setStatuAnnonce();
                                                 addNotification(Offre, offree);
@@ -281,7 +245,6 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                                         });
                                     }
                                 })
-                                // A null listener allows the button to dismiss the dialog and take no further action.
                                 .setNegativeButton("Annuler", null)
                                 //  .setIcon(android.R.drawable.ic_dialog_alert)
                                 .show();
@@ -343,9 +306,6 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            //// Toast.makeText(context, "Un email a ètè envoyè, veuillez consulter votre boite email", Toast.LENGTH_SHORT).show();
-                        } else {
-                            // Toast.makeText(context, "Échec de l'envoi", Toast.LENGTH_SHORT).show();
                         }
                     }
 

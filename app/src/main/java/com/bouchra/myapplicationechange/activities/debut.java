@@ -64,13 +64,12 @@ public class debut extends AppCompatActivity {
             };
 
 
-
-
     @Override
     protected void onResume() {
-        check();
+        checkUserStatus();
         super.onResume();
     }
+
     public void updateToken(String token) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Tokens");
         Token mToken = new Token();
@@ -78,23 +77,26 @@ public class debut extends AppCompatActivity {
         ref.child(preferenceUtils.getMember().getIdMembre()).setValue(mToken);
 
     }
+
     private void updateUI() {
         startActivity(new Intent(debut.this, MainActivity.class));
         finish();
     }
-    private void check() {
+
+    private void checkUserStatus() {
         // Check if user is signed in (non-null) and update UI accordingly.
-//get current user
+        // get current user
         FirebaseUser currentUser = firebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
 
             //user is signed in saty here
 
         } else {
-// user not signed in , go to main activity
+            // user not signed in , go to main activity
             updateUI();
         }
 
     }
+
 
 }

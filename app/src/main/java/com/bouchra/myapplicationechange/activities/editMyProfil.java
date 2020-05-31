@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -27,9 +26,6 @@ import com.bouchra.myapplicationechange.adapters.BootomSheetDialogCamGall;
 import com.bouchra.myapplicationechange.fragments.editPassword;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -49,20 +45,23 @@ public class editMyProfil extends AppCompatActivity {
     private TextView enregister;
     private TextView retour;
     private LinearLayout passwordLayout;
-
     private TextView tack_Pict;
     private CircleImageView image_user;
     private DatabaseReference databaseReference;
-    PreferenceUtils preferenceUtils;
-    Uri imagrUri;
+    private PreferenceUtils preferenceUtils;
+    private Uri imagrUri;
+    //request
     private static final int CAMERA_REQUEST_CODE = 100;
-    private static final int STORAGE_REQUEST_CODE = 200;
+    private static final int WRITE_EXTERNAL_STORAGE_REQUEST = 200;
+    private static final int READ_EXTERNAL_STORAGE_REQUEST = 300;
+
     //image pick constants
-    private static final int IMAGE_PICK_CAMERA_CODE = 300;
-    private static final int IMAGE_PICK_GALLERY_CODE = 400;
+    private static final int IMAGE_PICK_CAMERA_CODE = 400;
+    private static final int IMAGE_PICK_GALLERY_CODE = 500;
     //permissions arry
     String[] cameraPermission;
-    String[] storagePermission;
+    String[] storagePermissionWRITE;
+    String[] storagePermissionREAD;
 
 
     @Override
@@ -79,118 +78,104 @@ public class editMyProfil extends AppCompatActivity {
         retour = findViewById(R.id.retour);
         preferenceUtils = new PreferenceUtils(this);
         databaseReference = FirebaseDatabase.getInstance().getReference();
-
+        cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        storagePermissionWRITE = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        storagePermissionREAD = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+        // show contenu
         name.setText(preferenceUtils.getMember().getNomMembre());
         email.setText(preferenceUtils.getMember().getEmail());
         number.setText(String.valueOf(preferenceUtils.getMember().getNumTel()));
         //image_user
         Picasso.get().load(preferenceUtils.getMember().getPhotoUser()).into(image_user);
+        // if user don't not set img ,save last picture
         imagrUri = Uri.parse(preferenceUtils.getMember().getPhotoUser());
-        cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        tack_Pict.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
-                Bundle bundle = new Bundle();
-                bundle.putString("linkProfile", "fromProfil");
-                bottomsheet.setArguments(bundle);
-                bottomsheet.show(getSupportFragmentManager(), "Image Dialog");
 
-
-            }
-
+        tack_Pict.setOnClickListener(v -> {
+            BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
+            Bundle bundle = new Bundle();
+            bundle.putString("linkProfile", "fromProfil");
+            bottomsheet.setArguments(bundle);
+            bottomsheet.show(getSupportFragmentManager(), "Image Dialog");
         });
+// if user compte ne recoorepond pas a nov compte ,il n y a pas un moyen pour modifier leur mdps
         if (preferenceUtils.getMember().getMotDePasse().isEmpty()) {
             passwordLayout.setVisibility(View.GONE);
-
         }
-        enregister.setOnClickListener(new View.OnClickListener() {
+        retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nome = name.getText().toString();
-                String mail = email.getText().toString();
-                String numTel = number.getText().toString();
-                if (!nome.isEmpty() && !mail.isEmpty() && !numTel.isEmpty() && imagrUri != null) {
-                    //imguri.toString() f object
-                    databaseReference = FirebaseDatabase.getInstance().getReference("Membre").child(preferenceUtils.getMember().getIdMembre());
-                    Membre user = new Membre();
-                    user.setEmail(mail);
-                    user.setNomMembre(nome);
-                    user.setIdMembre(preferenceUtils.getMember().getIdMembre());
-                    user.setPhotoUser(imagrUri.toString());
-                    user.setDateInscription(preferenceUtils.getMember().getDateInscription());
-                    user.setNumTel(Integer.parseInt(numTel));
-                    databaseReference.setValue(user)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        preferenceUtils.Clear();
-                                        preferenceUtils.setMember(user);
-                                        startActivity(new Intent(editMyProfil.this, MyProfil.class));
-                                        finish();
-                                    }
-                                }
-
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                            Toast.makeText(editMyProfil.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-
-
-                } else {
-                    Toast.makeText(editMyProfil.this, "khas les d", Toast.LENGTH_SHORT).show();
-                }
-
+                startActivity(new Intent(getApplicationContext(), MyProfil.class));
+                finish();
             }
+        });
+        // set compte
+        enregister.setOnClickListener(v -> {
+            String nome = name.getText().toString();
+            String mail = email.getText().toString();
+            String numTel = number.getText().toString();
+            if (!nome.isEmpty() && imagrUri != null) {
+                databaseReference = FirebaseDatabase.getInstance().getReference("Membre").child(preferenceUtils.getMember().getIdMembre());
+                Membre user = new Membre();
+                user.setEmail(mail);
+                user.setNumTel(Integer.parseInt(numTel));
+                user.setNomMembre(nome);
+                user.setIdMembre(preferenceUtils.getMember().getIdMembre());
+                user.setPhotoUser(imagrUri.toString());
+                user.setDateInscription(preferenceUtils.getMember().getDateInscription());
+                databaseReference.setValue(user)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                preferenceUtils.Clear();
+                                preferenceUtils.setMember(user);
+                                startActivity(new Intent(editMyProfil.this, MyProfil.class));
+                                finish();
+                            }
+                        }).addOnFailureListener(e -> Toast.makeText(editMyProfil.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show());
+
+
+            } else {
+                Toast.makeText(editMyProfil.this, "Les données sont manquantes !!", Toast.LENGTH_SHORT).show();
+            }
+
         });
 
 
-        passwordLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("kayan pasword", preferenceUtils.getMember().getMotDePasse());
-                getSupportFragmentManager().beginTransaction().add(R.id.fragment, new editPassword(), "editpassword").commit();
+        passwordLayout.setOnClickListener(v -> {
+            Log.e("passwors exist ", preferenceUtils.getMember().getMotDePasse());
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment, new editPassword(), "editpassword").commit();
 
-            }
         });
     }
 
     public void pickFromGallery() {
-        //intent to pick image from gallery
 
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, IMAGE_PICK_GALLERY_CODE);
+        if (!checkExternalStorageWritePermission()) {
+            resuestExternalStorageWritePermission();
+        } else if (!checkExternalStorageREADPermission()) {
+            resuestExternalStorageREADPermission();
+        } else {
 
+            //intent to pick image from gallery
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(galleryIntent, IMAGE_PICK_GALLERY_CODE);
+        }
 
     }
 
     public void pickFromCamera() {
-        //intent to pick image from camera
-        //rani dayra whd prgrm sahal fi tp
+        if (!checkCameraPermission()) {
+            resuestCameraPermission();
+        } else if (!checkExternalStorageWritePermission()) {
+            resuestExternalStorageWritePermission();
+        } else if (!checkExternalStorageREADPermission()) {
+            resuestExternalStorageREADPermission();
+        } else {
+            //intent to pick image from camera
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
+        }
 
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
-
-
-    }
-
-    private boolean checkStoragePermission() {
-        //check if storage permission is enabel or not
-        boolean result = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-        return result;
-    }
-
-    private void resuestStoragePermission() {
-        //request runtime storage permission
-        ActivityCompat.requestPermissions(this, storagePermission, STORAGE_REQUEST_CODE);
     }
 
 
@@ -208,6 +193,28 @@ public class editMyProfil extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, cameraPermission, CAMERA_REQUEST_CODE);
     }
 
+    private boolean checkExternalStorageWritePermission() {
+        return ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+    }
+
+    private boolean checkExternalStorageREADPermission() {
+        return ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void resuestExternalStorageWritePermission() {
+        //request runtime camera permission
+        ActivityCompat.requestPermissions(this, storagePermissionWRITE, WRITE_EXTERNAL_STORAGE_REQUEST);
+
+    }
+
+    private void resuestExternalStorageREADPermission() {
+        //request runtime camera permission
+        ActivityCompat.requestPermissions(this, storagePermissionREAD, READ_EXTERNAL_STORAGE_REQUEST);
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -219,23 +226,19 @@ public class editMyProfil extends AppCompatActivity {
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
                         imagrUri = Uri.parse(saveImage(bitmap));
-
-                        Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
-                        //*******************
                         image_user.setImageBitmap(bitmap);
 
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
+
                     }
                 }
 
             } else if (requestCode == IMAGE_PICK_CAMERA_CODE) {
                 Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-                //******************
                 image_user.setImageBitmap(thumbnail);
                 imagrUri = Uri.parse(saveImage(thumbnail));
-                Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
+
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -298,7 +301,8 @@ public class editMyProfil extends AppCompatActivity {
                 }
             }
             break;
-            case STORAGE_REQUEST_CODE: {
+            case WRITE_EXTERNAL_STORAGE_REQUEST:
+            case READ_EXTERNAL_STORAGE_REQUEST: {
                 if (grantResults.length > 0) {
                     boolean storageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     if (storageAccepted) {
@@ -314,7 +318,16 @@ public class editMyProfil extends AppCompatActivity {
 
                 }
             }
+
             break;
+
+        }
+    }
+    @Override
+
+    public void onBackPressed() {
+        if (getSupportFragmentManager().findFragmentByTag("editpassword") != null) {
+            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("editpassword")).commit();
         }
     }
 }

@@ -4,13 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#efefef"
     tools:context=".activities.Historique">
+    <LinearLayout
+        android:id="@+id/tolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/gris"
+        android:layout_marginBottom="25dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/retour"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:drawableStart="@drawable/ic_keyboard_backspace_"
+            android:drawableTint="@color/orange" />
+
+
+    </LinearLayout>
     <TextView
         android:id="@+id/information"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="25dp"
         android:gravity="center"
+        android:layout_below="@+id/tolbar"
         android:text=" "
         android:textSize="25sp"
 
@@ -21,6 +41,7 @@
         android:id="@+id/recyle_historique"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/tolbar"
         android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
 
 

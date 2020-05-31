@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.models.Message;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -29,9 +29,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private Context mcontext;
     private ArrayList<Message> mChat;
     private String imageurl;
-    Dialog MyDialog;
-    FirebaseUser fuser;
-    // private ArrayList<Annonce> annonces = new ArrayList<>();
+    private Dialog MyDialog;
+    private PreferenceUtils preferenceUtils;
 
 
     public MessageAdapter(Context mcontext, ArrayList<Message> mChat, String imageurl) {
@@ -59,7 +58,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
 
         Message message = mChat.get(position);
-// holder.show_message.setText(message.getTextMessage());////////////// hadi hiya ta3 message
         Glide.with(mcontext).load(imageurl).into(holder.profile_image);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
         String str = simpleDateFormat.format(message.getDateMessage());
@@ -69,12 +67,26 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             // affiche txt message
             holder.show_message.setVisibility(View.VISIBLE);
             holder.messageIv.setVisibility(View.GONE);
-            holder.show_message.setText(msg);////////////// hadi hiya ta3 message
+            holder.show_message.setText(msg);
         } else {
-            //affiche photo message
-            holder.show_message.setVisibility(View.GONE);
-            holder.messageIv.setVisibility(View.VISIBLE);
-            Picasso.get().load(msg).placeholder(R.drawable.ic_image_black).into(holder.messageIv);
+            //affiche photo message ou position url
+            Picasso.get().load(msg).into(holder.messageIv, new Callback() {
+                @Override
+                public void onSuccess() {
+
+                    holder.show_message.setVisibility(View.GONE);
+                    holder.messageIv.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                    holder.show_message.setVisibility(View.VISIBLE);
+                    holder.messageIv.setVisibility(View.GONE);
+                    holder.show_message.setText(msg);
+
+                }
+            });
             holder.messageIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -111,13 +123,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
-        if (mChat.get(position).getIdsender().equals(fuser.getUid())) {
+
+        preferenceUtils = new PreferenceUtils(mcontext);
+        if (mChat.get(position).getIdsender().equals(preferenceUtils.getMember().getIdMembre())) {
             return MSG_TYPE_RIGHT;
-            // return MSG_TYPE_LEFT;
+
         } else {
             return MSG_TYPE_LEFT;
-            //return MSG_TYPE_RIGHT;
+
         }
     }
 
@@ -132,8 +145,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     private void showImage(String url) {
-
-
         View view = LayoutInflater.from(mcontext).inflate(R.layout.showimage, null);
         ImageView imageView = view.findViewById(R.id.imgclik_annonce);
 
@@ -141,19 +152,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 .asBitmap()
                 .load(url)
                 .into(imageView);
-
-
         TextView close = view.findViewById(R.id.retour);
         close.setOnClickListener(v -> {
             MyDialog.cancel();
 
         });
-
         //full screen
         MyDialog = new Dialog(mcontext, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
 
         MyDialog.setContentView(view);
-        MyDialog.show();// hadi nkd ndirha ghir f fct
+        MyDialog.show();
 
     }
 }

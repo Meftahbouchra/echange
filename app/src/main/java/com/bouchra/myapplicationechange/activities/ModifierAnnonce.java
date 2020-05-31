@@ -10,9 +10,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +30,10 @@ import com.bouchra.myapplicationechange.adapters.BootomSheetDialogCamGall;
 import com.bouchra.myapplicationechange.adapters.RecycleViewArticleRetour;
 import com.bouchra.myapplicationechange.adapters.myImage;
 import com.bouchra.myapplicationechange.models.Annonce;
+import com.bouchra.myapplicationechange.models.Commune;
 import com.bouchra.myapplicationechange.models.Notification;
 import com.bouchra.myapplicationechange.models.Offre;
+import com.bouchra.myapplicationechange.models.Wilaya;
 import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,6 +45,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -54,32 +63,40 @@ import java.util.UUID;
 
 public class ModifierAnnonce extends AppCompatActivity {
     private Annonce annonce;
-
     private EditText nomAnnonce;
     private ImageView imgAnnonc;
     private EditText desciAnnonce;
     private EditText editText;
     private TextView enregister;
+    private TextView retour;
     private TextView textView;
+    private Spinner spinner_wilaya;
+    private Spinner spinner_ville;
+    private String selectedWilaya, selectedVille;
+    private ArrayList<Wilaya> wilaya = new ArrayList<Wilaya>();
+    private ArrayList<Commune> communes = new ArrayList<Commune>();
+    private String[] wilayaname;
     private RecyclerView recyclerView;
     private RecycleViewArticleRetour postAdapter;
-    ArrayList<String> posts = new ArrayList<>();
-    private boolean notify = false;
-
+    private ArrayList<String> posts = new ArrayList<>();
     private DatabaseReference data;
-
-    StorageReference mStorageRef;
-    private ArrayList<String> list = new ArrayList<>();
-    PreferenceUtils preferenceUtils;
-    private int GALLERY = 1, CAMERA = 3, CAMERA_PERMISSION = 2, WRITE_EXTERNAL_STORAGE = 4, READ_EXTERNAL_STORAGE = 5;
+    private StorageReference mStorageRef;
+    private PreferenceUtils preferenceUtils;
+    private static final int GALLERY = 1;
+    private static final int CAMERA = 3;
+    private static final int CAMERA_PERMISSION = 2;
+    private static final int WRITE_EXTERNAL_STORAGE = 4;
+    private static final int READ_EXTERNAL_STORAGE = 5;
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final int STORAGE_REQUEST_CODE = 200;
     private ArrayList<Uri> listImages;
     private ArrayList<Uri> Images;
     private com.bouchra.myapplicationechange.adapters.myImage myImage;
-    RecyclerView recyclerViewImages;
+    private RecyclerView recyclerViewImages;
     public Uri imguri;
     private ArrayList<String> paths = new ArrayList<>();
+    private int j;
+    private int i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,19 +110,27 @@ public class ModifierAnnonce extends AppCompatActivity {
         textView = findViewById(R.id.ajout_article);
         enregister = findViewById(R.id.enregister);
         recyclerView = findViewById(R.id.rec_retour);
+        spinner_wilaya = findViewById(R.id.spinner_wilaya);
+        spinner_ville = findViewById(R.id.spinner_ville);
+        retour = findViewById(R.id.retour);
         preferenceUtils = new PreferenceUtils(this);
         recyclerViewImages = findViewById(R.id.recycleImages);
         //StorageReference Firebase
         mStorageRef = FirebaseStorage.getInstance().getReference("Images Annonce");
-
         listImages = new ArrayList<>();
-        Images=new ArrayList<>();
+        Images = new ArrayList<>();
 
+        myImage = new myImage(this, listImages);
+        // recycle view horizontal
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerViewImages.setLayoutManager(linearLayoutManager);
+        recyclerViewImages.setAdapter(myImage);
+
+        // pic image from gallery or camera
         Button buttonOpenBottomSheet = findViewById(R.id.button_sheet);
         buttonOpenBottomSheet.setOnClickListener(v -> {
             if (listImages.size() <= 5) {
-               /* BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
-                bottomsheet.show(getSupportFragmentManager(), "exemplBottomsheet");*/
                 BootomSheetDialogCamGall bottomsheet = new BootomSheetDialogCamGall();
                 Bundle bundle = new Bundle();
                 bundle.putString("linkModifierannonce", "fromModifierannonce");
@@ -117,20 +142,20 @@ public class ModifierAnnonce extends AppCompatActivity {
 
         });
 
-
+        retour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         textView.setOnClickListener(v -> {
             ajoutArticle();
         });
 
-        //UNPACK OUR DATA FROM OUR BUNDLE
-      /* Bundle b3 = getArguments();
-        String name = b3.getString("name");
-       String titre = this.getArguments().getString("nomannonce");*/
-
         nomAnnonce.setText(annonce.getTitreAnnonce());
         desciAnnonce.setText(annonce.getDescriptionAnnonce());
 
-        int j;
+        // get aticle en retour
         for (j = 0; j < annonce.getArticleEnRetour().size(); j++) {
             String article = annonce.getArticleEnRetour().get(j);
             Log.e("annoce une is", article);
@@ -140,39 +165,98 @@ public class ModifierAnnonce extends AppCompatActivity {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(postAdapter);
         }
-        for (int i = 0; i < annonce.getImages().size(); i++) {
+        // get images
+        for (i = 0; i < annonce.getImages().size(); i++) {
             listImages.add(Uri.parse(annonce.getImages().get(i)));
-            myImage = new myImage(this, listImages);
+            myImage.notifyDataSetChanged();
+           /* myImage = new myImage(this, listImages);
             // recycle view horizontal
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             recyclerViewImages.setLayoutManager(linearLayoutManager);
-            recyclerViewImages.setAdapter(myImage);
+            recyclerViewImages.setAdapter(myImage);*/
         }
 
-        //myImage.notifyDataSetChanged();
-        /*Glide.with(this)
-                .asBitmap()
-                .load(annonce.getImages().get(0))
-                .into(imgAnnonc);*/
-     /*   if (annonce.getImages().size()<= 5) {
-            listImages.add(Uri.parse(saveImage(bitmap)));
-            myImage.notifyDataSetChanged();
-        } else {
-            Toast.makeText(this, "Vous ne pouvez pas ajouter d'autres photos ", Toast.LENGTH_SHORT).show();
-        }*/
+
         enregister.setOnClickListener(v -> {
 
             if (listImages.size() != 0) {
-
+                // images
                 Fileuploader();
                 updateAnnonce();
+                finish();
 
             } else {
                 Toast.makeText(this, "Ajouter des images a votre annonce ", Toast.LENGTH_SHORT).show();
             }
+        });
+        //// spiners
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(readFileFromRawDirectory(R.raw.wilayas));
+            wilayaname = new String[jsonArray.length()];
+            for (int i = 0; i < jsonArray.length(); i++) {
+                try {
+                    wilaya.add(new Wilaya(Integer.parseInt(jsonArray.getJSONObject(i).getString("id")), jsonArray.getJSONObject(i).getString("nom")));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                wilayaname[i] = wilaya.get(i).getId() + " " + wilaya.get(i).getName();
+            }
+            ArrayAdapter<String> wilayaAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, wilayaname);
+            spinner_wilaya.setAdapter(wilayaAdapter);
+            spinner_wilaya.setSelection(getIndex(spinner_wilaya, annonce.getWilaya()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            JSONArray jsonArrayCommune = new JSONArray(readFileFromRawDirectory(R.raw.communes));
+            for (int i = 0; i < jsonArrayCommune.length(); i++) {
+                communes.add(new Commune(Integer.parseInt(jsonArrayCommune.getJSONObject(i).getString("id")), Integer.parseInt(jsonArrayCommune.getJSONObject(i).getString("wilaya_id")), jsonArrayCommune.getJSONObject(i).getString("nom")));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 
+        spinner_wilaya.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
+
+                selectedWilaya = parent.getItemAtPosition(position).toString();
+                int selectedId = Integer.parseInt(selectedWilaya.subSequence(0, 2).toString().trim());
+                ArrayList<Commune> communeSelected = new ArrayList<Commune>();
+                for (int i = 0; i < communes.size(); i++)
+                    if (selectedId == communes.get(i).getWilaya_id()) {
+                        communeSelected.add(communes.get(i));
+                    }
+                String[] communeName = new String[communeSelected.size()];
+                for (int i = 0; i < communeSelected.size(); i++)
+                    communeName[i] = communeSelected.get(i).getName();
+                ArrayAdapter<String> communeAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, communeName);
+                spinner_ville.setAdapter(communeAdapter);
+                spinner_ville.setSelection(getIndexCommune(spinner_ville, annonce.getCommune()));
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+
+        spinner_ville.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
+                selectedVille = parent.getItemAtPosition(position).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
         });
     }
 
@@ -181,21 +265,18 @@ public class ModifierAnnonce extends AppCompatActivity {
         String desc_Annonce = desciAnnonce.getText().toString();
 
         if (!titre_Annonce.isEmpty() && !desc_Annonce.isEmpty()) {
-            ////getting the specified artist reference
             DatabaseReference refannonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
             Annonce ann = new Annonce();
-            //updating annonce
-            ann.setDescriptionAnnonce(desc_Annonce);//c bn
-            ann.setTitreAnnonce(titre_Annonce);// c bn
+            ann.setDescriptionAnnonce(desc_Annonce);
+            ann.setTitreAnnonce(titre_Annonce);
             ann.setDateAnnonce(annonce.getDateAnnonce());
             ann.setStatu(annonce.getStatu());
             ann.setUserId(annonce.getUserId());
             ann.setIdAnnonce(annonce.getIdAnnonce());
             ann.setIdOffreSelected(annonce.getIdOffreSelected());
-            // ann.setImages(annonce.getImages());
             ann.setImages(paths);
-            ann.setCommune(annonce.getCommune());////////methode static
-            ann.setWilaya(annonce.getWilaya());////////
+            ann.setCommune(selectedVille);
+            ann.setWilaya(selectedWilaya.split(" ")[1]);
             ann.setArticleEnRetour(posts);
             refannonce.setValue(ann)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -226,14 +307,11 @@ public class ModifierAnnonce extends AppCompatActivity {
     private void getOffres(Annonce annonce) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Offre").child(annonce.getIdAnnonce());
-       /* PreferenceUtils preferenceUtils;
-        preferenceUtils = new PreferenceUtils(getContext());*/
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Offre offre = postSnapshot.getValue(Offre.class);
-
                     addNotification(annonce, offre);
                 }
 
@@ -247,7 +325,7 @@ public class ModifierAnnonce extends AppCompatActivity {
         });
     }
 
-    // nrsl l mol l offre balo badal f annonce
+    // informer que la  noinncea ete modifier
     private void addNotification(Annonce annonce, Offre offre) {
         data = FirebaseDatabase.getInstance().getReference("Notification").child(offre.getIdUser());
         Notification notification = new Notification();
@@ -276,7 +354,6 @@ public class ModifierAnnonce extends AppCompatActivity {
                 postAdapter = new RecycleViewArticleRetour(this, posts);
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
                 recyclerView.setAdapter(postAdapter);
-
 
             } else {
                 Toast.makeText(this, "remplir le champs", Toast.LENGTH_SHORT).show();
@@ -307,9 +384,6 @@ public class ModifierAnnonce extends AppCompatActivity {
         startActivityForResult(intent, CAMERA);
 
     }
-
-
-
 
 
     public String saveImage(Bitmap myBitmap) {
@@ -343,7 +417,6 @@ public class ModifierAnnonce extends AppCompatActivity {
         }
         return "";
     }
-
 
 
     @Override
@@ -406,8 +479,6 @@ public class ModifierAnnonce extends AppCompatActivity {
             listImages.add(Uri.parse(saveImage(thumbnail)));
             myImage.notifyDataSetChanged();
 
-
-            Toast.makeText(getApplicationContext(), "Image Saved!", Toast.LENGTH_SHORT).show();
         } else if (requestCode == CAMERA_PERMISSION) {
             //takePhotoFromCamera();
         } else if (requestCode == WRITE_EXTERNAL_STORAGE) {
@@ -417,6 +488,31 @@ public class ModifierAnnonce extends AppCompatActivity {
         }
     }
 
+    private String readFileFromRawDirectory(int resourceId) {
+        InputStream iStream = getApplicationContext().getResources().openRawResource(resourceId);
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        try {
+            byte[] buffer = new byte[iStream.available()];
+            iStream.read(buffer);
+            byteStream.write(buffer);
+            byteStream.close();
+            iStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return byteStream.toString();
+    }
+
+    private int getIndexCommune(Spinner spinner_ville, String commune) {
+        for (int i = 0; i < spinner_ville.getCount(); i++) {
+            String nom = (String) spinner_ville.getItemAtPosition(i);
+            if (nom.equals(commune)) {
+                return i;
+            }
+
+        }
+        return 0;
+    }
 
     private void Fileuploader() {
         paths.clear();
@@ -426,20 +522,14 @@ public class ModifierAnnonce extends AppCompatActivity {
             Log.e("img here", imguri.toString());
             try {
                 InputStream stream = new FileInputStream(String.valueOf(imguri));
-                //StorageReference ref = mStorageRef.child("images/" + UUID.randomUUID().toString());
                 StorageReference ref = mStorageRef.child(UUID.randomUUID().toString());
                 ref.putStream(stream)
                         .addOnSuccessListener(taskSnapshot -> {
-                            Toast.makeText(this, "Uploaded", Toast.LENGTH_SHORT).show();
                             taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
-
-
-
-
                                     }
                             );
                         })
-                        .addOnFailureListener(e -> Toast.makeText(this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show())
                         .addOnProgressListener(taskSnapshot -> {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
                                     .getTotalByteCount());
@@ -448,6 +538,17 @@ public class ModifierAnnonce extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    private int getIndex(Spinner spinner_wilaya, String wilaya) {
+        for (int i = 0; i < spinner_wilaya.getCount(); i++) {
+            String nom = (String) spinner_wilaya.getItemAtPosition(i);
+            if (nom.split(" ")[1].equals(wilaya)) {
+                return i;
+            }
+
+        }
+        return 0;
     }
 
 

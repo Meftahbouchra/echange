@@ -14,7 +14,8 @@ import com.bouchra.myapplicationechange.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Posts extends Fragment {
-    private String offreSelected;
+
+    private String offreSelected;// pour signifier que  user selec un article pour ajouter comme un offre
 
     public Posts() {
     }
@@ -31,21 +32,16 @@ public class Posts extends Fragment {
         }
 
         View view = inflater.inflate(R.layout.activity_posts, container, false);
-
         BottomNavigationView bottomNavigationView = view.findViewById(R.id.post_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(nouvList);
-        //offreSelected = getArguments().getString("offre");
 
-
-//par defaut
+        //par defaut
         if (offreSelected == null) {
             getChildFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment, new mesAnnonce()).commit();
         } else {
             getChildFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment, new mesAnnonce(offreSelected)).commit();
         }
 
-
-        //  getFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment, new mesAnnonce()).commit();
         return view;
     }
 
@@ -78,7 +74,6 @@ public class Posts extends Fragment {
                 }
 
                 getChildFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment, selectedFragment).commit();
-                //  getFragmentManager().beginTransaction().replace(R.id.post_navigation_fragment,selectedFragment).commit();
                 return true;
             };
 

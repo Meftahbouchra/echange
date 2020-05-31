@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    // tgla3 l frag ila kyn ila mknch tkhroj ga3  mn had l act
+
     public void onBackPressed() {
         if (getSupportFragmentManager().findFragmentByTag("connect") != null) {
             getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("connect")).commit();

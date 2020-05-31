@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_offre"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="320dp"
     android:layout_marginHorizontal="8dp"
     android:layout_marginTop="8dp"
     android:background="@drawable/card_items"
@@ -13,8 +13,8 @@
 
     <TextView
         android:id="@+id/select_manipulation"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentEnd="true"
         android:drawableStart="@drawable/ic_more_vert_black_24dp"
         android:drawableTint="@color/orange"
@@ -106,9 +106,5 @@
         android:paddingLeft="30sp"
         android:text="Statu"
         android:textSize="15sp" />
-    <FrameLayout
-        android:elevation="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fragment"/>
+
 </RelativeLayout>
