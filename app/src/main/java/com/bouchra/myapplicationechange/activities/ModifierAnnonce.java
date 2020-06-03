@@ -89,12 +89,12 @@ public class ModifierAnnonce extends AppCompatActivity {
     private static final int READ_EXTERNAL_STORAGE = 5;
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final int STORAGE_REQUEST_CODE = 200;
-    private ArrayList<Uri> listImages;
+    private ArrayList<String> listImages;
     private ArrayList<Uri> Images;
     private com.bouchra.myapplicationechange.adapters.myImage myImage;
     private RecyclerView recyclerViewImages;
     public Uri imguri;
-    private ArrayList<String> paths = new ArrayList<>();
+    private ArrayList<String> paths;
     private int j;
     private int i;
 
@@ -119,7 +119,7 @@ public class ModifierAnnonce extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference("Images Annonce");
         listImages = new ArrayList<>();
         Images = new ArrayList<>();
-
+        paths = new ArrayList<>();
         myImage = new myImage(this, listImages);
         // recycle view horizontal
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -166,8 +166,8 @@ public class ModifierAnnonce extends AppCompatActivity {
             recyclerView.setAdapter(postAdapter);
         }
         // get images
-        for (i = 0; i < annonce.getImages().size(); i++) {
-            listImages.add(Uri.parse(annonce.getImages().get(i)));
+      /*  for (i = 0; i < annonce.getImages().size(); i++) {
+            listImages.add(annonce.getImages().get(i));
             myImage.notifyDataSetChanged();
            /* myImage = new myImage(this, listImages);
             // recycle view horizontal
@@ -175,8 +175,10 @@ public class ModifierAnnonce extends AppCompatActivity {
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             recyclerViewImages.setLayoutManager(linearLayoutManager);
             recyclerViewImages.setAdapter(myImage);*/
-        }
+        //  }
 
+        listImages.addAll(annonce.getImages());
+        myImage.notifyDataSetChanged();
 
         enregister.setOnClickListener(v -> {
 
@@ -439,7 +441,7 @@ public class ModifierAnnonce extends AppCompatActivity {
                         try {
                             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                             if (listImages.size() <= 5) {
-                                listImages.add(Uri.parse(saveImage(bitmap)));
+                                listImages.add(saveImage(bitmap));
                                 myImage.notifyDataSetChanged();
                             } else {
                                 Toast.makeText(this, "Vous ne pouvez pas ajouter d'autres photos ", Toast.LENGTH_SHORT).show();
@@ -458,7 +460,7 @@ public class ModifierAnnonce extends AppCompatActivity {
                     Bitmap bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                        listImages.add(Uri.parse(saveImage(bitmap)));
+                        listImages.add(saveImage(bitmap));
                         myImage.notifyDataSetChanged();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -476,7 +478,7 @@ public class ModifierAnnonce extends AppCompatActivity {
             // imageview.setImageBitmap(thumbnail);
             // imguri = Uri.parse(saveImage(thumbnail));
 
-            listImages.add(Uri.parse(saveImage(thumbnail)));
+            listImages.add(saveImage(thumbnail));// nn nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
             myImage.notifyDataSetChanged();
 
         } else if (requestCode == CAMERA_PERMISSION) {
@@ -515,17 +517,19 @@ public class ModifierAnnonce extends AppCompatActivity {
     }
 
     private void Fileuploader() {
-        paths.clear();
-        for (Uri uri : listImages) {
-            imguri = uri;
-            paths.add(String.valueOf(imguri));
-            Log.e("img here", imguri.toString());
+
+        for (String uri : listImages) {
+            imguri = Uri.parse(uri);
+            paths.add(String.valueOf(imguri));// hadi kindirha tkhroj kima chfnaha lbrh wiiiiiii
             try {
                 InputStream stream = new FileInputStream(String.valueOf(imguri));
                 StorageReference ref = mStorageRef.child(UUID.randomUUID().toString());
                 ref.putStream(stream)
                         .addOnSuccessListener(taskSnapshot -> {
                             taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
+                                        Log.e("Image link modific", String.valueOf(task));
+                                       // paths.add(String.valueOf(task)); hadi mkhdmtch
+// nrmlm hada win mrhich ttla3 nichn
                                     }
                             );
                         })
@@ -535,9 +539,11 @@ public class ModifierAnnonce extends AppCompatActivity {
                                     .getTotalByteCount());
                         });
             } catch (FileNotFoundException e) {
+
                 e.printStackTrace();
             }
         }
+
     }
 
     private int getIndex(Spinner spinner_wilaya, String wilaya) {
@@ -597,9 +603,3 @@ public class ModifierAnnonce extends AppCompatActivity {
         }
     }
 }
-
-
-
-
-
-

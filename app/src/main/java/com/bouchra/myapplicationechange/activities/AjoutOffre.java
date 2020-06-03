@@ -62,6 +62,7 @@ public class AjoutOffre extends AppCompatActivity {
     private TextView annuler;
     private ImageButton suppImage;
     private Spinner wilayaSpinner, villeSpinner;
+    private String downloadUriPicture;
     private String titre = "";
     private String desc = "";
     private String idAnnonce = "";
@@ -72,7 +73,8 @@ public class AjoutOffre extends AppCompatActivity {
     private DatabaseReference databaseReference, databasereference, data;
     private Annonce annonce;
     private StorageReference mStorageRef;
-    public Uri imguri;
+    private Uri imguri;
+    private String pathImage;
     private static final int GALLERY = 1;
     private static final int CAMERA = 2;
     private static final int CAMERA_PERMISSION = 3;
@@ -151,7 +153,7 @@ public class AjoutOffre extends AppCompatActivity {
                     offre.setCommune(selectedVille);
                     offre.setIdUser(preferenceUtils.getMember().getIdMembre());
                     offre.setStatu("CREATED");
-                    offre.setImage(imguri.toString());
+                    offre.setImage(downloadUriPicture);
                     databaseReference.child(String.valueOf(offre.getDateOffre().hashCode()) + offre.getAnnonceId().hashCode()).setValue(offre).addOnCompleteListener(task2 -> {/*
                 setValue () -  Cette méthode prendra un objet de classe java modèle qui contiendra toutes les variables
                  à stocker dans la référence. La même méthode sera utilisée pour mettre à jour les valeurs car elle écrase
@@ -401,6 +403,10 @@ public class AjoutOffre extends AppCompatActivity {
             ref.putStream(stream)
                     .addOnSuccessListener(taskSnapshot -> {
                         taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
+                                    // pathImage = task.toString();
+
+                                    downloadUriPicture = task.getPath();
+
 
                                 }
                         );

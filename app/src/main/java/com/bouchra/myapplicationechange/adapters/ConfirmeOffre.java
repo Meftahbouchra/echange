@@ -12,6 +12,7 @@ import com.bouchra.myapplicationechange.activities.DemandesOffre;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Notification;
 import com.bouchra.myapplicationechange.models.Offre;
+import com.bouchra.myapplicationechange.utils.PreferenceUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +26,7 @@ public class ConfirmeOffre extends AppCompatDialogFragment {
 
     private Offre offre;
     private String titreAnnonce;
+    private PreferenceUtils preferenceUtils;
 
     @NonNull
     @Override
@@ -32,6 +34,7 @@ public class ConfirmeOffre extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         offre = (Offre) this.getArguments().getSerializable("offre");
         titreAnnonce = this.getArguments().getString("nomAnnonce");
+        preferenceUtils=new PreferenceUtils(getContext());
         builder.setTitle("Echanger votre object")
                 .setMessage("Etes vous sure de bien vouloir accepter cette demande de troc pour echanger votre " + titreAnnonce + " avec " + offre.getNomOffre() + " ?")
                 .setPositiveButton("Accepter", (dialog, which) -> {
@@ -58,8 +61,9 @@ public class ConfirmeOffre extends AppCompatDialogFragment {
                 Annonce annonce = snapshot.getValue(Annonce.class);
                 DatabaseReference data = FirebaseDatabase.getInstance().getReference("Notification").child(offre.getIdUser());
                 Notification notification = new Notification();
-                notification.setIdsender(annonce.getUserId());
+                //notification.setIdsender(annonce.getUserId());
                 notification.setIdreceiver(offre.getIdUser());
+                notification.setIdsender(preferenceUtils.getMember().getIdMembre());
                 notification.setDateNotification(new Date());
                 notification.setContenuNotification("acceptOffre");
                 notification.setIdNotification(String.valueOf(offre.getIdOffre().hashCode()) + annonce.getIdAnnonce().hashCode());

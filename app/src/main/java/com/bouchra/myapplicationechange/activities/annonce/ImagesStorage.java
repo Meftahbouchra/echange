@@ -47,7 +47,7 @@ public class ImagesStorage extends AppCompatActivity {
     public Uri imguri;
     private Annonce annonce;
     private String selectedCateg;
-    private ArrayList<Uri> listImages;
+    private ArrayList<String> listImages;
     private com.bouchra.myapplicationechange.adapters.myImage myImage;
     private RecyclerView recyclerView;
     private TextView annuler;
@@ -160,7 +160,7 @@ public class ImagesStorage extends AppCompatActivity {
                         try {
                             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                             if (listImages.size() <= 5) {
-                                listImages.add(Uri.parse(saveImage(bitmap)));
+                                listImages.add(saveImage(bitmap));
                                 myImage.notifyDataSetChanged();
                             } else {
                                 Toast.makeText(this, "Vous ne pouvez pas ajouter d'autres photos ", Toast.LENGTH_SHORT).show();
@@ -179,7 +179,7 @@ public class ImagesStorage extends AppCompatActivity {
                     Bitmap bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                        listImages.add(Uri.parse(saveImage(bitmap)));
+                        listImages.add(saveImage(bitmap));
                         myImage.notifyDataSetChanged();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -193,7 +193,7 @@ public class ImagesStorage extends AppCompatActivity {
 
         } else if (requestCode == CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            listImages.add(Uri.parse(saveImage(thumbnail)));
+            listImages.add(saveImage(thumbnail));
             myImage.notifyDataSetChanged();
 
         } /*else if (requestCode == CAMERA_PERMISSION) {
@@ -241,8 +241,8 @@ public class ImagesStorage extends AppCompatActivity {
     private void Fileuploader() {
         int size = listImages.size();
         ArrayList<Uri> LIST = new ArrayList<>();
-        for (Uri uri : listImages) {
-            imguri = uri;
+        for (String uri : listImages) {
+            imguri = Uri.parse(uri);
             Log.e("img here", imguri.toString());
             try {
                 InputStream stream = new FileInputStream(String.valueOf(imguri));

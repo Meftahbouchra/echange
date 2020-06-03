@@ -1,7 +1,6 @@
 package com.bouchra.myapplicationechange.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class myImage extends RecyclerView.Adapter<myImage.ViewHolder> {
 
     private Context mcontext;
-    private ArrayList<Uri> images;
+    private ArrayList<String> images;
 
-    public myImage(Context mcontext, ArrayList<Uri> images) {
+    public myImage(Context mcontext, ArrayList<String> images) {
         this.mcontext = mcontext;
         this.images = images;
     }
@@ -28,25 +28,22 @@ public class myImage extends RecyclerView.Adapter<myImage.ViewHolder> {
     @NonNull
     @Override
     public myImage.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View vi = LayoutInflater.from(mcontext).inflate(R.layout.myimage, parent, false);
-        return new myImage.ViewHolder(vi);
+        myImage.ViewHolder h = new myImage.ViewHolder(vi);
+        return h;
     }
 
 
     @Override
     public void onBindViewHolder(@NonNull myImage.ViewHolder holder, int position) {
-        Uri uri = images.get(position);
+        String uri = images.get(position);
 
         holder.suppImage.setOnClickListener(v -> {
             images.remove(position);
             this.notifyDataSetChanged();
-
         });
-        /*String image = String.valueOf(uri);
-        Picasso.get().load(image).into(holder.imageAnnonce);
-        Picasso.get().load(uri).into(holder.imageAnnonce);*/
-        holder.imageAnnonce.setImageURI(uri);
+
+        Picasso.get().load(uri).into(holder.imageAnnonce);
 
 
     }
@@ -73,4 +70,3 @@ public class myImage extends RecyclerView.Adapter<myImage.ViewHolder> {
 
 
 }
-

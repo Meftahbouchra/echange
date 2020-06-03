@@ -98,6 +98,8 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         publicAdapter = new publicationannonceadapt(getContext(), new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(publicAdapter);
+        informationRecherche.setVisibility(View.VISIBLE);
+        informationDafault.setVisibility(View.VISIBLE);
 // dafault affichage
         affichageParDefaut();
         // add text to btn categorie
@@ -305,7 +307,6 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         Log.e("nom categorie ", categ);
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Categorie").child(categ);
-        Log.e("root", databaseReference.getRoot().toString());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -354,9 +355,10 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
 
 
                 } else {
-                    informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
                     informationDafault.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
+                    informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
+
 
                 }
 

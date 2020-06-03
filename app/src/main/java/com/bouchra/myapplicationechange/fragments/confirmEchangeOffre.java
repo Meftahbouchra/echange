@@ -164,6 +164,8 @@ public class confirmEchangeOffre extends Fragment {
                                                     review.putExtra("Statu", "wait");// signifier att de autrre commenter
                                                     review.putExtra("offre", offre);
                                                     getActivity().startActivity(review);
+                                                    getActivity().finish();
+
                                                 }
                                             }
 
@@ -201,6 +203,7 @@ public class confirmEchangeOffre extends Fragment {
                         updateEtatAnnonce();
                         Intent intent = new Intent(getActivity(), debut.class);
                         getActivity().startActivity(intent);
+                        getActivity().finish();
 
 
                     } else {

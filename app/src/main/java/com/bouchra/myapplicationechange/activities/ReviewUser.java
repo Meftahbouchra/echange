@@ -155,9 +155,7 @@ public class ReviewUser extends AppCompatActivity {
                     commentaire.setIdCommentaire(String.valueOf(commentaire.getDateCommentaire().hashCode()) + commentaire.getIdSender().hashCode());
                     databaseReference.child(String.valueOf(commentaire.getDateCommentaire().hashCode()) + commentaire.getIdSender().hashCode()).setValue(commentaire).addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {
-                            Intent an = new Intent(ReviewUser.this, debut.class);
-                            startActivity(an);
-                            finish();
+
                             if (ajou.hasExtra("annonce")) {
                                 // review from annonce,modifier statu annonce to completed
                                 Annonce annonce = (Annonce) getIntent().getSerializableExtra("annonce");
@@ -226,9 +224,11 @@ public class ReviewUser extends AppCompatActivity {
                                                     OFFRE.put("wilaya", offre.getWilaya());
                                                     OFFRE.put("statu", "COMPLETEDOFFRE");
                                                     mDbRef.updateChildren(OFFRE);
+                                                    deplaceAnnoncewithOffre(offre.getAnnonceId());
                                                     DatabaseReference dOffre = FirebaseDatabase.getInstance().getReference("Offre").child(offre.getAnnonceId()).child(offre.getIdOffre());
                                                     dOffre.removeValue();
-                                                    deplaceAnnoncewithOffre(offre.getAnnonceId());
+                                                    //  Log.e("id annonce",offre.getAnnonceId());
+
                                                 }
                                             }
 
@@ -241,6 +241,9 @@ public class ReviewUser extends AppCompatActivity {
                                             }
                                         });
                             }
+                            Intent an = new Intent(ReviewUser.this, debut.class);
+                            startActivity(an);
+                            finish();
 
                         }
                     });
@@ -291,7 +294,26 @@ public class ReviewUser extends AppCompatActivity {
             public void onDataChange(DataSnapshot snapshot) {
 
                 Annonce annonce = snapshot.getValue(Annonce.class);
-                deplaceAnnonce(annonce);
+            /*Log.e("hna kayan data if ",annoncE.getTitreAnnonce());
+               deplaceAnnonce(annoncE);*/
+                DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(annonce.getUserId()).child(annonce.getIdAnnonce());
+                Map<String, Object> ANNONCE = new HashMap<>();
+                ANNONCE.put("idAnnonce", annonce.getIdAnnonce());
+                ANNONCE.put("titreAnnonce", annonce.getTitreAnnonce());
+                ANNONCE.put("commune", annonce.getCommune());
+                ANNONCE.put("wilaya", annonce.getWilaya());
+                ANNONCE.put("images", annonce.getImages());
+                ANNONCE.put("descriptionAnnonce", annonce.getDescriptionAnnonce());
+                ANNONCE.put("articleEnRetour", annonce.getArticleEnRetour());
+                ANNONCE.put("dateAnnonce", annonce.getDateAnnonce());
+                ANNONCE.put("IdOffreSelected", annonce.getIdOffreSelected());
+                ANNONCE.put("statu", "COMPLETEDANNONCE");
+                ANNONCE.put("categorie", nameCategorie);
+                mDbRef.updateChildren(ANNONCE);
+                DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
+                dAnnonce.removeValue();
+                DatabaseReference dCategorie = FirebaseDatabase.getInstance().getReference("Categorie").child(nameCategorie).child(annonce.getIdAnnonce());
+                dCategorie.removeValue();
             }
 
             @Override
