@@ -271,7 +271,6 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                     if (!user.equals(preferenceUtils.getMember().getIdMembre())) {
                         if (!statu.equals("NEED_REVIEW") && !statu.equals("COMPLETED")) {
                             annonces.add(postSnapshot.getValue(Annonce.class));
-
                         }
 
 
@@ -282,6 +281,7 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                     informationRecherche.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
                 } else {
+                    recyclerView.setVisibility(View.VISIBLE);
                     informationDafault.setVisibility(View.GONE);
                     informationRecherche.setVisibility(View.GONE);
                     publicAdapter.setMesannonce(annonces);
