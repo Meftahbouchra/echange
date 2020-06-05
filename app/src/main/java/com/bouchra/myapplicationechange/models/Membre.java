@@ -8,7 +8,6 @@ public class Membre implements Serializable {
     private String nomMembre;
     private int numTel;
     private String email;
-    private String adresseMembre;/////////  hna ndir latitde w langitude ta3ah w tani ndirha fi commune ta3 les annonce w les offre
     private String motDePasse;
     private Date dateInscription;
     private String photoUser;
@@ -18,12 +17,11 @@ public class Membre implements Serializable {
     }
 
 
-    public Membre(String idMembre, String nomMembre, int numTel, String email, String adresseMembre, String motDePasse,  Date dateInscription, String photoUser) {
+    public Membre(String idMembre, String nomMembre, int numTel, String email, String motDePasse,  Date dateInscription, String photoUser) {
         this.idMembre = idMembre;
         this.nomMembre = nomMembre;
         this.numTel = numTel;
         this.email = email;
-        this.adresseMembre = adresseMembre;
         this.motDePasse = motDePasse;
         this.dateInscription = dateInscription;
         this.photoUser = photoUser;
@@ -69,13 +67,6 @@ public class Membre implements Serializable {
         this.email = email;
     }
 
-    public String getAdresseMembre() {
-        return adresseMembre;
-    }
-
-    public void setAdresseMembre(String adresseMembre) {
-        this.adresseMembre = adresseMembre;
-    }
 
     public String getMotDePasse() {
         return motDePasse;

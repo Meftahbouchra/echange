@@ -296,8 +296,8 @@ public class ReviewUser extends AppCompatActivity {
                 Annonce annonce = snapshot.getValue(Annonce.class);
             /*Log.e("hna kayan data if ",annoncE.getTitreAnnonce());
                deplaceAnnonce(annoncE);*/
-                Log.e("titre annonce", annonce.getTitreAnnonce());
-                Log.e("id user ", annonce.getUserId());
+               /* Log.e("titre annonce", annonce.getTitreAnnonce());
+                Log.e("id user ", annonce.getUserId());*/
                 deplaceAnnonce(annonce);
             }
 

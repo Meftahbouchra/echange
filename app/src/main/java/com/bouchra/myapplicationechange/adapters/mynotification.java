@@ -178,6 +178,7 @@ public class mynotification extends RecyclerView.Adapter<mynotification.ViewHold
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+
                 String nameUser = snapshot.child("nomMembre").getValue().toString();
                 String PicUser = snapshot.child("photoUser").getValue().toString();
                 Picasso.get().load(PicUser).into(holder.profile_image);
