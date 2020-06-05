@@ -69,6 +69,7 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e("Count ", "" + snapshot.getChildrenCount());
+                annonces.clear();
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Log.e("Data here", postSnapshot.toString());
                     String user = postSnapshot.child("userId").getValue().toString();
