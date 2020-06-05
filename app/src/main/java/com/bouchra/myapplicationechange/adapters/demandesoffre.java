@@ -121,18 +121,8 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
 
 
         });*/
-        holder.position.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Locatiion();
-            }
-        });
-        holder.imageOffre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showImage(offre.getImage());
-            }
-        });
+        holder.position.setOnClickListener(v -> Locatiion());
+        holder.imageOffre.setOnClickListener(v -> showImage(offre.getImage()));
         holder.itemView.setOnLongClickListener(v -> {
             ConfirmeOffre confirmeOffre = new ConfirmeOffre();
             Bundle b2 = new Bundle();
@@ -141,6 +131,11 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
             confirmeOffre.setArguments(b2);
             confirmeOffre.show(((AppCompatActivity) context).getSupportFragmentManager(), "fragment");
             return true;
+            /*
+            return truesignifie que l'événement est consommé. Il est géré. Aucun autre événement de clic ne sera notifié.
+return falsesignifie que l'événement n'est pas consommé. Tout autre événement de clic continuera de recevoir des notifications.
+Donc, si vous ne voulez onClickpas également être déclenché après un événement onLongClick, vous devriez le faire à return truepartir de l' onLongClickévénement.
+             */
         });
 
 
@@ -212,13 +207,15 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
 
 
     }
+
     private void Locatiion() {
         //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + AddressUSer)); sans marqueur
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + AddressUSer));
         intent.setPackage("com.google.android.apps.maps");// seul app map
-       context.startActivity(intent);
+        context.startActivity(intent);
 
     }
+
     private void etatConfirmOffre(String idOffre, String idAnnonce) {
 
         Task<Void> databasereference;

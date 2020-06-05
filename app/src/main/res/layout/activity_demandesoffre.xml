@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_offre"
     android:layout_width="match_parent"
-    android:layout_height="360dp"
+    android:layout_height="380dp"
     android:layout_marginHorizontal="8dp"
     android:layout_marginTop="8dp"
     android:background="@drawable/card_offre_refuse"
@@ -66,8 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:layout_below="@+id/titte_offre"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
+        android:layout_margin="12dp"
         android:background="@drawable/card_items"
         android:src="#ffffff" />
 

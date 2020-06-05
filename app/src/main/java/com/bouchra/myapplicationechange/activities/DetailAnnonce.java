@@ -1,21 +1,34 @@
 package com.bouchra.myapplicationechange.activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,6 +37,13 @@ import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.fragments.Posts;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,8 +56,11 @@ import com.synnapps.carouselview.ImageListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -54,7 +77,7 @@ public class DetailAnnonce extends AppCompatActivity {
     private TextView name_user;
     private TextView ville;
     private TextView commune;
-
+    private LinearLayout position;
     private CircleImageView imgUser;
     private Button offre;
     private Dialog MyDialog;
@@ -63,6 +86,8 @@ public class DetailAnnonce extends AppCompatActivity {
     private TextView etoiles_user;
     private int nbrComm = 0;
     private float totalRepos = 0;
+    String[] locationpermission;
+    private static final int PERMISSION_ID = 44;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +95,8 @@ public class DetailAnnonce extends AppCompatActivity {
         setContentView(R.layout.activity_detail_annonce);
         initViews();
         annonce = (Annonce) getIntent().getSerializableExtra("annonce");
+        locationpermission = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+
         //RECEIVE detaill data of annonce
         getIncomingIntent();
 
@@ -119,6 +146,22 @@ public class DetailAnnonce extends AppCompatActivity {
             startActivity(intent);
 
         });
+
+        // show position of annonce
+        position.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               /*  String source = "26.4888155,-1.3582442";
+                 String distination = "33.80722,2.897196";*/
+                // String source = "26.4888155,-1.3582442";
+                double getLatitude = 36.191201;
+                double getLongitude = 1.279685;
+                String distination = "adrar";
+                LatLng myCoordinates = new LatLng(getLatitude, getLongitude);
+                String source = getCityName(myCoordinates);
+                DisplayTrack(source, distination);
+            }
+        });
         //share Post *FileProvider*
        /*shar_publication.setOnClickListener(v -> {
             String nom = tite.getText().toString().trim();
@@ -138,6 +181,72 @@ public class DetailAnnonce extends AppCompatActivity {
 
 
         });*/
+
+    }
+
+    public void getIncomingIntent() {
+        Log.e("User is :", FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).toString());
+        FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    if (dataSnapshot.getValue() != null) {
+                        try {
+                            name_user.setText(dataSnapshot.child("nomMembre").getValue().toString());
+                            String photouser = dataSnapshot.child("photoUser").getValue().toString();
+                            Picasso.get().load(photouser).into(imgUser);
+                            Log.e("User is :", dataSnapshot.getValue().toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Log.e("TAG", " it's null.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        tite.setText(annonce.getTitreAnnonce());
+        desc.setText(annonce.getDescriptionAnnonce());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
+        String str = simpleDateFormat.format(annonce.getDateAnnonce());
+        time.setText(str);
+        ville.setText(annonce.getWilaya() + ", ");
+        commune.setText(annonce.getCommune());
+        ArrayList<String> Images = new ArrayList<>();
+        for (String image : annonce.getImages()) {
+            Images.add(image);
+        }
+        images.setPageCount(Images.size());
+        images.setImageListener(new ImageListener() {
+            @Override
+            public void setImageForPosition(int position, ImageView imageView) {
+
+                Glide.with(DetailAnnonce.this)
+                        .load(Images.get(position))
+                        .centerCrop()
+                        .into(imageView);
+
+
+            }
+        });
+        for (int i = 0; i < annonce.getArticleEnRetour().size(); i++) {
+            retour.setText(retour.getText() + "\n" + annonce.getArticleEnRetour().get(i));
+        }
+        images.setImageClickListener(new ImageClickListener() {
+            @Override
+            public void onClick(int position) {
+                //image clicable
+                showImage(Images.get(position));
+
+            }
+        });
 
     }
 
@@ -287,76 +396,138 @@ public class DetailAnnonce extends AppCompatActivity {
         etoiles_user = findViewById(R.id.etoiles_user);
         offre = findViewById(R.id.offre);
         sendMsg = findViewById(R.id.send_Msg);
-        ville=findViewById(R.id.ville);
-        commune=findViewById(R.id.commune);
+        ville = findViewById(R.id.ville);
+        commune = findViewById(R.id.commune);
+        position = findViewById(R.id.position);
 
     }
 
-    public void getIncomingIntent() {
-        Log.e("User is :", FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).toString());
-        FirebaseDatabase.getInstance().getReference("Membre").child(annonce.getUserId()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try {
-                    if (dataSnapshot.getValue() != null) {
-                        try {
-                            name_user.setText(dataSnapshot.child("nomMembre").getValue().toString());
-                            String photouser = dataSnapshot.child("photoUser").getValue().toString();
-                            Picasso.get().load(photouser).into(imgUser);
-                            Log.e("User is :", dataSnapshot.getValue().toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
+    private String getCityName(LatLng myCoordinates) {
+        String myCity = "";
+        Geocoder geocoder = new Geocoder(DetailAnnonce.this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(myCoordinates.latitude, myCoordinates.longitude, 1);
+            String address = addresses.get(0).getAddressLine(0);
+            myCity = addresses.get(0).getLocality();
+            Log.d("mylog", "Complete Address: " + addresses.toString());
+            Log.d("mylog", "Address: " + address);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return myCity;
+    }
+
+    private void DisplayTrack(String source, String distination) {
+        try {
+            //when google map is installed
+            Uri uri = Uri.parse("https://www.google.co.in/maps/dir/" + source + "/" + distination);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.setPackage("com.google.android.apps.maps");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
+
+        } catch (ActivityNotFoundException e) {
+            // redirect to play store
+            // google maps not installed
+            Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.maps");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
+
+    //cette méthode est appelée lorsqu'un utilisateur autorise ou refuse nos autorisations demandées.
+    // Cela nous aidera donc à aller de l'avant si les autorisations sont accordées.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_ID) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //  obtenir les informations de localisation
+                getLastLocation();
+            }
+        }
+    }
+
+    //Cette méthode nous dira si l'utilisateur nous autorise à accéder à ACCESS_COARSE_LOCATIONet ACCESS_FINE_LOCATION.
+    private boolean checkPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
+    }
+
+    //Cette méthode demandera nos autorisations nécessaires à l'utilisateur si elles ne sont pas déjà accordées.
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(
+                this, locationpermission, PERMISSION_ID);
+    }
+
+    //Cela vérifiera si l'utilisateur a activé l'emplacement à partir du paramètre,
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER
+        );
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getLastLocation() {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+                mFusedLocationClient.getLastLocation().addOnCompleteListener(
+                        new OnCompleteListener<Location>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Location> task) {
+                                Location location = task.getResult();
+                                if (location == null) {
+                                    requestNewLocationData();
+                                } else {
+
+                                    txt_send.setText("https://www.google.com/maps/@" + location.getLatitude() + "," + location.getLongitude() + ",15z");
+                                }
+                            }
                         }
-                    } else {
-                        Log.e("TAG", " it's null.");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                );
+            } else {
+                Toast.makeText(this, "Activer l'emplacement", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        tite.setText(annonce.getTitreAnnonce());
-        desc.setText(annonce.getDescriptionAnnonce());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  \n kk:mm ");
-        String str = simpleDateFormat.format(annonce.getDateAnnonce());
-        time.setText(str);
-        ville.setText(annonce.getWilaya()+", ");
-        commune.setText(annonce.getCommune());
-        ArrayList<String> Images = new ArrayList<>();
-        for (String image : annonce.getImages()) {
-            Images.add(image);
+        } else {
+            requestPermissions();
         }
-        images.setPageCount(Images.size());
-        images.setImageListener(new ImageListener() {
-            @Override
-            public void setImageForPosition(int position, ImageView imageView) {
+    }
 
-                Glide.with(DetailAnnonce.this)
-                        .load(Images.get(position))
-                        .centerCrop()
-                        .into(imageView);
+    @SuppressLint("MissingPermission")
+    private void requestNewLocationData() {//enregistrera les informations de localisation lors de l'exécution.nouvelle demande de localisation
 
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(0);//indiquez à l'application à quelle fréquence vous avez besoin de la mise à jour de l'emplacement d'un intervalle de temps maximum
+        mLocationRequest.setFastestInterval(0);//à minimum
+        mLocationRequest.setNumUpdates(1);//permettra aux utilisateurs de mettre à jour l'emplacement en temps réel
 
-            }
-        });
-        for (int i = 0; i < annonce.getArticleEnRetour().size(); i++) {
-            retour.setText(retour.getText() + "\n" + annonce.getArticleEnRetour().get(i));
-        }
-        images.setImageClickListener(new ImageClickListener() {
-            @Override
-            public void onClick(int position) {
-                //image clicable
-                showImage(Images.get(position));
-
-            }
-        });
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient.requestLocationUpdates(
+                mLocationRequest, mLocationCallback,
+                Looper.myLooper()
+        );
 
     }
+
+    //lorsque nous obtenons la mise à jour de l'emplacement, nous définissons les valeurs de latitude et de longitude
+    private LocationCallback mLocationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            Location mLastLocation = locationResult.getLastLocation();
+            txt_send.setText("https://www.google.com/maps/@" + mLastLocation.getLatitude() + "," + mLastLocation.getLongitude() + ",15z");
+
+        }
+    };
 
 
 }
