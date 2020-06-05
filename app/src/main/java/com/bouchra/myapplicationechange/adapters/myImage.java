@@ -1,9 +1,12 @@
 package com.bouchra.myapplicationechange.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bouchra.myapplicationechange.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class myImage extends RecyclerView.Adapter<myImage.ViewHolder> {
@@ -42,8 +46,16 @@ public class myImage extends RecyclerView.Adapter<myImage.ViewHolder> {
             images.remove(position);
             this.notifyDataSetChanged();
         });
+        if(URLUtil.isValidUrl(uri)){
+            Picasso.get().load(uri).into(holder.imageAnnonce);
+        } else{
+            File imgFile = new  File(uri);
+            if(imgFile.exists()){
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                holder.imageAnnonce.setImageBitmap(myBitmap);
+            }
+        }
 
-        Picasso.get().load(uri).into(holder.imageAnnonce);
 
 
     }
