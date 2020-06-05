@@ -250,7 +250,6 @@ public class ImagesStorage extends AppCompatActivity {
                 ref.putStream(stream)
                         .addOnSuccessListener(taskSnapshot -> {
                             taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
-
                                         annonce.getImages().add(String.valueOf(task));
                                         LIST.add(imguri);
                                         Log.e("Image link", String.valueOf(task));

@@ -94,7 +94,6 @@ public class ModifierAnnonce extends AppCompatActivity {
     private com.bouchra.myapplicationechange.adapters.myImage myImage;
     private RecyclerView recyclerViewImages;
     public Uri imguri;
-    private ArrayList<String> paths;
     private int j;
     private int i;
 
@@ -119,7 +118,6 @@ public class ModifierAnnonce extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference("Images Annonce");
         listImages = new ArrayList<>();
         Images = new ArrayList<>();
-        paths = new ArrayList<>();
         myImage = new myImage(this, listImages);
         // recycle view horizontal
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -184,7 +182,7 @@ public class ModifierAnnonce extends AppCompatActivity {
 
             if (listImages.size() != 0) {
                 // images
-                Fileuploader();
+                //Fileuploader();
                 updateAnnonce();
                 finish();
 
@@ -276,31 +274,20 @@ public class ModifierAnnonce extends AppCompatActivity {
             ann.setUserId(annonce.getUserId());
             ann.setIdAnnonce(annonce.getIdAnnonce());
             ann.setIdOffreSelected(annonce.getIdOffreSelected());
-            ann.setImages(paths);
+            ann.setImages(listImages);
             ann.setCommune(selectedVille);
             ann.setWilaya(selectedWilaya.split(" ")[1]);
             ann.setArticleEnRetour(posts);
             refannonce.setValue(ann)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                if (!annonce.getStatu().equals("NEED_To_Be_CONFIRM") && !annonce.getStatu().equals("NEED_REVIEW") && !annonce.getStatu().equals("COMPLETED")) {
-                                    getOffres(annonce);
-
-                                }
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (!annonce.getStatu().equals("NEED_To_Be_CONFIRM") && !annonce.getStatu().equals("NEED_REVIEW") && !annonce.getStatu().equals("COMPLETED")) {
+                                getOffres(annonce);
 
                             }
+
                         }
-
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-
-                    Toast.makeText(ModifierAnnonce.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                }
-            });
+                    }).addOnFailureListener(e -> Toast.makeText(ModifierAnnonce.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show());
 
 
         }
@@ -441,8 +428,7 @@ public class ModifierAnnonce extends AppCompatActivity {
                         try {
                             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                             if (listImages.size() <= 5) {
-                                listImages.add(saveImage(bitmap));
-                                myImage.notifyDataSetChanged();
+                                Imageuploader(saveImage(bitmap));
                             } else {
                                 Toast.makeText(this, "Vous ne pouvez pas ajouter d'autres photos ", Toast.LENGTH_SHORT).show();
                             }
@@ -460,8 +446,7 @@ public class ModifierAnnonce extends AppCompatActivity {
                     Bitmap bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                        listImages.add(saveImage(bitmap));
-                        myImage.notifyDataSetChanged();
+                        Imageuploader(saveImage(bitmap));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -478,8 +463,7 @@ public class ModifierAnnonce extends AppCompatActivity {
             // imageview.setImageBitmap(thumbnail);
             // imguri = Uri.parse(saveImage(thumbnail));
 
-            listImages.add(saveImage(thumbnail));// nn nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-            myImage.notifyDataSetChanged();
+            Imageuploader(saveImage(thumbnail));
 
         } else if (requestCode == CAMERA_PERMISSION) {
             //takePhotoFromCamera();
@@ -516,34 +500,26 @@ public class ModifierAnnonce extends AppCompatActivity {
         return 0;
     }
 
-    private void Fileuploader() {
-
-        for (String uri : listImages) {
-            imguri = Uri.parse(uri);
-            paths.add(String.valueOf(imguri));// hadi kindirha tkhroj kima chfnaha lbrh wiiiiiii
-            try {
-                InputStream stream = new FileInputStream(String.valueOf(imguri));
-                StorageReference ref = mStorageRef.child(UUID.randomUUID().toString());
-                ref.putStream(stream)
-                        .addOnSuccessListener(taskSnapshot -> {
-                            taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
-                                        Log.e("Image link modific", String.valueOf(task));
-                                       // paths.add(String.valueOf(task)); hadi mkhdmtch
-// nrmlm hada win mrhich ttla3 nichn
-                                    }
-                            );
-                        })
-                        .addOnFailureListener(e -> Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show())
-                        .addOnProgressListener(taskSnapshot -> {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-                                    .getTotalByteCount());
+    private void Imageuploader(String path) {
+        try {
+            InputStream stream = new FileInputStream(path);
+            StorageReference ref = mStorageRef.child(UUID.randomUUID().toString());
+            ref.putStream(stream)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
+                            Log.e("Image link modific", String.valueOf(task));
+                            listImages.add(String.valueOf(task));
+                            myImage.notifyDataSetChanged();
+                        });
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show())
+                    .addOnProgressListener(taskSnapshot -> {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
                         });
             } catch (FileNotFoundException e) {
 
                 e.printStackTrace();
             }
-        }
-
     }
 
     private int getIndex(Spinner spinner_wilaya, String wilaya) {
