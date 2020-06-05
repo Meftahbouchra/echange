@@ -176,7 +176,9 @@ public class MainActivity extends AppCompatActivity {
                             usr.setIdMembre(ID);
                             //usr.setPhotoUser(photoUrl);
                             usr.setPhotoUser(String.valueOf(user.getPhotoUrl()));
-                            //usr.setNumTel(Integer.parseInt(user.getPhoneNumber()));
+                            if (user.getPhoneNumber() != null) {
+                                usr.setNumTel(Integer.parseInt(user.getPhoneNumber().replaceAll("[^0-9]", "")));
+                            }
                             usr.setDateInscription(new Date());
                             databaseReference.setValue(usr).addOnCompleteListener(task2 -> {
                                 if (task2.isSuccessful()) {

@@ -1,15 +1,19 @@
 package com.bouchra.myapplicationechange.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,9 +21,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.activities.profilUser;
+import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -34,6 +44,8 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
     private ArrayList<Membre> membres;
     private String nomAnnonce;
     private String annonce;// id offre selected
+    private Dialog MyDialog;
+    private final static String AddressUSer = "35.697,-0.641";
 
     public demandesoffre(Context context, ArrayList<Offre> mesDemandeDoffres, ArrayList<Membre> membres, String nomAnnonce, String annonce) {
         this.context = context;
@@ -97,7 +109,9 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
             profil.putExtra("user", membre.getIdMembre());
             context.startActivity(profil);
         });
-        holder.itemView.setOnClickListener(v -> {
+
+
+       /* holder.itemView.setOnClickListener(v -> {
             ConfirmeOffre confirmeOffre = new ConfirmeOffre();
             Bundle b2 = new Bundle();
             b2.putSerializable("offre", offre);
@@ -105,6 +119,28 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
             confirmeOffre.setArguments(b2);
             confirmeOffre.show(((AppCompatActivity) context).getSupportFragmentManager(), "fragment");
 
+
+        });*/
+        holder.position.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Locatiion();
+            }
+        });
+        holder.imageOffre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showImage(offre.getImage());
+            }
+        });
+        holder.itemView.setOnLongClickListener(v -> {
+            ConfirmeOffre confirmeOffre = new ConfirmeOffre();
+            Bundle b2 = new Bundle();
+            b2.putSerializable("offre", offre);
+            b2.putString("nomAnnonce", nomAnnonce);
+            confirmeOffre.setArguments(b2);
+            confirmeOffre.show(((AppCompatActivity) context).getSupportFragmentManager(), "fragment");
+            return true;
         });
 
 
@@ -126,6 +162,7 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
         private CircleImageView imageUser;
         private TextView nameUser;
         private RelativeLayout relative_profie;
+        private LinearLayout position;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -140,10 +177,89 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
             imageUser = itemView.findViewById(R.id.img_user);
             nameUser = itemView.findViewById(R.id.nom_user);
             relative_profie = itemView.findViewById(R.id.relative_profie);
+            position = itemView.findViewById(R.id.position);
 
 
         }
 
+
+    }
+
+    public void selectedoffre(String idOffre, Annonce annonce) {
+
+        DatabaseReference databaseReference;
+        databaseReference = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
+        Annonce annonce1 = new Annonce();
+        annonce.setArticleEnRetour(annonce.getArticleEnRetour());
+        annonce.setImages(annonce.getImages());
+        annonce.setWilaya(annonce.getWilaya());
+        annonce.setCommune(annonce.getCommune());
+        annonce.setIdAnnonce(annonce.getIdAnnonce());
+        annonce.setUserId(annonce.getUserId());
+        annonce.setStatu("ASSINED");
+        annonce.setTitreAnnonce(annonce.getTitreAnnonce());
+        annonce.setDescriptionAnnonce(annonce.getDescriptionAnnonce());
+        annonce.setDateAnnonce(annonce.getDateAnnonce());
+
+        annonce.setIdOffreSelected(idOffre);
+
+        databaseReference.setValue(annonce1).addOnCompleteListener(task2 -> {
+            if (task2.isSuccessful()) {
+                etatConfirmOffre(idOffre, annonce1.getIdAnnonce());
+
+            }
+        });
+
+
+    }
+    private void Locatiion() {
+        //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + AddressUSer)); sans marqueur
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + AddressUSer));
+        intent.setPackage("com.google.android.apps.maps");// seul app map
+       context.startActivity(intent);
+
+    }
+    private void etatConfirmOffre(String idOffre, String idAnnonce) {
+
+        Task<Void> databasereference;
+        databasereference = FirebaseDatabase.getInstance().getReference("Offre").child(idAnnonce).child(idOffre).child("statu")
+                .setValue("NEED_To_Be_CONFIRM")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+
+                        }
+                    }
+
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+// get and show proper error message
+                        Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+    }
+
+    private void showImage(String position) {
+        View view = LayoutInflater.from(context).inflate(R.layout.showimage, null);
+        ImageView imageView = view.findViewById(R.id.imgclik_annonce);
+        Glide.with(context)
+                .asBitmap()
+                .load(position)
+                .into(imageView);
+
+        TextView close = view.findViewById(R.id.retour);
+        close.setOnClickListener(v -> {
+            MyDialog.cancel();
+
+        });
+        //full screen
+        MyDialog = new Dialog(context, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
+        MyDialog.setContentView(view);
+        MyDialog.show();
 
     }
 

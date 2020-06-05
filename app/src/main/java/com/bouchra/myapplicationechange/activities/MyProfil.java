@@ -34,7 +34,6 @@ public class MyProfil extends AppCompatActivity {
     private TextView nbrCommentaire;
     private TextView mail_user;
     private TextView tel_user;
-    private TextView adress_user;
     private RecyclerView recyle_commentaire;
     private Button editProfil;
     private Button back;
@@ -61,7 +60,6 @@ public class MyProfil extends AppCompatActivity {
         mail_user = findViewById(R.id.mail_user);
         tel_user = findViewById(R.id.tel_user);
         back = findViewById(R.id.back);
-        adress_user = findViewById(R.id.adress_user);
         editProfil = findViewById(R.id.editProfil);
         commentaires = new ArrayList<>();
         commentaireAdapter = new CommentaireAdapter(this, commentaires, idUSer);
@@ -77,7 +75,7 @@ public class MyProfil extends AppCompatActivity {
         } else {
             tel_user.setText(String.valueOf(preferenceUtils.getMember().getNumTel()));
         }
-        adress_user.setText(preferenceUtils.getMember().getAdresseMembre());
+
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override

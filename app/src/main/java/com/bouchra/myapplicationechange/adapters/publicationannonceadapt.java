@@ -69,7 +69,7 @@ public class publicationannonceadapt extends RecyclerView.Adapter<publicationann
         Log.e("nbr des annonce ", (String.valueOf(annonce_publ.size())));
         Annonce annonce = annonce_publ.get(position);
         holder.textView.setText(annonce.getTitreAnnonce());
-        Log.e("Url", annonce.getImages().get(0));
+//        Log.e("Url", annonce.getImages().get(0));
         ArrayList<String> images = new ArrayList<>();
         for (String image : annonce.getImages()) {
             images.add(image);

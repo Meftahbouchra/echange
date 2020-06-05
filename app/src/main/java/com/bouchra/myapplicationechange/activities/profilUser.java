@@ -46,7 +46,6 @@ public class profilUser extends AppCompatActivity {
     private TextView nomUser;
     private TextView mailUser;
     private TextView telUser;
-    private TextView adressUser;
     private LinearLayout zoneEmail;
     private LinearLayout zonePhone;
     private String[] callPermission;
@@ -71,7 +70,7 @@ public class profilUser extends AppCompatActivity {
         nomUser = findViewById(R.id.nom_user);
         mailUser = findViewById(R.id.mail_user);
         telUser = findViewById(R.id.tel_user);
-        adressUser = findViewById(R.id.adress_user);
+
         zoneEmail = findViewById(R.id.zone_email);
         zonePhone = findViewById(R.id.zone_phone);
         cmntr=findViewById(R.id.cmntr);
@@ -139,12 +138,12 @@ public class profilUser extends AppCompatActivity {
                 nomUser.setText(membre.getNomMembre());
                 mailUser.setText(membre.getEmail());
                 try{telUser.setText(membre.getNumTel());
-                    adressUser.setText(membre.getAdresseMembre());
+
 
 
                 }catch (Exception e){
                     telUser.setText("+213..");
-                    adressUser.setText("");
+
 
                 }
 

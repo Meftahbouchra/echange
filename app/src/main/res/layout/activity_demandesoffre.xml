@@ -19,9 +19,9 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/img_user"
             android:layout_width="60dp"
-            android:layout_marginTop="5dp"
             android:layout_height="70dp"
             android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/user"></de.hdodenhof.circleimageview.CircleImageView>
 
         <TextView
@@ -84,10 +84,10 @@
 
 
     <LinearLayout
-
+        android:id="@+id/position"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/img_offre"
+        android:layout_below="@id/desc_offre"
         android:orientation="horizontal">
 
         <TextView
@@ -95,7 +95,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="10dp"
             android:drawableStart="@drawable/ic_location"
             android:drawableTint="@color/rouge"
             android:gravity="center"
@@ -107,8 +106,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-
             android:gravity="center"
             android:text="Commune"
             android:textColor="@color/black" />

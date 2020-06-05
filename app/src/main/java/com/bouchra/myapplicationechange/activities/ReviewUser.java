@@ -296,24 +296,9 @@ public class ReviewUser extends AppCompatActivity {
                 Annonce annonce = snapshot.getValue(Annonce.class);
             /*Log.e("hna kayan data if ",annoncE.getTitreAnnonce());
                deplaceAnnonce(annoncE);*/
-                DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference("Historique").child(annonce.getUserId()).child(annonce.getIdAnnonce());
-                Map<String, Object> ANNONCE = new HashMap<>();
-                ANNONCE.put("idAnnonce", annonce.getIdAnnonce());
-                ANNONCE.put("titreAnnonce", annonce.getTitreAnnonce());
-                ANNONCE.put("commune", annonce.getCommune());
-                ANNONCE.put("wilaya", annonce.getWilaya());
-                ANNONCE.put("images", annonce.getImages());
-                ANNONCE.put("descriptionAnnonce", annonce.getDescriptionAnnonce());
-                ANNONCE.put("articleEnRetour", annonce.getArticleEnRetour());
-                ANNONCE.put("dateAnnonce", annonce.getDateAnnonce());
-                ANNONCE.put("IdOffreSelected", annonce.getIdOffreSelected());
-                ANNONCE.put("statu", "COMPLETEDANNONCE");
-                ANNONCE.put("categorie", nameCategorie);
-                mDbRef.updateChildren(ANNONCE);
-                DatabaseReference dAnnonce = FirebaseDatabase.getInstance().getReference("Annonce").child(annonce.getIdAnnonce());
-                dAnnonce.removeValue();
-                DatabaseReference dCategorie = FirebaseDatabase.getInstance().getReference("Categorie").child(nameCategorie).child(annonce.getIdAnnonce());
-                dCategorie.removeValue();
+                Log.e("titre annonce", annonce.getTitreAnnonce());
+                Log.e("id user ", annonce.getUserId());
+                deplaceAnnonce(annonce);
             }
 
             @Override

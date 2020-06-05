@@ -37,6 +37,7 @@ public class DemandesOffre extends AppCompatActivity {
     private ArrayList<Membre> membres;
     private String annonce;
     private TextView information;
+    private TextView retour;
 
 
     public DemandesOffre() {
@@ -50,6 +51,7 @@ public class DemandesOffre extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyle_demandesoffres);
         information=findViewById(R.id.information);
+        retour=findViewById(R.id.retour);
         offres = new ArrayList<>();
         membres = new ArrayList<>();
 
@@ -57,8 +59,13 @@ public class DemandesOffre extends AppCompatActivity {
         Intent ajou = getIntent();
         Annonce annonce1 = (Annonce) ajou.getSerializableExtra("annonce");
 
-
-        demandesoffre = new demandesoffre(this, offres, membres, annonce1.getTitreAnnonce(), annonce);
+        retour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        demandesoffre = new demandesoffre(this, offres, membres, annonce1.getTitreAnnonce(), annonce1.getIdAnnonce());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(demandesoffre);
 // get annonce offres && user offre
@@ -144,7 +151,7 @@ public class DemandesOffre extends AppCompatActivity {
 
     }
 
-    public void selectedoffre(String idOffre) {
+   public void selectedoffre(String idOffre) {
         Intent ajou = getIntent();
         Annonce annonce1 = (Annonce) ajou.getSerializableExtra("annonce");
         DatabaseReference databaseReference;
