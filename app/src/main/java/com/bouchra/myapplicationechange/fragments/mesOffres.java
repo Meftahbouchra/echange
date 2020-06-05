@@ -69,6 +69,7 @@ public class mesOffres extends Fragment {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e("Count ", "" + snapshot.getChildrenCount());
+                offres.clear();
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     for (DataSnapshot off : postSnapshot.getChildren()) {
                         String user = off.child("idUser").getValue().toString();

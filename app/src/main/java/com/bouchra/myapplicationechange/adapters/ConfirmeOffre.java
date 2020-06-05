@@ -46,7 +46,6 @@ public class ConfirmeOffre extends AppCompatDialogFragment {
                 })
                 .setNegativeButton("Annuler", (dialog, which) -> {
                     dismiss();
-
                 });
         return builder.create();
 
