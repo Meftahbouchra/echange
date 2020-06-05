@@ -191,8 +191,8 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
         });
 
 
-      /*editsearch = view.findViewById(R.id.search);
-        editsearch.setOnQueryTextListener(this);*/
+        editsearch = view.findViewById(R.id.search);
+        editsearch.setOnQueryTextListener(this);
         return view;
     }
 
@@ -231,17 +231,15 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
             String obj = object.getTitreAnnonce().toLowerCase();
             if (obj.contains(keyWord.toLowerCase()) && object.getWilaya().toLowerCase().contains(wilaya.toLowerCase())) {
                 output.add(object);
-
             }
-
-
         }
         if (output.size() == 0) {
             informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
+            informationRecherche.setVisibility(View.VISIBLE);
             informationDafault.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
-
         } else {
+            recyclerView.setVisibility(View.VISIBLE);
             informationDafault.setVisibility(View.GONE);
             informationRecherche.setVisibility(View.GONE);
             publicAdapter.setMesannonce(output);
