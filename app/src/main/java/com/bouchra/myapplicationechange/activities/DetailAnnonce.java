@@ -408,10 +408,14 @@ public class DetailAnnonce extends AppCompatActivity {
         Geocoder geocoder = new Geocoder(DetailAnnonce.this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(myCoordinates.latitude, myCoordinates.longitude, 1);
-            String address = addresses.get(0).getAddressLine(0);
-            myCity = addresses.get(0).getLocality();
-            Log.d("mylog", "Complete Address: " + addresses.toString());
-            Log.d("mylog", "Address: " + address);
+            if(addresses.size() > 0){
+                if(addresses.get(0).getAddressLine(0) != null){
+                    String address = addresses.get(0).getAddressLine(0);
+                    myCity = addresses.get(0).getLocality();
+                    Log.d("mylog", "Complete Address: " + addresses.toString());
+                    Log.d("mylog", "Address: " + address);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
