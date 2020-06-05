@@ -292,13 +292,9 @@ public class ReviewUser extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
                 Annonce annonce = snapshot.getValue(Annonce.class);
-            /*Log.e("hna kayan data if ",annoncE.getTitreAnnonce());
-               deplaceAnnonce(annoncE);*/
-                Log.e("titre annonce", annonce.getTitreAnnonce());
-                Log.e("id user ", annonce.getUserId());
-                deplaceAnnonce(annonce);
+                Log.e("titre annonce", snapshot.toString());
+                if(annonce != null) deplaceAnnonce(annonce);
             }
 
             @Override

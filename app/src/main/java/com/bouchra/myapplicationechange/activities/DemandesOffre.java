@@ -93,7 +93,6 @@ public class DemandesOffre extends AppCompatActivity {
                                 for (DataSnapshot postSnapshott : dataSnapshot.getChildren()) {
                                     String iduserMembre = postSnapshott.child("idMembre").getValue().toString();
                                     if (iduser.equals(iduserMembre)) {
-
                                         membres.add(postSnapshott.getValue(Membre.class));
                                         offres.add(postSnapshot.getValue(Offre.class));
                                         demandesoffre.notifyDataSetChanged();
