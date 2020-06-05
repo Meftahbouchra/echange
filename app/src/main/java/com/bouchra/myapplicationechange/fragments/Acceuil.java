@@ -300,11 +300,14 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
     }
 
     public void affichageParCategorie(String categ) {
-
         annonces.clear();
+        informationRecherche.setVisibility(View.VISIBLE);
+        informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
+        informationDafault.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
         Log.e("nom categorie ", categ);
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference("Categorie").child(categ);
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Categorie").child(categ.trim());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -331,9 +334,11 @@ public class Acceuil extends Fragment implements Single_choice_classification.Si
                                     annonces.add(snapshot.getValue(Annonce.class));
                                     informationRecherche.setVisibility(View.GONE);
                                     informationDafault.setVisibility(View.GONE);
+                                    recyclerView.setVisibility(View.VISIBLE);
                                     publicAdapter.setMesannonce(annonces);
                                     publicAdapter.notifyDataSetChanged();
                                 } else {
+                                    informationRecherche.setVisibility(View.VISIBLE);
                                     informationRecherche.setText("Dèsolè ,il n'y a pas d'annonce pour cette recherche actuellement");
                                     informationDafault.setVisibility(View.GONE);
                                     recyclerView.setVisibility(View.GONE);
