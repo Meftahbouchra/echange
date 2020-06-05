@@ -82,6 +82,7 @@ public class DemandesOffre extends AppCompatActivity {
             */
                 if(snapshot.exists()){
                     information.setVisibility(View.GONE);
+                    offres.clear();
                     Log.e("Count ", "" + snapshot.getChildrenCount());
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                         Log.e("Data here", postSnapshot.toString());
