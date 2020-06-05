@@ -37,6 +37,7 @@ import com.bouchra.myapplicationechange.R;
 import com.bouchra.myapplicationechange.fragments.Posts;
 import com.bouchra.myapplicationechange.models.Annonce;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -81,13 +82,17 @@ public class DetailAnnonce extends AppCompatActivity {
     private CircleImageView imgUser;
     private Button offre;
     private Dialog MyDialog;
+    private FusedLocationProviderClient mFusedLocationClient;
     private TextView sendMsg;
     private TextView shar_publication;
     private TextView etoiles_user;
     private int nbrComm = 0;
     private float totalRepos = 0;
-    String[] locationpermission;
+    private String[] locationpermission;
     private static final int PERMISSION_ID = 44;
+    private double latitude;
+    private double longitude;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,13 +156,9 @@ public class DetailAnnonce extends AppCompatActivity {
         position.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /*  String source = "26.4888155,-1.3582442";
-                 String distination = "33.80722,2.897196";*/
-                // String source = "26.4888155,-1.3582442";
-                double getLatitude = 36.191201;
-                double getLongitude = 1.279685;
+                getLastLocation();
                 String distination = "adrar";
-                LatLng myCoordinates = new LatLng(getLatitude, getLongitude);
+                LatLng myCoordinates = new LatLng(latitude, longitude);
                 String source = getCityName(myCoordinates);
                 DisplayTrack(source, distination);
             }
@@ -486,8 +487,8 @@ public class DetailAnnonce extends AppCompatActivity {
                                 if (location == null) {
                                     requestNewLocationData();
                                 } else {
-
-                                    txt_send.setText("https://www.google.com/maps/@" + location.getLatitude() + "," + location.getLongitude() + ",15z");
+                                    latitude = location.getLatitude();
+                                    longitude = location.getLongitude();
                                 }
                             }
                         }
@@ -524,7 +525,8 @@ public class DetailAnnonce extends AppCompatActivity {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             Location mLastLocation = locationResult.getLastLocation();
-            txt_send.setText("https://www.google.com/maps/@" + mLastLocation.getLatitude() + "," + mLastLocation.getLongitude() + ",15z");
+            latitude = mLastLocation.getLatitude();
+            longitude = mLastLocation.getLongitude();
 
         }
     };
