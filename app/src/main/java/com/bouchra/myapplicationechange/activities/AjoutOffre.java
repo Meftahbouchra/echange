@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -138,7 +139,6 @@ public class AjoutOffre extends AppCompatActivity {
 
         suiv.setOnClickListener(v -> {
             if (imguri != null) {
-                Fileuploader();
                 titre = titleObjet.getText().toString();
                 desc = descObjet.getText().toString();
                 if (!titre.isEmpty() && !desc.isEmpty()) {
@@ -344,10 +344,7 @@ public class AjoutOffre extends AppCompatActivity {
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
                     imguri = Uri.parse(saveImage(bitmap));
-
-
-                    pic.setImageBitmap(bitmap);
-
+                    Fileuploader(String.valueOf(imguri));
                 } catch (IOException e) {
                     e.printStackTrace();
 
@@ -395,19 +392,16 @@ public class AjoutOffre extends AppCompatActivity {
         return "";
     }
 
-    private void Fileuploader() {
-        Log.e("img here", imguri.toString());
+    private void Fileuploader(String uriImage) {
         try {
-            InputStream stream = new FileInputStream(String.valueOf(imguri));
+            InputStream stream = new FileInputStream(String.valueOf(uriImage));
             StorageReference ref = mStorageRef.child(UUID.randomUUID().toString());
             ref.putStream(stream)
                     .addOnSuccessListener(taskSnapshot -> {
                         taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
                                     // pathImage = task.toString();
-
-                                    downloadUriPicture = task.getPath();
-
-
+                                    downloadUriPicture = String.valueOf(task);
+                                    Picasso.get().load(downloadUriPicture).into(pic);
                                 }
                         );
                     })
