@@ -140,8 +140,6 @@ public class confirmEchangeAnnonce extends Fragment {
                 if (snapshot.getValue() != null) {
                     Offre offre = snapshot.getValue(Offre.class);
                     titte_offre.setText(offre.getNomOffre());
-                   //Glide.with(getActivity()).load(offre.getImage()).into(img_offre);
-                ;
                     Picasso.get().load(offre.getImage()).into(img_offre);
                     recupererUser(offre.getIdUser());
 

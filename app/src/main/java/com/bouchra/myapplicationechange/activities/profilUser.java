@@ -46,6 +46,7 @@ public class profilUser extends AppCompatActivity {
     private TextView nomUser;
     private TextView mailUser;
     private TextView telUser;
+    private TextView back;
     private LinearLayout zoneEmail;
     private LinearLayout zonePhone;
     private String[] callPermission;
@@ -70,12 +71,13 @@ public class profilUser extends AppCompatActivity {
         nomUser = findViewById(R.id.nom_user);
         mailUser = findViewById(R.id.mail_user);
         telUser = findViewById(R.id.tel_user);
+        back = findViewById(R.id.back);
 
         zoneEmail = findViewById(R.id.zone_email);
         zonePhone = findViewById(R.id.zone_phone);
-        cmntr=findViewById(R.id.cmntr);
+        cmntr = findViewById(R.id.cmntr);
         avis = findViewById(R.id.avis);
-        information=findViewById(R.id.information);
+        information = findViewById(R.id.information);
         //init permission arrys
         callPermission = new String[]{Manifest.permission.CALL_PHONE};
         smsPermission = new String[]{Manifest.permission.SEND_SMS};
@@ -137,11 +139,11 @@ public class profilUser extends AppCompatActivity {
                 Picasso.get().load(membre.getPhotoUser()).into(imageUser);
                 nomUser.setText(membre.getNomMembre());
                 mailUser.setText(membre.getEmail());
-                try{telUser.setText(membre.getNumTel());
+                try {
+                    telUser.setText(membre.getNumTel());
 
 
-
-                }catch (Exception e){
+                } catch (Exception e) {
                     telUser.setText("+213..");
 
 
@@ -173,6 +175,8 @@ public class profilUser extends AppCompatActivity {
             emailIntent.putExtra(Intent.EXTRA_TEXT, body);
             startActivity(Intent.createChooser(emailIntent, chooserTitle));
         });
+
+        back.setOnClickListener(v -> finish());
     }
 
     //URI: est une chaine de caracteres utilisee pour identifier une ressource

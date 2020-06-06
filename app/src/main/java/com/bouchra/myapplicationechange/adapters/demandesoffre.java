@@ -1,10 +1,21 @@
 package com.bouchra.myapplicationechange.adapters;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bouchra.myapplicationechange.R;
@@ -25,6 +37,12 @@ import com.bouchra.myapplicationechange.models.Annonce;
 import com.bouchra.myapplicationechange.models.Membre;
 import com.bouchra.myapplicationechange.models.Offre;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -32,12 +50,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder> {
+public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder> implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private Context context;
     private ArrayList<Offre> mesDemandeDoffres;
@@ -45,7 +66,11 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
     private String nomAnnonce;
     private String annonce;// id offre selected
     private Dialog MyDialog;
-    private final static String AddressUSer = "35.697,-0.641";
+    private String[] locationpermission;
+    private static final int PERMISSION_ID = 44;
+    private double latitude;
+    private double longitude;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     public demandesoffre(Context context, ArrayList<Offre> mesDemandeDoffres, ArrayList<Membre> membres, String nomAnnonce, String annonce) {
         this.context = context;
@@ -73,6 +98,8 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull demandesoffre.ViewHolder holder, int position) {
+        locationpermission = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+
         //////////********************************************************  offre
         Offre offre = mesDemandeDoffres.get(position);
         holder.titreOffre.setText(offre.getNomOffre());
@@ -89,7 +116,8 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
 /////////////*****************************************************membre
         Membre membre = membres.get(position);
         holder.nameUser.setText(membre.getNomMembre());
-        if(membre.getPhotoUser() != null) Picasso.get().load(membre.getPhotoUser()).into(holder.imageUser);
+        if (membre.getPhotoUser() != null)
+            Picasso.get().load(membre.getPhotoUser()).into(holder.imageUser);
         if (annonce != null) {
 
         } else {
@@ -111,17 +139,15 @@ public class demandesoffre extends RecyclerView.Adapter<demandesoffre.ViewHolder
         });
 
 
-       /* holder.itemView.setOnClickListener(v -> {
-            ConfirmeOffre confirmeOffre = new ConfirmeOffre();
-            Bundle b2 = new Bundle();
-            b2.putSerializable("offre", offre);
-            b2.putString("nomAnnonce", nomAnnonce);
-            confirmeOffre.setArguments(b2);
-            confirmeOffre.show(((AppCompatActivity) context).getSupportFragmentManager(), "fragment");
-
-
-        });*/
-        holder.position.setOnClickListener(v -> Locatiion());
+        holder.position.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLastLocation();
+                LatLng myCoordinates = new LatLng(latitude, longitude);
+                String source = getCityName(myCoordinates);
+                DisplayTrack(source, offre.getCommune());
+            }
+        });
         holder.imageOffre.setOnClickListener(v -> showImage(offre.getImage()));
         holder.itemView.setOnLongClickListener(v -> {
             ConfirmeOffre confirmeOffre = new ConfirmeOffre();
@@ -144,6 +170,16 @@ Donc, si vous ne voulez onClickpas également être déclenché après un évén
     @Override
     public int getItemCount() {
         return mesDemandeDoffres.size();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSION_ID) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //  obtenir les informations de localisation
+                getLastLocation();
+            }
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -208,13 +244,6 @@ Donc, si vous ne voulez onClickpas également être déclenché après un évén
 
     }
 
-    private void Locatiion() {
-        //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + AddressUSer)); sans marqueur
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + AddressUSer));
-        intent.setPackage("com.google.android.apps.maps");// seul app map
-        context.startActivity(intent);
-
-    }
 
     private void etatConfirmOffre(String idOffre, String idAnnonce) {
 
@@ -259,6 +288,124 @@ Donc, si vous ne voulez onClickpas également être déclenché après un évén
         MyDialog.show();
 
     }
+
+    private String getCityName(LatLng myCoordinates) {
+        String myCity = "";
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(myCoordinates.latitude, myCoordinates.longitude, 1);
+            if (addresses.size() > 0) {
+                if (addresses.get(0).getAddressLine(0) != null) {
+                    String address = addresses.get(0).getAddressLine(0);
+                    myCity = addresses.get(0).getLocality();
+                    Log.d("mylog", "Complete Address: " + addresses.toString());
+                    Log.d("mylog", "Address: " + address);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return myCity;
+    }
+
+    private void DisplayTrack(String source, String distination) {
+        try {
+            //when google map is installed
+            Uri uri = Uri.parse("https://www.google.co.in/maps/dir/" + source + "/" + distination);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.setPackage("com.google.android.apps.maps");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+
+
+        } catch (ActivityNotFoundException e) {
+            // redirect to play store
+            // google maps not installed
+            Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.maps");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
+
+
+    private boolean checkPermissions() {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
+    }
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(
+                ((Activity) context), locationpermission, PERMISSION_ID);
+    }
+
+
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER
+        );
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getLastLocation() {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+                mFusedLocationClient.getLastLocation().addOnCompleteListener(
+                        new OnCompleteListener<Location>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Location> task) {
+                                Location location = task.getResult();
+                                if (location == null) {
+                                    requestNewLocationData();
+                                } else {
+                                    latitude = location.getLatitude();
+                                    longitude = location.getLongitude();
+                                }
+                            }
+                        }
+                );
+            } else {
+                Toast.makeText(context, "Activer l'emplacement", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                context.startActivity(intent);
+            }
+        } else {
+            requestPermissions();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void requestNewLocationData() {
+
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(0);
+        mLocationRequest.setFastestInterval(0);
+        mLocationRequest.setNumUpdates(1);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        mFusedLocationClient.requestLocationUpdates(
+                mLocationRequest, mLocationCallback,
+                Looper.myLooper()
+        );
+
+    }
+
+
+    private LocationCallback mLocationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            Location mLastLocation = locationResult.getLastLocation();
+            latitude = mLastLocation.getLatitude();
+            longitude = mLastLocation.getLongitude();
+
+        }
+    };
 
 
 }

@@ -3,7 +3,7 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/gris</item>
-        <item name="colorPrimaryDark">@color/gris</item>//ta3 lfog ga3
+        <item name="colorPrimaryDark">@color/gris</item>
         <item name="colorAccent">@color/grey</item>
     </style>
 

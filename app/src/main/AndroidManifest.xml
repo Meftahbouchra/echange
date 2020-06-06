@@ -46,7 +46,6 @@
             android:name=".activities.annonce.ImagesStorage"
             android:theme="@style/AppTheme.FullScreen">
 
-            <!-- nkado ndro kima hadik taa activit lwla -->
         </activity>
         <activity android:name=".activities.GoogleMaps" />
 

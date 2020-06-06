@@ -75,7 +75,6 @@ public class AjoutOffre extends AppCompatActivity {
     private Annonce annonce;
     private StorageReference mStorageRef;
     private Uri imguri;
-    private String pathImage;
     private static final int GALLERY = 1;
     private static final int CAMERA = 2;
     private static final int CAMERA_PERMISSION = 3;
@@ -399,7 +398,6 @@ public class AjoutOffre extends AppCompatActivity {
             ref.putStream(stream)
                     .addOnSuccessListener(taskSnapshot -> {
                         taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(task -> {
-                                    // pathImage = task.toString();
                                     downloadUriPicture = String.valueOf(task);
                                     Picasso.get().load(downloadUriPicture).into(pic);
                                 }

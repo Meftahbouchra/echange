@@ -7,10 +7,6 @@
     <string name="cancelled">Cancelled</string>
     <string name="ok">OK</string>
     <string name="FBexception">FacebookAuthorizationException.</string>
-    <!--<string-array name="choice_item">
-        <item> Distance la plus proche</item>
-        <item>Timing</item>
-    </string-array>-->
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>

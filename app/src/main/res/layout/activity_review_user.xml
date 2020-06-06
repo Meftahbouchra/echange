@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/retour"
         android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
         android:text="Vous attendez qu'apres votre partenaire confirmer l'echange" />
 
     <RelativeLayout

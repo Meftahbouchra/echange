@@ -46,16 +46,15 @@ public class myImage extends RecyclerView.Adapter<myImage.ViewHolder> {
             images.remove(position);
             this.notifyDataSetChanged();
         });
-        if(URLUtil.isValidUrl(uri)){
+        if (URLUtil.isValidUrl(uri)) {
             Picasso.get().load(uri).into(holder.imageAnnonce);
-        } else{
-            File imgFile = new  File(uri);
-            if(imgFile.exists()){
+        } else {
+            File imgFile = new File(uri);
+            if (imgFile.exists()) {
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 holder.imageAnnonce.setImageBitmap(myBitmap);
             }
         }
-
 
 
     }

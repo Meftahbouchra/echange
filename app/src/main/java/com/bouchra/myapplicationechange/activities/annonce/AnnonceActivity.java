@@ -34,10 +34,10 @@ public class AnnonceActivity extends AppCompatActivity {
     private TextView annuler;
     private EditText titreAnnonce;
     private EditText descAnnonce;
-    private String titre_Annonce = "";
     private String selectedWilaya;
     private String selectedVille;
     private String selectedCateg;
+    private String titre_Annonce = "";
     private String desc_Annonce = "";
     private Boolean isSelected = false;
     private Spinner wilayaSpinner;
