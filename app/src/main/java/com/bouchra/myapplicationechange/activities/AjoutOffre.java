@@ -352,8 +352,8 @@ public class AjoutOffre extends AppCompatActivity {
 
         } else if (requestCode == CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            pic.setImageBitmap(thumbnail);
             imguri = Uri.parse(saveImage(thumbnail));
+            Fileuploader(String.valueOf(imguri));
 
         }
     }
