@@ -51,6 +51,8 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
 
         recyclerView = view.findViewById(R.id.recyle_mesannonces);
         information = view.findViewById(R.id.information);
+
+
         annonces = new ArrayList<>();
         preferenceUtils = new PreferenceUtils(getContext());
         if (offre == null) {
@@ -99,8 +101,8 @@ public class mesAnnonce extends Fragment implements SearchView.OnQueryTextListen
             }
         });
         // Locate the EditText in listview_main.xml
-    /*    editsearch =view.findViewById(R.id.search);/////////////////////////////////////////////////
-        editsearch.setOnQueryTextListener(this);*/
+        editsearch = view.findViewById(R.id.search);
+        editsearch.setOnQueryTextListener(this);
         // récupère la chaîne de requête actuellement dans le champ de texte
         return view;
     }

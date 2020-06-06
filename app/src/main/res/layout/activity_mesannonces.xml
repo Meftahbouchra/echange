@@ -5,7 +5,7 @@
     android:background="#efefef"
     android:orientation="vertical">
 
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:layout_marginTop="20dp"
         android:id="@+id/search"
         android:layout_width="350dp"
@@ -15,7 +15,7 @@
         android:layout_height="55dp"
         android:iconifiedByDefault="false"
        >
-    </SearchView>
+     </androidx.appcompat.widget.SearchView>
     <TextView
         android:id="@+id/information"
         android:layout_width="match_parent"

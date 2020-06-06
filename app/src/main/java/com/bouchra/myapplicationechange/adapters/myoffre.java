@@ -57,7 +57,10 @@ public class myoffre extends RecyclerView.Adapter<myoffre.ViewHolder> {
 
     }
 
-
+    public void setMesoffre(ArrayList<Offre> output) {
+        this.mesoffre.clear();
+        this.mesoffre.addAll(output);
+    }
     public myoffre(Context context, ArrayList<Offre> mesoffre, String idAnnonce, String offre) {
         this.context = context;
         this.mesoffre = mesoffre;

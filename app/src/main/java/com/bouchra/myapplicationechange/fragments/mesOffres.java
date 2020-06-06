@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,13 +26,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class mesOffres extends Fragment {
+public class mesOffres extends Fragment implements SearchView.OnQueryTextListener  {
 
     private myoffre myoffre;
     private ArrayList<Offre> offres;
     private String idannoncE;
     private RecyclerView recyclerView;
-    // SearchView editsearch;
+    private SearchView editsearch;
     private String offre;// id annonce
     private TextView information;
     PreferenceUtils preferenceUtils;
@@ -107,8 +108,26 @@ public class mesOffres extends Fragment {
                 // Getting model failed, log a message
             }
         });
-
+        editsearch = view.findViewById(R.id.search);
+        editsearch.setOnQueryTextListener(this);
         return view;
+    }
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        ArrayList<Offre> output = new ArrayList<>();
+        for (Offre object : offres) {
+            String obj = object.getNomOffre().toLowerCase();
+            if (obj.contains(newText.toLowerCase())) output.add(object);
+        }
+        myoffre.setMesoffre(output);
+        myoffre.notifyDataSetChanged();
+
+        return false;
     }
 
 }
